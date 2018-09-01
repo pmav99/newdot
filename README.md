@@ -42,7 +42,8 @@ In this repo we have several `zsh` directories:
 - `zsh_vanilla` contains the vanilla Runcoms as of `7bb7a7cb6fe02cce77ad3` (I keep this to make it
    easier to find upstream changes.
 - `zsh_desktop` contains the runcoms that I use on my own PCs (desktop and laptop).
-` `zsh_remote` contains the runcoms that I use on various VPSs that I manage.
+- `zsh_remote` contains the runcoms that I use on various VPSs that I manage.
+
 
 So, no matter which machine I use, I am able to create the appropriate symlinks using git stow. E.g.
 
