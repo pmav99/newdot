@@ -48,6 +48,7 @@ In this repo we have several `zsh` directories:
 So, no matter which machine I use, I am able to create the appropriate symlinks using git stow. E.g.
 
 ```
-cd zsh_remote
-git stow
+git clone https://github.com/pmav99/newdot ~/.dotfiles
+cd .dotfiles
+stow zsh_remote
 ```
