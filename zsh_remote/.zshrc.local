@@ -204,4 +204,3 @@ export PIP_WHEEL_DIR=~/.wheelhouse
 export PIP_FIND_LINKS=~/.wheelhouse
 export JAVA_OPTS="-Xmx2048M -Xms32M"
 export GOPATH=~/Prog/go
-export GEM_HOME=$(ruby -e 'print Gem.user_dir')
