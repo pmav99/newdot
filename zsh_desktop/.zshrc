@@ -20,16 +20,7 @@ unsetopt AUTO_CD
 # Customize to your needs...
 DOTFILES_DIR="$HOME/.dotfiles"
 
-# autoenv
-if [ -f '/usr/share/autoenv/activate.sh' ]; then
-    AUTOENV_AUTH_FILE=~/.autoenv_authorized
-    AUTOENV_ENV_FILENAME='env'
-    #AUTOENV_LOWER_FIRST=''
-    source '/usr/share/autoenv/activate.sh'
-fi
-
 # direnv
-
 if which direnv &> /dev/null; then
     eval "$(direnv hook zsh)"
 fi
