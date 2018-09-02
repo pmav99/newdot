@@ -10,4 +10,7 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Customize to your needs...
+# Source local customizations
+if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.local" ]]; then
+    source "${ZDOTDIR:-$HOME}/.zshrc.local"
+fi

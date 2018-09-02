@@ -1,0 +1,207 @@
+#
+# Executes commands at the start of an interactive session.
+#
+# Authors:
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#
+
+# Spaceship theme customization
+SPACESHIP_HOST_SHOW='always'
+SPACESHIP_USER_SHOW='always'
+
+# disable AUTO_CD
+unsetopt AUTO_CD
+
+# direnv
+if which direnv &> /dev/null; then
+    eval "$(direnv hook zsh)"
+fi
+
+# NTFY notifications
+if which ntfy  &> /dev/null; then
+    eval "$(ntfy shell-integration)"
+fi
+
+# ffind
+if which ffind &> /dev/null; then
+    alias ff='ffind'
+fi
+
+# fzf
+if which fzf  &> /dev/null; then
+    source ~/.fzf.zsh
+    export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
+    alias vz'=gvim $(fzf)'
+fi
+
+# ZSH ONLY!!!
+# Make ls use natural sort
+alias ls="${aliases[ls]:-ls} -v"
+
+# aliases
+alias ping8='ping -c3 8.8.8.8'
+alias pingg='ping -c3 www.google.com'
+alias mmv='noglob zmv -W'
+
+alias gtar='tar pcvzf'
+alias btar='tar pcvjf'
+alias untar='tar xvf'
+alias ungtar='tar xvzf'
+alias unbtar='tar xvjf'
+
+# Journalctl aliases
+alias jctl=journalctl
+alias jspy='jctl -f'
+
+# Systemctl aliases
+alias reload='sudo systemctl reload'
+alias restart='sudo systemctl restart'
+alias start='sudo systemctl start'
+alias sctl='sudo systemctl'
+alias status='systemctl -l status'
+alias stop='sudo systemctl stop'
+
+## Python aliases
+alias f="find ./ -name"
+alias qg='qgit --all'
+alias pw="pew workon"
+alias jn="jupyter notebook"
+alias rmpyc="find ./ -name '*.pyc' -delete"
+alias rmtex="find . -type f \( -name '*.aux' -o -name '*.glo' -o -name '*.idx' -o -name '*.log' -o -name '*.toc' -o -name '*.ist' -o -name '*.acn' -o -name '*.acr' -o -name '*.alg' -o -name '*.bbl' -o -name '*.blg' -o -name '*.dvi' -o -name '*.glg' -o -name '*.gls' -o -name '*.ilg' -o -name '*.ind' -o -name '*.lof' -o -name '*.lot' -o -name '*.maf' -o -name '*.mtc' -o -name '*.thm' -o -name '*.nav' -o -name '*.snm' -o -name '*.out' -o -name '*.synctex.gz' -o -name '*.mtc1' -name '*.bcf' -name '*.fls' -name '*.run.xml' \) -delete"
+
+### Useful commands
+
+treex()   { tree ${1:-./} -C -v --dirsfirst -P "*.$1" }
+treepy()  { tree ${1:-./} -C -v --dirsfirst -P '*.py|*.ini|*.cfg|*.conf|*.json|*.html|*.jinja|*.j2' -I '*__pycache__|*.pyc' }
+treejs()  { tree ${1:-./} -C -v --dirsfirst -P '*.html|*.css|*.js' }
+treedoc() { tree ${1:-./} -C -v --dirsfirst -P '*.tex|*.html|*.rest|*.md|*.rst|*.txt' }
+treegit() {
+    # A tree command that respects .gitgnore!
+    # http://unix.stackexchange.com/a/291283/37579
+    git_ignore_file=$( git config --get core.excludesfile )
+    if [[ -f "${git_ignore_file}" ]] ; then
+        tree -I"$( tr '\n' '\|' < "${git_ignore_file}" )" "${@}"
+    else
+        tree "${@}"
+    fi
+}
+
+# an extract command
+x() {
+    local c e i
+
+    (($#)) || return
+
+    for i; do
+        c=''
+        e=1
+
+        if [[ ! -r $i ]]; then
+            echo "$0: file is unreadable: \`$i'" >&2
+            continue
+        fi
+
+        case $i in
+            *.tar) c=(bsdtar xvf);;
+            *.tar.bz) c=(bsdtar xvf);;
+            *.t@(gz|lz|xz|b@(2|z?(2))|a@(z|r?(.@(Z|bz?(2)|gz|lzma|xz)))))
+                   c=(bsdtar xvf);;
+            *.7z)  c=(7z x);;
+            *.Z)   c=(uncompress);;
+            *.bz2) c=(bunzip2);;
+            *.exe) c=(cabextract);;
+            *.gz)  c=(gunzip);;
+            *.rar) c=(unrar x);;
+            *.xz)  c=(unxz);;
+            *.zip) c=(unzip);;
+            *)     echo "$0: unrecognized file extension: \`$i'" >&2
+                   continue;;
+        esac
+
+        command "${c[@]}" "$i"
+        ((e = e || $?))
+    done
+    return "$e"
+}
+
+# A quick httpserver. You can define the port (defaults to 8000). E.g.:
+# httpserver 8080
+httpserver() {
+    python2 -m SimpleHTTPServer $1 || python3 -m http.server $1
+}
+
+# a pretty print command. Works with xml and json.
+pprint() {
+    local c i
+
+    (($#)) || return
+
+    for i; do
+        c=''
+
+        if [[ ! -r $i ]]; then
+            echo "$0: file is unreadable: \`$i'" >&2
+            continue
+        fi
+
+        case $i in
+            *.xml)  c=(xmllint --format);;
+            *.json) c=(python -m json.tool);;
+            *)      echo "$0: unrecognized file extension: \`$i'" >&2
+                    continue;;
+        esac
+
+        command "${c[@]}" "$i"
+        ((e = e || $?))
+    done
+    return "$e"
+}
+
+myip() {
+    if which dig &> /dev/null; then
+        dig +short myip.opendns.com @resolver1.opendns.com
+    else
+        curl -s http://whatismyip.akamai.com/
+    fi
+}
+
+mylocalip() {
+    python -c "import socket; print(socket.gethostbyname(socket.gethostname()))"
+}
+
+openports() {
+    watch -n 1 -d -x sudo netstat -lntpu
+}
+
+makemine(){
+    sudo chown "${USER}":"${USER}" $@
+}
+
+bigfiles() {
+    if (( $# < 1 )); then
+        echo 'usage: bigfiles DIRECTORY [NO_FILES]'
+        return 1
+    fi
+    search_dir=$1
+    if [[ ! -z $2 ]]; then
+        no_files=$2
+    else
+        no_files=10
+    fi
+    find $search_dir -type f -exec du -ah {} + | sort -hr | head -n $no_files
+}
+
+
+### Append folders to PATH
+mkdir -p ~/.wheelhouse
+export R_LIBS="$HOME/.R"
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Prog/venvs
+export PIP_WHEEL_DIR=~/.wheelhouse
+export PIP_FIND_LINKS=~/.wheelhouse
+export JAVA_OPTS="-Xmx2048M -Xms32M"
+export GOPATH=~/Prog/go
+export GEM_HOME=$(ruby -e 'print Gem.user_dir')
