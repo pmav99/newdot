@@ -288,6 +288,27 @@ bigfiles() {
     find $search_dir -type f -exec du -ah {} + | sort -hr | head -n $no_files
 }
 
+gdrive_download () {
+    if (( $# < 2 )); then
+        echo 'usage: gdrive_download url output_filename'
+        return 1
+    else
+        url=$1
+        filename=$2
+    fi
+
+    # extract the id from the url
+    case "$url" in
+        'https://drive.google.com/open?id='*) id=$(echo "$url" | awk -F'=|&' '{printf"%s",$2}');;
+        'https://drive.google.com/file/d/'*|'https://docs.google.com/file/d/'*) id=$(echo "$url" | awk -F'/' '{printf"%s",$6}');;
+    esac
+
+    # download the file
+    CONFIRM=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate "https://docs.google.com/uc?export=download&id=$1" -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')
+    wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$CONFIRM&id=$id" -O $filename
+    rm -rf /tmp/cookies.txt
+}
+
 update_awesome_menu() {
     if which xdg_menu &> /dev/null; then
         rm -rf ~/.config/awesome/archmenu.lua
