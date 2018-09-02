@@ -34,11 +34,10 @@ if which fzf  &> /dev/null; then
     alias vz'=gvim $(fzf)'
 fi
 
-# ZSH ONLY!!!
-# Make ls use natural sort
-alias ls="${aliases[ls]:-ls} -v"
-
 # aliases
+alias ls="${aliases[ls]:-ls} -v"    # XXX ZSH ONLY!!! Make ls use natural sort
+alias sudo='sudo '                  # Let the aliases work with sudo too!
+
 alias ping8='ping -c3 8.8.8.8'
 alias pingg='ping -c3 www.google.com'
 alias mmv='noglob zmv -W'
