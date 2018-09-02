@@ -39,8 +39,8 @@ If you want to update you run:
 
 In this repo we have several `zsh` directories:
 
-- `zsh_vanilla` contains the vanilla Runcoms as of `7bb7a7cb6fe02cce77ad3` (I keep this to make it
-   easier to find upstream changes.
+- `zsh_upstream` contains the upstream Runcoms as of `7bb7a7cb6fe02cce77ad3`. We keep this directory
+  here just for convenience when updating.
 - `zsh_desktop` contains the runcoms that I use on my own PCs (desktop and laptop).
 - `zsh_remote` contains the runcoms that I use on various VPSs that I manage.
 
