@@ -66,6 +66,7 @@ alias stop='sudo systemctl stop'
 alias dc='docker-compose'
 alias dm='docker-machine'
 alias dockviz='docker run --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz images -t'
+alias inspec='docker run -it --rm -v $(pwd):/share chef/inspec'
 
 ## Python aliases
 alias f="find ./ -name"
