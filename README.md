@@ -13,7 +13,8 @@ PR the proper way to setup `zsh` with `prezto` requires that you do the followin
 1. Install `zsh`
 2. `git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"`
 3. `git clone --recursive https://github.com/belak/prezto-contrib "${ZDOTDIR:-$HOME}/.zprezto/contrib"`
-4. Copy (and not link!) the Runcoms into your `${ZDOTDIR:-$HOME} (the official documentation says
+4. Open a zsh shell.
+5. Copy (and not link!) the Runcoms into your `${ZDOTDIR:-$HOME} (the official documentation says
    that you should link but this makes it hard to update prezto). So:
    ```
     setopt EXTENDED_GLOB
@@ -22,8 +23,8 @@ PR the proper way to setup `zsh` with `prezto` requires that you do the followin
       cp "$rcfile" ".${rcfile:t}"
     done
    ```
-5. Edit the Runcoms to your liking
-6. Profit!
+6. Edit the Runcoms to your liking
+7. Profit!
 
 If you want to update you run:
 
