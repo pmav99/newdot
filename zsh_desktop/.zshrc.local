@@ -29,14 +29,15 @@ fi
 
 # fzf
 if which fzf  &> /dev/null; then
-    source ~/.fzf.zsh
+    source /usr/share/fzf/key-bindings.zsh
+    source /usr/share/fzf/completion.zsh
     export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
     alias vz'=gvim $(fzf)'
 fi
 
 # aliases
 alias ls="${aliases[ls]:-ls} -v"    # XXX ZSH ONLY!!! Make ls use natural sort
-alias sudo='sudo '                  # Let the aliases work with sudo too!
+#alias sudo='sudo '                  # Let the aliases work with sudo too!
 
 alias ping8='ping -c3 8.8.8.8'
 alias pingg='ping -c3 www.google.com'
