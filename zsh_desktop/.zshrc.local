@@ -93,6 +93,23 @@ treegit() {
     fi
 }
 
+bak() {(
+    display_usage () {
+        echo 'Backup a file by appending the timestamp.'
+        echo 'Usage: bak <path>'
+    }
+    # We only need a single argument. If it is not supplied, display usage
+    if [  $# -ne 1 ]; then
+        display_usage
+        exit 1
+    # If the user asks for help, provide it!
+    elif [[ ( $1 == "--help") ||  ( $1 == "-h" ) ]]; then
+        display_usage
+        exit 0
+    fi
+    cp -r $1 "${1}_$(date +"%y%m%d_%H%M%S")"
+)}
+
 dcx() {
     cmd=$2
     cmd=${2:-/bin/bash}
@@ -132,7 +149,6 @@ dgc() {
         docker ps -q | head -n1
     fi
 }
-
 
 dvolume() {
     if [ ! -z $1 ]
@@ -181,7 +197,6 @@ weather() {
         curl -4 http://wttr.in/Rethymno
     fi
 }
-
 
 # an extract command
 x() {
