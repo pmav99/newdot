@@ -12,6 +12,12 @@ SPACESHIP_USER_SHOW='true'
 # disable AUTO_CD
 unsetopt AUTO_CD
 
+# kubectl
+if [ $commands[kubectl] ]; then
+    source <(kubectl completion zsh);
+    alias k="kubectl"
+fi
+
 # direnv
 if which direnv &> /dev/null; then
     eval "$(direnv hook zsh)"
