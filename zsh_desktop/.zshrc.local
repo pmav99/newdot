@@ -12,7 +12,10 @@ SPACESHIP_USER_SHOW='true'
 # disable AUTO_CD
 unsetopt AUTO_CD
 
-# kubectl
+# kubectl & minicube
+if [ $commands[minikube] ]; then
+    alias mk="minikube"
+fi
 if [ $commands[kubectl] ]; then
     source <(kubectl completion zsh);
     alias k="kubectl"
