@@ -258,7 +258,7 @@ weather() {
     then
         curl -4 http://wttr.in/$1
     else
-        curl -4 http://wttr.in/Rethymno
+        curl -4 http://wttr.in/Chania
     fi
 }
 
