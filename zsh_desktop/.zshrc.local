@@ -101,19 +101,40 @@ treegit() {
 
 bak() {(
     display_usage () {
-        echo 'Backup a file by appending the timestamp.'
-        echo 'Usage: bak <path>'
+        echo 'Backup a file by appending "bak" or (optionally) a timestamp.'
+        echo 'Usage: bak [-t] <path>'
     }
-    # We only need a single argument. If it is not supplied, display usage
-    if [  $# -ne 1 ]; then
+    # Bail out early
+    if [[ ( $# -gt 2 ) || ( $# -eq 0) ]]; then
         display_usage
         exit 1
-    # If the user asks for help, provide it!
-    elif [[ ( $1 == "--help") ||  ( $1 == "-h" ) ]]; then
-        display_usage
-        exit 0
     fi
-    cp -r $1 "${1}_$(date +"%y%m%d_%H%M%S")"
+    # Read CLI arguments using getopt
+    local cli_options
+    cli_options=$(getopt -o th --long help -- "$@")
+    [ $? -eq 0 ] || {
+        echo "Incorrect options provided"
+        exit 1
+    }
+    eval set -- "$cli_options"
+    # default values
+    extension='bak'
+    path=''
+    # Parse getopt arguments
+    while true; do
+        case "$1" in
+            -h | --help )           display_usage
+                                    exit 0
+                                    ;;
+            -t | --timestamp )      extension=$(/usr/bin/date +"%y%m%d_%H%M%S")
+                                    shift
+                                    ;;
+            --)                     shift;
+                                    path=$1;
+                                    break;;
+        esac
+    done
+    /usr/bin/cp -r -i "${path}" "${path}.${extension}"
 )}
 
 dcx() {
