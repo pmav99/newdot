@@ -92,6 +92,10 @@ alias untar='tar xvf'
 alias ungtar='tar xvzf'
 alias unbtar='tar xvjf'
 
+ping88() {
+    ping -c3 8.8.8.8
+}
+
 # Journalctl aliases
 alias jctl=journalctl
 alias jspy='jctl -f'
