@@ -80,7 +80,7 @@ fi
 
 # aliases
 alias ls="${aliases[ls]:-ls} -v"    # XXX ZSH ONLY!!! Make ls use natural sort
-alias sudo='sudo '                  # Let the aliases work with sudo too!
+#alias sudo='sudo '                  # Let the aliases work with sudo too!
 
 alias ping8='ping -c3 8.8.8.8'
 alias pingg='ping -c3 www.google.com'
