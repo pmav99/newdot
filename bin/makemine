@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# Transfer ownership the specified files/folder to $USER
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+sudo chown "${USER}":"${USER}" $@

@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+#
+# Extract any archive!
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+
+(($#)) || exit
+
+for i; do
+    c=''
+    e=1
+
+    if [[ ! -r $i ]]; then
+        echo "$0: file is unreadable: \`$i'" >&2
+        continue
+    fi
+
+    case $i in
+        *.tar) c=(bsdtar xvf);;
+        *.cbt) c=(bsdtar xvf);;
+        #
+        *.bz) c=(bsdtar xvf);;
+        *.tbz) c=(bsdtar xvf);;
+        *.tar.bz) c=(bsdtar xvf);;
+        *.bz2) c=(bsdtar xvf);;
+        *.tbz2) c=(bsdtar xvf);;
+        *.tar.bz2) c=(bsdtar xvf);;
+        #
+        *.gz) c=(bsdtar xvf);;
+        *.tgz) c=(bsdtar xvf);;
+        *.tar.gz) c=(bsdtar xvf);;
+        #
+        *.xz) c=(bsdtar xvf);;
+        *.txz) c=(bsdtar xvf);;
+        *.tar.xz) c=(bsdtar xvf);;
+        #
+        *.lz) c=(bsdtar xvf);;
+        *.lzma) c=(bsdtar xvf);;
+        *.tlz) c=(bsdtar xvf);;
+        *.tar.lz) c=(bsdtar xvf);;
+
+        #*.t@(gz|lz|xz|b@(2|z?(2))|a@(z|r?(.@(Z|bz?(2)|gz|lzma|xz))))) c=(bsdtar xvf);;
+        *.7z)  c=(7z x);;
+        *.Z)   c=(uncompress);;
+        *.exe) c=(cabextract);;
+        *.rar) c=(unrar x);;
+        *.zip) c=(unzip);;
+        *)     echo "$0: unrecognized file extension: \`$i'" >&2
+                continue;;
+    esac
+
+    command "${c[@]}" "$i"
+    ((e = e || $?))
+done
+exit "$e"

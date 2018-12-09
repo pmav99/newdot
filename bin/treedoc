@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# Custom tree command for docs
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+tree ${1:-./} -C -v --dirsfirst -P '*.tex|*.html|*.rest|*.md|*.rst|*.txt'

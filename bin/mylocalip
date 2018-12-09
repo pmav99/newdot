@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# Get the local IP of the current host.
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+python3 -c "import socket; print(socket.gethostbyname(socket.gethostname()))"

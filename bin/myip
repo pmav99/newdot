@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#
+# Get the public IP of the current host.
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+if which dig &> /dev/null; then
+    dig +short whoami.akamai.net @ns1-1.akamaitech.net
+else
+    curl -s http://whatismyip.akamai.com/
+fi

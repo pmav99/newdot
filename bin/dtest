@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# test docker image
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+if [ ! -z $1 ]
+then
+    docker run --rm -it $1 /bin/bash
+else
+    echo 'Please provide an image!'
+fi

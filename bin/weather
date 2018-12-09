@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# Display weather on the Command Line
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+if [ ! -z $1 ]
+then
+    curl -4 http://wttr.in/$1
+else
+    curl -4 http://wttr.in/Chania
+fi

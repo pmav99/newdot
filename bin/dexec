@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# [docker] exec into a running container
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+
+if [ ! -z $1 ]
+then
+    docker exec -it $1 /bin/bash
+else
+    echo 'Please provide a running container!'
+fi

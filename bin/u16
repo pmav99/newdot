@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# create a customized 16.04 container.
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+if [ ! -z $1 ]
+then
+    echo $@
+    docker run --rm $@ -it pmav99/u16:latest
+else
+    docker run --rm -it pmav99/u16:latest
+fi

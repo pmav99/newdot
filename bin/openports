@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# Watch the open ports on the current host.
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+watch -n 1 -d -x sudo netstat -lntpu

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# [docker] Mount a volume
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+if [ ! -z $1 ]
+then
+    docker run --rm -v $1:/volume -it pmav99/u14:latest
+else
+    echo 'Please provide a volume!'
+fi

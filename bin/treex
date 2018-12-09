@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# Custom tree command
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+tree ${1:-./} -C -v --dirsfirst -P "*.$1"

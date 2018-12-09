@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# A tree command that respects .gitgnore!
+# http://unix.stackexchange.com/a/291283/37579
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+git_ignore_file=$( git config --get core.excludesfile )
+if [[ -f "${git_ignore_file}" ]] ; then
+    tree -I"$( tr '\n' '\|' < "${git_ignore_file}" )" "${@}"
+else
+    tree "${@}"
+fi
