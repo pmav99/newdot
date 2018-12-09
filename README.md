@@ -53,3 +53,9 @@ git clone https://github.com/pmav99/newdot ~/.dotfiles
 cd .dotfiles
 stow zsh_remote
 ```
+
+# Awesome4
+
+For archlinux, this requires the following packages (aur):
+
+- lain-git
