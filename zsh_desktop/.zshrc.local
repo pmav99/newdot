@@ -46,14 +46,18 @@ SPACESHIP_PROMPT_ORDER=(
 # disable AUTO_CD
 unsetopt AUTO_CD
 
-# kubectl & minicube
+# kubernetes
 if [ $commands[minikube] ]; then
     alias mk="minikube"
 fi
 if [ $commands[kubectl] ]; then
     source <(kubectl completion zsh);
-    alias k="kubectl"
+    alias kc="kubectl"
 fi
+if [ $commands[kubeadm] ]; then
+    alias ka="kubeadm"
+fi
+
 
 # direnv
 if which direnv &> /dev/null; then
