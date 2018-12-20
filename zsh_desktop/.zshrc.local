@@ -64,17 +64,17 @@ if [ $commands[virsh] ]; then
 fi
 
 # direnv
-if which direnv &> /dev/null; then
+if [ $commands[direnv] ]; then
     eval "$(direnv hook zsh)"
 fi
 
 # NTFY notifications
-if which ntfy  &> /dev/null; then
+if [ $commands[ntfy] ]; then
     eval "$(ntfy shell-integration)"
 fi
 
 # ffind
-if which ffind &> /dev/null; then
+if [ $commands[ffind]; then
     alias ff='ffind'
 fi
 
@@ -152,7 +152,7 @@ gdrive_download () {
 }
 
 update_awesome_menu() {
-    if which xdg_menu &> /dev/null; then
+    if [ $commands[xdg_menu] ]; then
         rm -rf ~/.config/awesome/archmenu.lua
         xdg_menu --format awesome --root-menu /etc/xdg/menus/arch-applications.menu > ~/.config/awesome/archmenu.lua
     else
