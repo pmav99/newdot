@@ -58,6 +58,10 @@ if [ $commands[kubeadm] ]; then
     alias ka="kubeadm"
 fi
 
+# virsh
+if [ $commands[virsh] ]; then
+    alias v="virsh --connect qemu:///system"
+fi
 
 # direnv
 if which direnv &> /dev/null; then
@@ -75,7 +79,7 @@ if which ffind &> /dev/null; then
 fi
 
 # fzf
-if which fzf  &> /dev/null; then
+if [ $commands[fzf] ]; then
     source /usr/share/fzf/key-bindings.zsh
     source /usr/share/fzf/completion.zsh
     export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
