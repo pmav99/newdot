@@ -69,7 +69,7 @@ if [ $commands[ntfy] ]; then
 fi
 
 # ffind
-if [ $commands[ffind]; then
+if [ $commands[ffind] ]; then
     alias ff='ffind'
 fi
 
