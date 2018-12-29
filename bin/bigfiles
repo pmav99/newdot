@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Find big files in a directory
+#
+
+set -euo pipefail
+
+if (( $# < 1 )); then
+    echo 'usage: bigfiles DIRECTORY [NO_FILES]'
+    exit 1
+fi
+search_dir=$1
+if [[ ! -z $2 ]]; then
+    no_files=$2
+else
+    no_files=10
+fi
+find $search_dir -type f -exec du -ah {} + | sort -hr | head -n $no_files
+exit

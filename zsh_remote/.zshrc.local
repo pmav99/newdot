@@ -117,20 +117,6 @@ alias rmtex="find . -type f \( -name '*.aux' -o -name '*.glo' -o -name '*.idx' -
 
 ### Useful commands
 
-bigfiles() {
-    if (( $# < 1 )); then
-        echo 'usage: bigfiles DIRECTORY [NO_FILES]'
-        return 1
-    fi
-    search_dir=$1
-    if [[ ! -z $2 ]]; then
-        no_files=$2
-    else
-        no_files=10
-    fi
-    find $search_dir -type f -exec du -ah {} + | sort -hr | head -n $no_files
-}
-
 gdrive_download () {
     if (( $# < 2 )); then
         echo 'usage: gdrive_download url output_filename'
