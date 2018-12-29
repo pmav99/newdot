@@ -110,8 +110,6 @@ alias stop='sudo systemctl stop'
 ## Python aliases
 alias f="find ./ -name"
 alias qg='qgit --all'
-alias pw="pew workon"
-alias jn="jupyter notebook"
 alias rmpyc="find ./ -name '*.pyc' -delete"
 alias rmtex="find . -type f \( -name '*.aux' -o -name '*.glo' -o -name '*.idx' -o -name '*.log' -o -name '*.toc' -o -name '*.ist' -o -name '*.acn' -o -name '*.acr' -o -name '*.alg' -o -name '*.bbl' -o -name '*.blg' -o -name '*.dvi' -o -name '*.glg' -o -name '*.gls' -o -name '*.ilg' -o -name '*.ind' -o -name '*.lof' -o -name '*.lot' -o -name '*.maf' -o -name '*.mtc' -o -name '*.thm' -o -name '*.nav' -o -name '*.snm' -o -name '*.out' -o -name '*.synctex.gz' -o -name '*.mtc1' -name '*.bcf' -name '*.fls' -name '*.run.xml' \) -delete"
 
@@ -150,3 +148,18 @@ export PIP_WHEEL_DIR=~/.wheelhouse
 export PIP_FIND_LINKS=~/.wheelhouse
 export JAVA_OPTS="-Xmx2048M -Xms32M"
 export GOPATH=~/Prog/go
+
+
+# Ipython and Jupyter
+# Both projects have decided not to follow XDG.
+# To circumvent this we need to add some ENV variables
+# https://ipython.readthedocs.io/en/7.2.0/development/config.html#configuration-file-location
+# https://github.com/jupyter/notebook/issues/1355#
+export IPYTHONDIR=${XDG_CONFIG_HOME:-$HOME/.config}/ipython
+export JUPYTER_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/jupyter
+# JUPYTERLAB_DIR defines where jupyter extensions are being installed.
+export JUPYTERLAB_DIR=${JUPYTER_CONFIG_DIR}/lab/
+alias i2="ipython2"
+alias i3="ipython3"
+alias jn="jupyter notebook"
+alias jl="jupyter lab"
