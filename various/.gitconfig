@@ -31,6 +31,8 @@
     linenumber = true
 [github]
     user = pmav99
+[gitlab]
+    user = pmav99
 [apply]
     whitespace = nowarn
 [url "git@github.com:"]
