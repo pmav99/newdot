@@ -10,7 +10,7 @@
     diff = auto
     status = auto
     branch = auto
-	ui = true
+    ui =true
 [color "branch"]
     current = yellow reverse
     local = yellow
@@ -33,13 +33,11 @@
     user = pmav99
 [gitlab]
     user = pmav99
+[bitbucket]
+    user = pmav99
 [apply]
     whitespace = nowarn
-[url "git@github.com:"]
-	insteadOf = https://github.com/
-[url "git@bitbucket.org:"]
-	insteadOf = https://bitbucket.org/
-[url "git@gitlab.com:"]
-	insteadOf = https://gitlab.com/
 [pull]
-	rebase = true
+    rebase = true
+[include]
+    path = ~/.gitconfig.local
