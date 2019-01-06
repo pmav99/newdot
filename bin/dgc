@@ -6,7 +6,7 @@
 #
 
 #set -euxo pipefail
-set -euo pipefail
+set -o pipefail
 
 if [ ! -z  $1 ]
 then
