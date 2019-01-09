@@ -78,7 +78,6 @@ if [ $commands[fzf] ]; then
     source /usr/share/fzf/key-bindings.zsh
     source /usr/share/fzf/completion.zsh
     export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
-    alias vz'=gvim $(fzf)'
 fi
 
 # aliases
@@ -88,6 +87,9 @@ alias ls="${aliases[ls]:-ls} -v"    # XXX ZSH ONLY!!! Make ls use natural sort
 alias ping8='ping -c3 8.8.8.8'
 alias pingg='ping -c3 www.google.com'
 alias mmv='noglob zmv -W'
+
+alias v='vim'
+alias vv='v $(fzf)'
 
 alias gtar='tar pcvzf'
 alias btar='tar pcvjf'
