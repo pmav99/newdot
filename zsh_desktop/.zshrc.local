@@ -192,3 +192,10 @@ alias i2="ipython2"
 alias i3="ipython3"
 alias jn="jupyter notebook"
 alias jl="jupyter lab"
+
+# Setup proper console colors
+# https://github.com/chriskempson/base16-shell
+theme="base16-gruvbox-dark-hard.sh"
+if [ -f "${HOME}/.config/base16-shell/scripts/${theme}" ]; then
+    source "${HOME}/.config/base16-shell/scripts/${theme}"
+fi
