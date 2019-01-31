@@ -65,7 +65,7 @@ fi
 
 # virsh
 if [ $commands[virsh] ]; then
-    alias v="virsh --connect qemu:///system"
+    alias vrs="virsh --connect qemu:///system"
 fi
 
 # direnv
