@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# Move a file to /tmp
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+
+display_usage () {
+    echo 'Move a file to /tmp'
+    echo 'Usage: del <path>'
+}
+# Bail out early
+if [[ ( $# -gt 2 ) || ( $# -eq 0) ]]; then
+    display_usage
+    exit 1
+fi
+# Read CLI arguments using getopt
+cli_options=$(getopt -o th --long help -- "$@")
+[ $? -eq 0 ] || {
+    echo "Incorrect options provided"
+    exit 1
+}
+eval set -- "$cli_options"
+# default values
+extension='bak'
+path=''
+# Parse getopt arguments
+while true; do
+    case "$1" in
+        -h | --help )           display_usage
+                                exit 0
+                                ;;
+        --)                     shift;
+                                path=$1;
+                                break;;
+    esac
+done
+
+/usr/bin/mv -f "${path}" /tmp
