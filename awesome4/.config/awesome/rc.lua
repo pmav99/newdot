@@ -54,7 +54,7 @@ beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 -- common
 local modkey     = "Mod4"
 local altkey     = "Mod1"
-local terminal   = "terminator" or "urxvtc" or "xterm"
+local terminal   = "terminator" or "terminology" or "urxvtc" or "xterm"
 local editor     = os.getenv("EDITOR") or "nano" or "vi"
 editor_cmd = terminal .. " -e " .. editor
 
