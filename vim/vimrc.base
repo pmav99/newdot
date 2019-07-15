@@ -299,6 +299,12 @@ set nocompatible               " Be iMproved
 
 " Custom Autocmds {
 
+  " gopass {
+  augroup my_gopass
+    autocmd BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
+  augroup END
+  " } gopass
+
   " CursorLine {
     " Only show cursorline in the current window and in normal mode.
     augroup my_cursorline
