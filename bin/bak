@@ -32,7 +32,7 @@ while true; do
         -h | --help )           display_usage
                                 exit 0
                                 ;;
-        -t | --timestamp )      extension=$(/usr/bin/date +"%y%m%d_%H%M%S")
+        -t | --timestamp )      extension=$(/bin/date +"%y%m%d_%H%M%S")
                                 shift
                                 ;;
         --)                     shift;
@@ -41,4 +41,4 @@ while true; do
     esac
 done
 
-/usr/bin/cp -r -i "${path}" "${path}.${extension}"
+/bin/cp -r -i "${path}" "${path}.${extension}"
