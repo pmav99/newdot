@@ -1,6 +1,9 @@
 # Instructions
 
-In order to use this you need GNU stow.
+In order to use this you need GNU `stow`.
+
+Before running stow you probably want to create the directory structure beforehand so that stow
+creates symlinks only for files. More info [here](https://stackoverflow.com/a/4073999/592289)
 
 # Zsh
 
