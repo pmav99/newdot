@@ -94,6 +94,7 @@ fi
 alias ls="${aliases[ls]:-ls} -v"    # XXX ZSH ONLY!!! Make ls use natural sort
 #alias sudo='sudo '                  # Let the aliases work with sudo too!
 
+alias ping1='ping -c3 1.1.1.1'
 alias ping8='ping -c3 8.8.8.8'
 alias pingg='ping -c3 www.google.com'
 alias mmv='noglob zmv -W'
@@ -123,9 +124,13 @@ alias status='systemctl -l status'
 alias stop='sudo systemctl stop'
 
 # docker
-alias dc='docker-compose'
-alias dm='docker-machine'
-alias dockviz='docker run --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz images -t'
+alias dc='docker'
+alias dcc='docker container'
+alias dci='docker image'
+alias dcv='docker volume'
+
+alias dcmp='docker-compose'
+alias dmch='docker-machine'
 
 ## Python aliases
 alias f="find ./ -name"
