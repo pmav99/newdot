@@ -3,6 +3,7 @@ set -o vi
 
 export EDITOR=vim
 export PS1="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ "
+export PATH="~/.local/bin":${PATH}
 
 #-------------------------------------------------------------
 # The 'ls' family (this assumes you use a recent GNU ls).
