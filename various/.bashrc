@@ -81,6 +81,7 @@ alias dc='docker'
 alias dcc='docker container'
 alias dci='docker image'
 alias dcv='docker volume'
+alias dcmp='docker-compose'
 
 function x()      # Handy Extract Program
 {
