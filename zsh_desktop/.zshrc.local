@@ -128,9 +128,8 @@ alias dc='docker'
 alias dcc='docker container'
 alias dci='docker image'
 alias dcv='docker volume'
-
+alias dcn='docker network'
 alias dcmp='docker-compose'
-alias dmch='docker-machine'
 
 ## Python aliases
 alias f="find ./ -name"

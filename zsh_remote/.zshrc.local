@@ -33,7 +33,7 @@ SPACESHIP_PROMPT_ORDER=(
   pyenv         # Pyenv section
   #dotnet        # .NET section
   #ember         # Ember.js section
-  #kubecontext   # Kubectl context section
+  kubecontext   # Kubectl context section
   exec_time     # Execution time
   line_sep      # Line break
   #battery       # Battery level and status
@@ -63,6 +63,11 @@ if [ $commands[kubeadm] ]; then
     alias ka="kubeadm"
 fi
 
+# virsh
+if [ $commands[virsh] ]; then
+    alias vrs="virsh --connect qemu:///system"
+fi
+
 # direnv
 if [ $commands[direnv] ]; then
     eval "$(direnv hook zsh)"
@@ -89,6 +94,7 @@ fi
 alias ls="${aliases[ls]:-ls} -v"    # XXX ZSH ONLY!!! Make ls use natural sort
 #alias sudo='sudo '                  # Let the aliases work with sudo too!
 
+alias ping1='ping -c3 1.1.1.1'
 alias ping8='ping -c3 8.8.8.8'
 alias pingg='ping -c3 www.google.com'
 alias mmv='noglob zmv -W'
@@ -111,8 +117,17 @@ alias reload='sudo systemctl reload'
 alias restart='sudo systemctl restart'
 alias start='sudo systemctl start'
 alias sctl='sudo systemctl'
+alias usctl='systemctl --user'
 alias status='systemctl -l status'
 alias stop='sudo systemctl stop'
+
+# docker
+alias dc='docker'
+alias dcc='docker container'
+alias dci='docker image'
+alias dcv='docker volume'
+alias dcn='docker network'
+alias dcmp='docker-compose'
 
 ## Python aliases
 alias f="find ./ -name"
@@ -120,15 +135,6 @@ alias qg='qgit --all'
 alias rmpyc="find ./ -name '*.pyc' -delete"
 alias add_pygitignore='wget -O "./.gitignore" https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore'
 alias rmtex="find . -type f \( -name '*.aux' -o -name '*.glo' -o -name '*.idx' -o -name '*.log' -o -name '*.toc' -o -name '*.ist' -o -name '*.acn' -o -name '*.acr' -o -name '*.alg' -o -name '*.bbl' -o -name '*.blg' -o -name '*.dvi' -o -name '*.glg' -o -name '*.gls' -o -name '*.ilg' -o -name '*.ind' -o -name '*.lof' -o -name '*.lot' -o -name '*.maf' -o -name '*.mtc' -o -name '*.thm' -o -name '*.nav' -o -name '*.snm' -o -name '*.out' -o -name '*.synctex.gz' -o -name '*.mtc1' -name '*.bcf' -name '*.fls' -name '*.run.xml' \) -delete"
-
-
-# docker
-alias dc='docker'
-alias dcc='docker container'
-alias dci='docker image'
-alias dcv='docker volume'
-alias dcmp='docker-compose'
-alias dmch='docker-machine'
 
 ### Useful commands
 
