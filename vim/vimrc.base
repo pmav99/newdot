@@ -167,7 +167,9 @@ set nocompatible               " Be iMproved
 " Ale Config }
 
 " Theme {
-    set termguicolors
+    if v:version >= 800
+        set termguicolors
+    endif
     set background=dark
     colorscheme gruvbox
     let g:gruvbox_italic = 1
