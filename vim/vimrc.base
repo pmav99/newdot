@@ -90,11 +90,13 @@ set nocompatible               " Be iMproved
   " fzr }
 
   " LSP (Language Server Protocol) {
-    Plug 'prabirshrestha/async.vim'"
-    Plug 'prabirshrestha/asyncomplete.vim'"
-    Plug 'prabirshrestha/asyncomplete-lsp.vim'
-    Plug 'prabirshrestha/asyncomplete-buffer.vim'
-    Plug 'prabirshrestha/vim-lsp'"
+    if v:version >= 800
+        Plug 'prabirshrestha/async.vim'"
+        Plug 'prabirshrestha/asyncomplete.vim'"
+        Plug 'prabirshrestha/asyncomplete-lsp.vim'
+        Plug 'prabirshrestha/asyncomplete-buffer.vim'
+        Plug 'prabirshrestha/vim-lsp'"
+    endif
     "Plug 'w0rp/ale'
 
   " LSP (Language Server Protocol) }
