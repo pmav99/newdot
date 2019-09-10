@@ -53,6 +53,7 @@ then you must specify the user and ip. E.g.
 def parse_arguments():
     parser = argparse.ArgumentParser(description="""A wrapper around `rsync`.""", prog=__file__, epilog=epilog)
     parser.add_argument('-p', dest='port', action='store', default=22, help='The port sshd runs on')
+    parser.add_argument('-y', '--yes', dest='user_confirm', action='store_false', help='Don\'t ask for confirmation')
     parser.add_argument('-n', '--dry-run', action="store_const", dest='dry_run', const="--dry-run", default="", help='perform a trial run with no changes made')
     parser.add_argument('source', action='store', help='The source directory')
     parser.add_argument('destination', action='store', help='The destination directory')
@@ -73,10 +74,13 @@ def main():
     command = "rsync {dry_run} {default_rsync_args} {extra} {ssh} {source} {destination}"
     command = command.format(ssh=ssh, default_rsync_args=DEFAULT_RSYNC_ARGS, **options.__dict__)
 
-    print("The following command will be executed:\n\n%s\n" % command)
-    value = input("Press ENTER to continue or any other key to abort:\n")
-    if not value:
+    if not options.user_confirm:
         subprocess.check_call(shlex.split(command))
+    else:
+        print("The following command will be executed:\n\n%s\n" % command)
+        value = input("Press ENTER to continue or any other key to abort:\n")
+        if not value:
+            subprocess.check_call(shlex.split(command))
 
 
 if __name__ == "__main__":
