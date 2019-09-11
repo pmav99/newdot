@@ -45,6 +45,7 @@ set nocompatible               " Be iMproved
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-surround'
     Plug 'Konfekt/FastFold'
+    Plug 'pedrohdz/vim-yaml-folds'
 
     " LimeLight {
       Plug 'junegunn/goyo.vim'
