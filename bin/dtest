@@ -6,9 +6,16 @@
 #set -euxo pipefail
 set -euo pipefail
 
-if [ ! -z $1 ]
+proxy_vars='-e ftp_proxy -e http_proxy -e https_proxy -e no_proxy -e rsync_proxy -e FTP_PROXY -e HTTP_PROXY -e HTTPS_PROXY -e NO_PROXY -e RSYNC_PROXY'
+
+if [ -z $1 ]
 then
-    docker run --rm -it $1 /bin/bash
+    echo 'Usage: dtest IMG [CMD]'
+    echo
+    echo 'This is the equivalent of "docker run --rm -it <IMG> <CMD>"'
+    echo 'If CMD is not specified, it defaults to /bin/bash'
 else
-    echo 'Please provide an image!'
+    image="${1}"
+    cmd="${2:-/bin/bash}"
+    docker run --rm -it ${proxy_vars} ${image} "${cmd}"
 fi
