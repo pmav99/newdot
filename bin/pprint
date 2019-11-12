@@ -18,6 +18,8 @@ for i; do
     case $i in
         *.xml)  c=(xmllint --format);;
         *.json) c=(python -m json.tool);;
+        *.yml)  c=(yamllint -f);;
+        *.yaml) c=(yamllint -f);;
         *)      echo "$0: unrecognized file extension: \`$i'" >&2
                 continue;;
     esac
