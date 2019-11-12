@@ -6,7 +6,20 @@
 #set -euxo pipefail
 set -euo pipefail
 
-(($#)) || exit
+
+display_usage () {
+    echo 'A pretty print command. Works with xml and json.'
+    echo 'Usage: pprint <path>'
+}
+
+# Bail out early
+if [[ ( $# -gt 1 ) || ( $# -eq 0) ]]; then
+    display_usage
+    exit 1
+fi
+
+e=''
+
 for i; do
     c=''
 
