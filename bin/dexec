@@ -9,7 +9,8 @@ set -euo pipefail
 
 if [ ! -z $1 ]
 then
-    docker exec -it $1 /bin/bash
+    cmd="${2:-'/bin/bash'}"
+    docker exec -it $1 "${cmd}"
 else
     echo 'Please provide a running container!'
 fi
