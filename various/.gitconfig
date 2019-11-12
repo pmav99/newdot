@@ -1,46 +1,46 @@
 [user]
-    email = pmav99@gmail.com
-    name = Panos Mavrogiorgos
+  email = pmav99@gmail.com
+  name = Panos Mavrogiorgos
 [push]
-    default = simple
+  default = simple
 [diff]
-    algorithm = patience
-    tool = gvimdiff
+  algorithm = patience
+  tool = gvimdiff
 [color]
-    diff = auto
-    status = auto
-    branch = auto
-    ui =true
+  diff = auto
+  status = auto
+  branch = auto
+  ui =true
 [color "branch"]
-    current = yellow reverse
-    local = yellow
-    remote = green
+  current = yellow reverse
+  local = yellow
+  remote = green
 [color "diff"]
-    meta = yellow bold
-    frag = magenta bold
-    old = red bold
-    new = green bold
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
 [color "status"]
-    added = yellow
-    changed = green
-    untracked = cyan
+  added = yellow
+  changed = green
+  untracked = cyan
 [core]
-    autocrlf = input
-    editor = vim
+  autocrlf = input
+  editor = vim
 [grep]
-    linenumber = true
+  linenumber = true
 [github]
-    user = pmav99
+  user = pmav99
 [gitlab]
-    user = pmav99
+  user = pmav99
 [bitbucket]
-    user = pmav99
+  user = pmav99
 [apply]
-    whitespace = nowarn
+  whitespace = nowarn
 [pull]
-    rebase = true
+  rebase = true
 [include]
-    path = ~/.gitconfig.local
+  path = ~/.gitconfig.local
 [mergetool]
   prompt = false
 [merge]
@@ -49,7 +49,7 @@
   lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
   lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
 [gui]
-	fontui = -family \"Noto Sans\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
-	fontdiff = -family \"Liberation Mono\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
+  fontui = -family \"Noto Sans\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
+  fontdiff = -family \"Liberation Mono\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
 [credential]
-  helper = cache --timeout 14400
+  helper = cache --timeout 57600

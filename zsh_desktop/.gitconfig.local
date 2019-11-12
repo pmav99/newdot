@@ -1,6 +1,7 @@
+# vi: set ft=gitconfig
 [url "git@github.com:"]
-    insteadOf = https://github.com/
+  insteadOf = https://github.com/
 [url "git@bitbucket.org:"]
-    insteadOf = https://bitbucket.org/
+  insteadOf = https://bitbucket.org/
 [url "git@gitlab.com:"]
-    insteadOf = https://gitlab.com/
+  insteadOf = https://gitlab.com/
