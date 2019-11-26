@@ -5,6 +5,11 @@ export EDITOR=vim
 export PS1="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ "
 export PATH="~/.local/bin":${PATH}
 
+alias gco='git checkout'
+alias gs='git stash'
+alias gsa='git stash apply'
+alias gsx='git stash drop'
+
 #-------------------------------------------------------------
 # The 'ls' family (this assumes you use a recent GNU ls).
 #-------------------------------------------------------------
