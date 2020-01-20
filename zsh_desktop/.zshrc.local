@@ -90,6 +90,12 @@ if [ $commands[fzf] ]; then
     export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
 fi
 
+if [ $commands[ansible] ]; then
+  alias apng='ansible -mping'
+  alias acmd='ansible -mcommand'
+  alias ashl='ansible -mshell'
+fi
+
 # aliases
 alias ls="${aliases[ls]:-ls} -v"    # XXX ZSH ONLY!!! Make ls use natural sort
 #alias sudo='sudo '                  # Let the aliases work with sudo too!
