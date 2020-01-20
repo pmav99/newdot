@@ -137,7 +137,7 @@ alias qg='qgit --all'
 alias rmpyc="find ./ -name '*.pyc' -delete"
 alias rmtex="find . -type f \( -name '*.aux' -o -name '*.glo' -o -name '*.idx' -o -name '*.log' -o -name '*.toc' -o -name '*.ist' -o -name '*.acn' -o -name '*.acr' -o -name '*.alg' -o -name '*.bbl' -o -name '*.blg' -o -name '*.dvi' -o -name '*.glg' -o -name '*.gls' -o -name '*.ilg' -o -name '*.ind' -o -name '*.lof' -o -name '*.lot' -o -name '*.maf' -o -name '*.mtc' -o -name '*.thm' -o -name '*.nav' -o -name '*.snm' -o -name '*.out' -o -name '*.synctex.gz' -o -name '*.mtc1' -name '*.bcf' -name '*.fls' -name '*.run.xml' \) -delete"
 alias add_pygitignore='wget -O "./.gitignore" https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore'
-alias add_envrc='echo layout python-venv python > .envrc'
+alias add_envrc='echo layout python-venv python3 > .envrc'
 
 ### Useful commands
 
