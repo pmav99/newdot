@@ -58,6 +58,13 @@ fi
 if [ $commands[kubectl] ]; then
     source <(kubectl completion zsh);
     alias kc="kubectl"
+    alias kcg="kubectl get"
+    alias kcl="kubectl list"
+    alias kcd="kubectl describe"
+    alias kkc="kubectl --namespace kube-system"
+    alias kkcg="kubectl --namespace kube-system get"
+    alias kkcl="kubectl --namespace kube-system list"
+    alias kkcd="kubectl --namespace kube-system describe"
 fi
 if [ $commands[kubeadm] ]; then
     alias ka="kubeadm"
