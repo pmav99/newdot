@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# Ping a host using ansible
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+
+display_usage () {
+    echo 'Run a command on a host (no shell expansion!)'
+    echo 'Usage: acmd <host1,host2,...,hostN> <"cat /etc/fstab">'
+}
+# Bail out early
+if [[ ( $# -gt 2 ) || ( $# -eq 0) ]]; then
+    display_usage
+    exit 1
+fi
+# Read CLI arguments using getopt
+cli_options=$(getopt -o th --long help -- "$@")
+[ $? -eq 0 ] || {
+    echo "Incorrect options provided"
+    exit 1
+}
+eval set -- "$cli_options"
+# default values
+hosts=''
+cmd=''
+# Parse getopt arguments
+while true; do
+    case "$1" in
+        -h | --help )           display_usage
+                                exit 0
+                                ;;
+        --)                     shift;
+                                hosts=$1;
+                                cmd=$2;
+                                break;;
+    esac
+done
+
+ansible -mcommand "${hosts}" -a "${cmd}"

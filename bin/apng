@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+# Ping a host using ansible
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+
+display_usage () {
+    echo 'Ping a host using ansible'
+    echo 'Usage: apng <host1,host2,...,hostN>'
+}
+# Bail out early
+if [[ ( $# -gt 1 ) || ( $# -eq 0) ]]; then
+    display_usage
+    exit 1
+fi
+# Read CLI arguments using getopt
+cli_options=$(getopt -o th --long help -- "$@")
+[ $? -eq 0 ] || {
+    echo "Incorrect options provided"
+    exit 1
+}
+eval set -- "$cli_options"
+# default values
+hosts=''
+# Parse getopt arguments
+while true; do
+    case "$1" in
+        -h | --help )           display_usage
+                                exit 0
+                                ;;
+        --)                     shift;
+                                hosts=$1;
+                                break;;
+    esac
+done
+
+ansible -mping "${hosts}"
