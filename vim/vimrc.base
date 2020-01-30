@@ -183,7 +183,9 @@ set nocompatible               " Be iMproved
   elseif has("gui_win32")
       set guifont=Consolas:h14
   else
-      set guifont=Hack\ Nerd\ Font\ 12
+      set guifont=Hack\ Nerd\ Font\ 12,
+      set guifont=Ubuntu\ Mono\ 12
+      set guifont=Fira\ Code\ 11
   end
 " Font }
 
