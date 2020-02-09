@@ -6,4 +6,6 @@
 #set -euxo pipefail
 set -euo pipefail
 
-python3 -m http.server $1 || python2 -m SimpleHTTPServer $1
+port="${1:-8000}"
+
+python3 -m http.server "${port}" || python2 -m SimpleHTTPServer "${port}"
