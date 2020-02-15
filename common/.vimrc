@@ -47,6 +47,8 @@ set nocompatible               " Be iMproved
     Plug 'Konfekt/FastFold'
     Plug 'pedrohdz/vim-yaml-folds'
 
+    Plug 'zah/nim.vim'
+
     " LimeLight {
       Plug 'junegunn/goyo.vim'
       Plug 'junegunn/limelight.vim'

@@ -6,7 +6,7 @@
 #set -euxo pipefail
 set -euo pipefail
 
-
+e=0
 display_usage () {
     echo 'A pretty print command. Works with xml and json.'
     echo 'Usage: pprint <path>'

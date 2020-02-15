@@ -40,7 +40,7 @@
 [pull]
   rebase = true
 [include]
-  path = ~/.gitconfig.local
+  path = ~/.gitconfig.ssh
 [mergetool]
   prompt = false
 [merge]

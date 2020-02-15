@@ -42,7 +42,7 @@ set -o vi
 
 export EDITOR=vim
 export PS1="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ "
-export PATH="~/.local/bin":${PATH}
+export PATH="~/.local/my_bin":"~/.local/bin":${PATH}
 
 alias gco='git checkout'
 alias gs='git stash'
@@ -151,3 +151,5 @@ function x()      # Handy Extract Program
 }
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+command -v gvim >/dev/null 2>&1 || alias gvim='vim'

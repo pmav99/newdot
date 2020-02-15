@@ -5,6 +5,14 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# Setup PATH
+# https://superuser.com/a/598924/258915
+typeset -U path
+path=($HOME/.local/my_bin
+      $HOME/.local/bin
+      $path)
+export PATH
+
 # Spaceship theme customization
 SPACESHIP_HOST_SHOW='always'
 SPACESHIP_USER_SHOW='always'
