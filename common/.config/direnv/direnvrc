@@ -1,8 +1,6 @@
-direnv_layout_dir() {
-  echo "${direnv_layout_dir:-$PWD/.direnv}"
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
 }
-
-
 layout_python-venv() {
     local python=${1:-python3}
     [[ $# -gt 0 ]] && shift
@@ -23,5 +21,7 @@ layout_python-venv() {
         log_status "no venv found; creating $VIRTUAL_ENV"
         "$python" -m venv "$VIRTUAL_ENV"
     fi
-    PATH_add "$VIRTUAL_ENV/bin"
+
+    PATH="${VIRTUAL_ENV}/bin:${PATH}"
+    export PATH
 }
