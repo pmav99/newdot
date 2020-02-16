@@ -130,6 +130,11 @@ alias dcn='docker network'
 alias dcv='docker volume'
 alias dcmp='docker-compose'
 
+# if gvim does not exist (i.e. in a server) use vim
+if ! [ -x "$(command -v gvim)" ]; then
+  alias gvim='vim'
+fi
+
 # direnv
 if [ -x "$(command -v direnv)" ]; then
     eval "$(direnv hook bash)"
@@ -171,5 +176,3 @@ function x()      # Handy Extract Program
         echo "'$1' is not a valid file!"
     fi
 }
-
-command -v gvim >/dev/null 2>&1 || alias gvim='vim'
