@@ -131,12 +131,12 @@ alias dcv='docker volume'
 alias dcmp='docker-compose'
 
 # direnv
-if [ command -v direnv >/dev/null 2>&1 ]; then
+if [ -x "$(command -v direnv)" ]; then
     eval "$(direnv hook bash)"
 fi
 
 # NTFY notifications
-if [ command -v ntfy >/dev/null 2>&1 ]; then
+if [ -x "$(command -v ntfy)" ]; then
     eval "$(ntfy shell-integration)"
 fi
 
