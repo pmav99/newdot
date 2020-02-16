@@ -176,3 +176,13 @@ function x()      # Handy Extract Program
         echo "'$1' is not a valid file!"
     fi
 }
+
+# Fix prompt for bash
+# https://github.com/direnv/direnv/wiki/Python#bash
+show_virtual_env() {
+  if [[ -n "$VIRTUAL_ENV" && -n "$DIRENV_DIR" ]]; then
+    echo "($(basename $VIRTUAL_ENV))"
+  fi
+}
+export -f show_virtual_env
+PS1='$(show_virtual_env)'$PS1
