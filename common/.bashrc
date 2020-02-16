@@ -140,6 +140,16 @@ if [ -x "$(command -v ntfy)" ]; then
     eval "$(ntfy shell-integration)"
 fi
 
+# fzf
+if [ -x "$(command -v fzf)" ]; then
+  source /usr/share/bash-completion/completions/fzf
+  source /usr/share/doc/fzf/examples/key-bindings.bash
+  #source /usr/share/fzf/key-bindings.zsh
+  #source /usr/share/fzf/completion.zsh
+  export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
+  alias vv='vim $(fzf)'
+fi
+
 function x()      # Handy Extract Program
 {
     if [ -f $1 ] ; then
@@ -161,7 +171,5 @@ function x()      # Handy Extract Program
         echo "'$1' is not a valid file!"
     fi
 }
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 command -v gvim >/dev/null 2>&1 || alias gvim='vim'
