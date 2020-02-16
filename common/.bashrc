@@ -39,10 +39,11 @@ fi
 # Use vim keybindings
 set -o vi
 
-
 export EDITOR=vim
 export PS1="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ "
 export PATH="${HOME}"/.local/my_bin:"${HOME}"/.local/bin:${PATH}
+
+alias v='vim'
 
 alias gco='git checkout'
 alias gs='git stash'
@@ -125,6 +126,7 @@ alias stop='sudo systemctl stop'
 alias dc='docker'
 alias dcc='docker container'
 alias dci='docker image'
+alias dcn='docker network'
 alias dcv='docker volume'
 alias dcmp='docker-compose'
 
