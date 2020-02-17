@@ -6,4 +6,4 @@
 #set -euxo pipefail
 set -euo pipefail
 
-tree ${1:-./} -C -v --dirsfirst -P '*.tex|*.html|*.rest|*.md|*.rst|*.txt'
+tree "${1:-./}" -C -v --dirsfirst -P '*.tex|*.html|*.rest|*.md|*.rst|*.txt'
