@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+
+set -euo pipefail
+
+while true; do
+  nvsmi ls;
+  sleep 0.1
+done
