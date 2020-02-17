@@ -6,4 +6,4 @@
 #set -euxo pipefail
 set -euo pipefail
 
-tree ${1:-./} -C -v --dirsfirst -P '*.ini|*.cfg|*.conf|*.json|*.html|*.jinja|*.j2|*.toml|*.yml|*.yaml' -I '*__pycache__|*.pyc'
+tree "${1:-./}" -C -v --dirsfirst -P '*.ini|*.cfg|*.conf|*.json|*.html|*.jinja|*.j2|*.toml|*.yml|*.yaml' -I '*__pycache__|*.pyc'

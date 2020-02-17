@@ -12,14 +12,14 @@ display_usage () {
 }
 
 # Bail out early
-if [[ ( $# -gt 2 ) || ( $# -eq 0) ]]; then
+if [[ ( ${#} -gt 2 ) || ( ${#} -eq 0) ]]; then
     display_usage
     exit 1
 fi
 
 # Read CLI arguments using getopt
-cli_options=$(getopt -o th --long help -- "$@")
-[ $? -eq 0 ] || {
+cli_options=$(getopt -o th --long help -- "${@}")
+[ "${?}" -eq 0 ] || {
     echo "Incorrect options provided"
     exit 1
 }

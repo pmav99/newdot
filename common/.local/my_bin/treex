@@ -6,4 +6,4 @@
 #set -euxo pipefail
 set -euo pipefail
 
-tree ${1:-./} -C -v --dirsfirst -P "*.$1"
+tree "${1:-./}" -C -v --dirsfirst -P "*.$1"
