@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#
+# Open an HTTP server on the specified port (defaults to 8000)
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+port="${1:-8000}"
+
+python3 -m http.server "${port}" || python2 -m SimpleHTTPServer "${port}"

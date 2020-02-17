@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#
+
+set -xeuo pipefail
+
+find ./ -name '*.pyc' -delete;
+find ./ -name '__pycache__' -delete;

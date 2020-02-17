@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# A pretty print command. Works with xml and json.
+#
+
+#set -euxo pipefail
+set -euo pipefail
+
+e=0
+display_usage () {
+    echo 'A pretty print command. Works with xml and json.'
+    echo 'Usage: pprint <path>'
+}
+
+# Bail out early
+if [[ ( $# -gt 1 ) || ( $# -eq 0) ]]; then
+    display_usage
+    exit 1
+fi
+
+e=''
+
+for i; do
+    c=''
+
+    if [[ ! -r $i ]]; then
+        echo "$0: file is unreadable: \`$i'" >&2
+        continue
+    fi
+
+    case $i in
+        *.xml)  c=(xmllint --format);;
+        *.json) c=(python -m json.tool);;
+        *.yml)  c=(yamllint -f);;
+        *.yaml) c=(yamllint -f);;
+        *)      echo "$0: unrecognized file extension: \`$i'" >&2
+                continue;;
+    esac
+
+    command "${c[@]}" "$i"
+    ((e = e || $?))
+done
+return "$e"

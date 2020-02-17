@@ -5,6 +5,14 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# Setup PATH
+# https://superuser.com/a/598924/258915
+typeset -U path
+path=($HOME/.local/my_bin
+      $HOME/.local/bin
+      $path)
+export PATH
+
 # Spaceship theme customization
 SPACESHIP_HOST_SHOW='always'
 SPACESHIP_USER_SHOW='true'
@@ -58,6 +66,13 @@ fi
 if [ $commands[kubectl] ]; then
     source <(kubectl completion zsh);
     alias kc="kubectl"
+    alias kcg="kubectl get"
+    alias kcl="kubectl list"
+    alias kcd="kubectl describe"
+    alias kkc="kubectl --namespace kube-system"
+    alias kkcg="kubectl --namespace kube-system get"
+    alias kkcl="kubectl --namespace kube-system list"
+    alias kkcd="kubectl --namespace kube-system describe"
 fi
 if [ $commands[kubeadm] ]; then
     alias ka="kubeadm"
@@ -88,12 +103,6 @@ if [ $commands[fzf] ]; then
     source /usr/share/fzf/key-bindings.zsh
     source /usr/share/fzf/completion.zsh
     export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
-fi
-
-if [ $commands[ansible] ]; then
-  alias apng='ansible -mping'
-  alias acmd='ansible -mcommand'
-  alias ashl='ansible -mshell'
 fi
 
 # aliases
@@ -140,7 +149,6 @@ alias dcmp='docker-compose'
 ## Python aliases
 alias f="find ./ -name"
 alias qg='qgit --all'
-alias rmpyc="find ./ -name '*.pyc' -delete"
 alias rmtex="find . -type f \( -name '*.aux' -o -name '*.glo' -o -name '*.idx' -o -name '*.log' -o -name '*.toc' -o -name '*.ist' -o -name '*.acn' -o -name '*.acr' -o -name '*.alg' -o -name '*.bbl' -o -name '*.blg' -o -name '*.dvi' -o -name '*.glg' -o -name '*.gls' -o -name '*.ilg' -o -name '*.ind' -o -name '*.lof' -o -name '*.lot' -o -name '*.maf' -o -name '*.mtc' -o -name '*.thm' -o -name '*.nav' -o -name '*.snm' -o -name '*.out' -o -name '*.synctex.gz' -o -name '*.mtc1' -name '*.bcf' -name '*.fls' -name '*.run.xml' \) -delete"
 alias add_pygitignore='wget -O "./.gitignore" https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore'
 alias add_envrc='echo layout python-venv python3 > .envrc'
@@ -221,3 +229,4 @@ fi
 if [ $commands[gnome-screensaver-command] ]; then
   alias lock='gnome-screensaver-command -l'
 fi
+
