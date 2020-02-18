@@ -4,6 +4,6 @@
 set -euo pipefail
 
 while true; do
-  nvsmi ls;
+  nvsmi ls "${@}";
   sleep 0.1
 done
