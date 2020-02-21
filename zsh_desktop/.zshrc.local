@@ -100,9 +100,17 @@ fi
 
 # fzf
 if [ $commands[fzf] ]; then
+  export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
+  alias vv='vim $(fzf)'
+  if [ -f /usr/share/fzf/key-bindings.zsh ]; then
     source /usr/share/fzf/key-bindings.zsh
     source /usr/share/fzf/completion.zsh
-    export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
+  elif [ -f "${HOME}"/.fzf/shell/key-bindings.zsh ]; then
+    source "${HOME}"/.fzf/shell/key-bindings.zsh
+    source "${HOME}"/.fzf/shell/completion.zsh
+  else
+    echo "couldn't find fzf files"
+  fi
 fi
 
 # aliases
