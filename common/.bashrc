@@ -146,13 +146,17 @@ if [ -x "$(command -v ntfy)" ]; then
 fi
 
 # fzf
-if [ -x "$(command -v fzf)" ]; then
-  source /usr/share/bash-completion/completions/fzf
-  source /usr/share/doc/fzf/examples/key-bindings.bash
-  #source /usr/share/fzf/key-bindings.zsh
-  #source /usr/share/fzf/completion.zsh
+if [ $commands[fzf] ]; then
   export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
-  alias vv='vim $(fzf)'
+  if [ -f /usr/share/fzf/key-bindings.bash ]; then
+    source /usr/share/fzf/key-bindings.bash
+    source /usr/share/fzf/completion.bash
+  elif [ -f "${HOME}"/.fzf/shell/key-bindings.bash ]; then
+    source "${HOME}"/.fzf/shell/key-bindings.bash
+    source "${HOME}"/.fzf/shell/completion.bash
+  else
+    echo "couldn't find fzf files"
+  fi
 fi
 
 function x()      # Handy Extract Program
