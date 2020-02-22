@@ -133,6 +133,7 @@ alias dcmp='docker-compose'
 # if gvim does not exist (i.e. in a server) use vim
 if ! [ -x "$(command -v gvim)" ]; then
   alias gvim='vim'
+  alias gvimdiff='vimdiff'
 fi
 
 # direnv
