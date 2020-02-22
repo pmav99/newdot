@@ -224,7 +224,7 @@ set nocompatible               " Be iMproved
   set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
   set backspace=indent,eol,start  " backspace for dummies
   set history=1000            " Store a ton of history (default is 20)
-  set shell=/bin/zsh
+  "set shell=/bin/zsh
   set fillchars=diff:⣿,vert:│
   set autowrite               " Autosave files
   set title
