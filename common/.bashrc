@@ -119,7 +119,7 @@ alias restart='sudo systemctl restart'
 alias start='sudo systemctl start'
 alias sctl='sudo systemctl'
 alias usctl='systemctl --user'
-alias status='systemctl -l status'
+alias status='sudo systemctl -l status'
 alias stop='sudo systemctl stop'
 
 # docker
