@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 
-set -xeuo pipefail
+set -euo pipefail
 
 display_usage () {
     echo 'Display the contents of an SSL certificate as text'
