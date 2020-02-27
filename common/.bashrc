@@ -149,9 +149,13 @@ fi
 # fzf
 if [ $commands[fzf] ]; then
   export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
+  alias vv='gvim $(fzf)'
   if [ -f /usr/share/fzf/key-bindings.bash ]; then
     source /usr/share/fzf/key-bindings.bash
     source /usr/share/fzf/completion.bash
+  elif [ -f /usr/share/bash-completion/completions/fzf ]; then
+    source /usr/share/bash-completion/completions/fzf
+    source /usr/share/doc/fzf/examples/key-bindings.bash
   elif [ -f "${HOME}"/.fzf/shell/key-bindings.bash ]; then
     source "${HOME}"/.fzf/shell/key-bindings.bash
     source "${HOME}"/.fzf/shell/completion.bash
