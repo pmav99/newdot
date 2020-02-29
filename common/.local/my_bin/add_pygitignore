@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+
+set -euo pipefail
+
+wget -O "./.gitignore" https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore
