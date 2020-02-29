@@ -150,6 +150,7 @@ fi
 if [ $commands[fzf] ]; then
   export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
   alias vv='gvim $(fzf)'
+  export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
   if [ -f /usr/share/fzf/key-bindings.bash ]; then
     source /usr/share/fzf/key-bindings.bash
     source /usr/share/fzf/completion.bash
