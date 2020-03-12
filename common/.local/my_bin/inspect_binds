@@ -15,3 +15,4 @@ if [ "${container_name}" = "-" ]; then
 fi
 
 docker inspect "${container_name}" | jq .[].HostConfig.Binds
+docker inspect "${container_name}" | jq .[].HostConfig.Mounts
