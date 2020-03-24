@@ -54,3 +54,5 @@
   fontdiff = -family \"Liberation Mono\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
 [credential]
   helper = cache --timeout 57600
+[gpg]
+  program = gpg2
