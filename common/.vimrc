@@ -109,7 +109,9 @@ set nocompatible               " Be iMproved
   " LSP (Language Server Protocol) }
 
   " Python {
+    Plug 'tmhedberg/SimpylFold',              { 'for': 'python' }
     Plug 'tmhedberg/SimpylFold',    { 'for': 'python' }
+    Plug 'jeetsukumaran/vim-pythonsense',     { 'for': 'python' }
   " Python }
 
   call plug#end()
