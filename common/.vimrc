@@ -63,6 +63,10 @@ set nocompatible               " Be iMproved
 
 " Various }
 
+  " Various {
+    Plug 'jiangmiao/auto-pairs'
+  " Various }
+
   " Polyglot {
     Plug 'sheerun/vim-polyglot'
     let g:polyglot_disabled = ['python']
