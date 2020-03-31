@@ -91,6 +91,10 @@ set nocompatible               " Be iMproved
 
   " LSP (Language Server Protocol) }
 
+  " Go {
+    Plug 'fatih/vim-go',    { 'for': 'go', 'do': ':GoInstallBinaries' }
+  " Go }
+
   " Python {
     Plug 'jeetsukumaran/vim-pythonsense',     { 'for': 'python' }
   " Python }
@@ -486,6 +490,14 @@ set nocompatible               " Be iMproved
       autocmd FileType make :setlocal noexpandtab
     augroup END
   " Makefile }
+
+  " Go {
+    augroup my_go
+      autocmd!
+      " Use tabs instead of spaces
+      autocmd FileType go :setlocal noet ci pi sts=0 sw=4 ts=4
+    augroup END
+  " Go }
 
   " Python {
     augroup my_python
