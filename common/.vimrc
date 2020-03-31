@@ -49,22 +49,6 @@ set nocompatible               " Be iMproved
 
     Plug 'zah/nim.vim'
 
-    " LimeLight {
-      Plug 'junegunn/goyo.vim'
-      Plug 'junegunn/limelight.vim'
-
-      " Only show cursorline in the current window and in normal mode.
-      augroup my_limelight
-        autocmd! User GoyoEnter Limelight
-        autocmd! User GoyoLeave Limelight!
-      augroup END
-  " CursorLine }
-    " LimeLight }
-
-" Various }
-
-  " Various {
-    Plug 'jiangmiao/auto-pairs'
   " Various }
 
   " Polyglot {
@@ -319,17 +303,6 @@ set nocompatible               " Be iMproved
     autocmd BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
   augroup END
   " } gopass
-
-  " CursorLine {
-    " Only show cursorline in the current window and in normal mode.
-    augroup my_cursorline
-        autocmd!
-        autocmd WinLeave * set nocursorline
-        autocmd WinEnter * set cursorline
-        autocmd InsertEnter * set nocursorline
-        autocmd InsertLeave * set cursorline
-    augroup END
-  " CursorLine }
 
   " Line return {
     " Make sure Vim returns to the same line when you reopen a file.
