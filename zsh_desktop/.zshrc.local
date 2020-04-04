@@ -200,6 +200,10 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_RUNTIME_DIR=/tmp/$USER    # this directory is created in .zprofile
 export JAVA_OPTS="-Xmx2048M -Xms32M"
 export GOPATH=~/Prog/go
+export GOBIN=~/Prog/go/bin
+export GOARCH=amd64
+export GOOS=linux
+
 
 # Ruby
 if [ $commands[ruby] ]; then
