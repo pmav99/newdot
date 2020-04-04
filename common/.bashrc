@@ -43,6 +43,14 @@ export EDITOR=vim
 export PS1="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ "
 export PATH="${HOME}"/.local/my_bin:"${HOME}"/.local/bin:${PATH}
 
+# XDG BASE directories
+# https://wiki.archlinux.org/index.php/XDG_Base_Directory
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
+export XDG_RUNTIME_DIR=/tmp/$USER    # this directory is created in .zprofile
+mkdir -p $XDG_DATA_HOME $XDG_RUNTIME_DIR $XDG_CACHE_HOME $XDG_CONFIG_HOME
+chmod 700 "${XDG_RUNTIME_DIR}"
 alias v='vim'
 
 alias gco='git checkout'
