@@ -78,6 +78,7 @@ alias gco='git checkout'
 alias gs='git stash'
 alias gsa='git stash apply'
 alias gsx='git stash drop'
+alias gsl='git stash list'
 
 #-------------------------------------------------------------
 # The 'ls' family (this assumes you use a recent GNU ls).
