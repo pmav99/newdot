@@ -51,6 +51,16 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_RUNTIME_DIR=/tmp/$USER    # this directory is created in .zprofile
 mkdir -p $XDG_DATA_HOME $XDG_RUNTIME_DIR $XDG_CACHE_HOME $XDG_CONFIG_HOME
 chmod 700 "${XDG_RUNTIME_DIR}"
+
+# Ipython and Jupyter
+# Both projects have decided not to follow XDG.
+# To circumvent this we need to add some ENV variables
+# https://ipython.readthedocs.io/en/7.2.0/development/config.html#configuration-file-location
+# https://github.com/jupyter/notebook/issues/1355#
+export IPYTHONDIR=${XDG_CONFIG_HOME:-$HOME/.config}/ipython
+export JUPYTER_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/jupyter
+# JUPYTERLAB_DIR defines where jupyter extensions are being installed.
+export JUPYTERLAB_DIR=${JUPYTER_CONFIG_DIR}/lab/
 alias v='vim'
 
 alias gco='git checkout'
