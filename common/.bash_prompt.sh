@@ -1,5 +1,8 @@
 # we use __git_ps1
 # This requires `bash-completion` to have been installed.
+#
+# WARNING: Sourcing of this file must happen **before** using eval on the direnv hook.
+#
 
 force_color_prompt=yes
 
