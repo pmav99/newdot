@@ -36,11 +36,12 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Setup prompt
+source "${HOME}"/.bash_prompt.sh
+
 # Use vim keybindings
 set -o vi
-
 export EDITOR=vim
-export PS1="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ "
 export PATH="${HOME}"/.local/my_bin:"${HOME}"/.local/bin:${PATH}
 
 # XDG BASE directories
@@ -214,13 +215,3 @@ function x()      # Handy Extract Program
         echo "'$1' is not a valid file!"
     fi
 }
-
-# Fix prompt for bash
-# https://github.com/direnv/direnv/wiki/Python#bash
-show_virtual_env() {
-  if [[ -n "$VIRTUAL_ENV" && -n "$DIRENV_DIR" ]]; then
-    echo "($(basename $VIRTUAL_ENV))"
-  fi
-}
-export -f show_virtual_env
-PS1='$(show_virtual_env)'$PS1
