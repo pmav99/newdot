@@ -61,7 +61,10 @@ export IPYTHONDIR=${XDG_CONFIG_HOME:-$HOME/.config}/ipython
 export JUPYTER_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/jupyter
 # JUPYTERLAB_DIR defines where jupyter extensions are being installed.
 export JUPYTERLAB_DIR=${JUPYTER_CONFIG_DIR}/lab/
+
 alias v='vim'
+alias i2="ipython2"
+alias i3="ipython3"
 
 alias gco='git checkout'
 alias gs='git stash'
