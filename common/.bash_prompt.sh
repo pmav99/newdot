@@ -1,8 +1,22 @@
-# we use __git_ps1
-# This requires `bash-completion` to have been installed.
-#
+#!/usr/bin/env bash
 # WARNING: Sourcing of this file must happen **before** using eval on the direnv hook.
 #
+
+# we use __git_ps1 so we must source git-prompt.sh which comes in a different place
+# in each distro.
+
+# Archlinux
+if [ -f /usr/share/git/completion/git-prompt.sh ]; then
+    source /usr/share/git/completion/git-prompt.sh;
+# debian & Ubuntu
+elif [ -f /usr/lib/git-core/git-sh-prompt ]; then
+    source /usr/lib/git-core/git-sh-prompt;
+# centos
+elif [  -f /usr/share/git-core/contrib/completion/git-prompt.sh ]; then
+    source /usr/share/git-core/contrib/completion/git-prompt.sh
+else
+    echo "couldn't find git-prompt.sh"
+fi
 
 force_color_prompt=yes
 
