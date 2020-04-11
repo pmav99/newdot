@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+
+set -euo pipefail
+
+usage() {
+  echo 'inspect_env CONTAINER_NAME_OR_HASH'
+}
+
+container_name="${1:-}"
+
+if [ "${container_name}" = "-" ]; then
+  usage
+  exit 1
+fi
+
+docker inspect "${container_name}" | jq '.[].State.Health'
