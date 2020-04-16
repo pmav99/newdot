@@ -4,6 +4,8 @@ case $- in
       *) return;;
 esac
 
+export TERM=xterm-256color
+
 # Save 5,000 lines of history in memory
 HISTSIZE=10000
 # Save 2,000,000 lines of history to disk (will have to grep ~/.bash_history for full listing)
