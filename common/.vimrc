@@ -88,7 +88,7 @@ set nocompatible               " Be iMproved
         Plug 'prabirshrestha/asyncomplete-buffer.vim'
         Plug 'prabirshrestha/vim-lsp'"
     endif
-    "Plug 'w0rp/ale'
+    Plug 'w0rp/ale'
 
   " LSP (Language Server Protocol) }
 
@@ -149,14 +149,17 @@ set nocompatible               " Be iMproved
 
 " Ale Config {
   " Only run ale on save
-  "let g:ale_lint_on_enter = 0
-  "let g:ale_lint_on_save = 1
-  "let g:ale_lint_on_text_changed = 'never'
-  "let g:ale_fix_on_save = 1
-  "let g:ale_linters = {
-    "\ 'javascript': ['eslint'],
-    "\ 'python': ['flake8'],
-  "\ }
+  let g:ale_lint_on_enter = 0
+  let g:ale_lint_on_save = 1
+  let g:ale_lint_on_text_changed = 'never'
+  let g:ale_fix_on_save = 0
+  let g:ale_virtualenv_dir_names = []
+  let g:ale_python_prospector_options = '--no-external-config'
+  let g:ale_fixers = {}
+  let g:ale_linters = {
+    \ 'javascript': ['eslint'],
+    \ 'python': ['prospector'],
+  \ }
   "let g:ale_fixers = {
     ""\ '*': ['remove_trailing_lines', 'trim_whitespace'],
     ""\ 'python': ['isort'],
