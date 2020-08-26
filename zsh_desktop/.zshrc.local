@@ -212,6 +212,7 @@ fi
 
 # Ensure that the directories exist
 mkdir -p $XDG_DATA_HOME $XDG_RUNTIME_DIR $XDG_CACHE_HOME $XDG_CONFIG_HOME
+chmod 700 "${XDG_RUNTIME_DIR}"
 
 # Ipython and Jupyter
 # Both projects have decided not to follow XDG.
@@ -222,6 +223,7 @@ export IPYTHONDIR=${XDG_CONFIG_HOME:-$HOME/.config}/ipython
 export JUPYTER_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/jupyter
 # JUPYTERLAB_DIR defines where jupyter extensions are being installed.
 export JUPYTERLAB_DIR=${JUPYTER_CONFIG_DIR}/lab/
+
 alias i2="ipython2"
 alias i3="ipython3"
 alias jn="jupyter notebook"
