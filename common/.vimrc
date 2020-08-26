@@ -229,6 +229,7 @@ set nocompatible               " Be iMproved
   set guioptions-=T              " Do not load toolbar
   set cmdheight=2
   set lazyredraw
+  set signcolumn=yes
 
   " TimeOuts {
     " Time out on key codes but not mappings.
@@ -278,14 +279,14 @@ set nocompatible               " Be iMproved
   set softtabstop=2               " let backspace delete indent
   set expandtab                   " tabs are spaces, not tabs
   set formatoptions=qrn1
-  set colorcolumn=90
+  set colorcolumn=98
   set autoindent                  " indent at the same level of the previous line
 " Tabs, spaces }
 
 " Wrap {
   set nowrap                      " Wrap long lines (or not!)
   set whichwrap=b,s,h,l,<,>,[,]   " backspace and cursor keys wrap to
-  set textwidth=88
+  set textwidth=100
 " Wrap }
 
 " Line Numbers {
