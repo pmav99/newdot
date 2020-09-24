@@ -417,7 +417,7 @@ awful.screen.connect_for_each_screen(function(s)
             --netdowninfo,
             --netupicon,
             --netupinfo.widget,
-            net_widgets.wireless({interface="wlp2s0"}),
+            net_widgets.wireless({interface="wlan0"}),
             volicon,
             volume,
             memicon,
