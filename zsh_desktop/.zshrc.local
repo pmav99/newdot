@@ -59,6 +59,11 @@ if [ -s "$HOME/.dir_colors" ]; then
   eval "$(dircolors -b $HOME/.dir_colors)"
 fi
 
+# ansible
+if [ $commands[ansible] ]; then
+    alias ap="ansible-playbook"
+fi
+
 # kubernetes
 if [ $commands[minikube] ]; then
     alias mk="minikube"
