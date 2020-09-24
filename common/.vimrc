@@ -185,6 +185,7 @@ set nocompatible               " Be iMproved
       set guifont=Hack\ Nerd\ Font\ 12,
       set guifont=Ubuntu\ Mono\ 12
       set guifont=Fira\ Code\ 11
+      set guifont=Iosevka\ Regular\ 12
   end
 " Font }
 
