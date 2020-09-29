@@ -1,15 +1,44 @@
-\set QUIET 1
-\encoding utf8
-\set client_encoding = 'UTF8';
+\set QUIET on
+-- Various
 \x auto
-\pset null '¤'
-\set PROMPT1 '%n@%M:%>%x %/# '
-\set PROMPT2 ''
-\set HISTCONTROL ignoredups
+\encoding 'UTF8'
+\set AUTOCOMMIT off
 \set COMP_KEYWORD_CASE upper
+SET client_encoding = 'UTF8';
+SET intervalstyle to 'postgres_verbose';
+
+-- Prompt
+-- https://tapoueh.org/blog/2017/12/setting-up-psql-the-postgresql-cli/
+-- https://thoughtbot.com/blog/improving-the-command-line-postgres-experience
+-- %[%033[1m%] : \bold
+-- %n: user
+-- %M: hostname
+-- %>: port
+-- %/: database name
+-- %x: transaction status
+-- %R
+-- %# user prompt (# vs $)
+-- %[%033[0m%] : reset normal letters (i.e. undo \bold)
+\set PROMPT1 '%[%033[1m%]%n@%M:%> %/%x %# %[%033[0m%]'
+\set PROMPT2 '[more] %R > '
+
+-- Error behavior
+\set ON_ERROR_STOP on
 \set ON_ERROR_ROLLBACK interactive
-\timing on
-\set qstats91 'SELECT usename, datname, substring(current_query, 1,100) || ''...'' As query FROM pg_stat_activity WHERE current_query != ''<IDLE>'';'
-\set qstats92 'SELECT usename, datname, left(query,100) || ''...'' As query FROM pg_stat_activity WHERE state != ''idle'' ;'
+\set VERBOSITY verbose
+
+-- History
+\set HISTFILE ~/.psql_history-:DBNAME
+\set HISTSIZE -1
+\set HISTCONTROL ignoreboth
+
+-- Pager
+\setenv PAGER 'pspg -s19 --only-for-tables --quit-if-one-screen'
 \pset pager always
-\unset QUIET
+\pset linestyle 'unicode'
+\pset border 1
+\pset null '¤'
+
+\timing on
+\set QUIET off
+
