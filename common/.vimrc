@@ -47,6 +47,12 @@ set nocompatible               " Be iMproved
     Plug 'Konfekt/FastFold'
     Plug 'pedrohdz/vim-yaml-folds'
 
+    " pgsql {
+    Plug 'lifepillar/pgsql.vim'
+    let g:sql_type_default = 'pgsql'
+    let g:pgsql_pl = ['python']
+    " pgsql }
+
     Plug 'zah/nim.vim'
 
   " Various }
