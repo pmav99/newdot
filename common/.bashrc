@@ -179,7 +179,7 @@ if [ -x "$(command -v ntfy)" ]; then
 fi
 
 # fzf
-if [ $commands[fzf] ]; then
+if [ -x "$(command -v fzf)" ]; then
   export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
   alias vv='gvim $(fzf)'
   export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
