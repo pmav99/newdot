@@ -13,9 +13,9 @@ HISTFILESIZE=2000000
 # Append to history instead of overwrite
 shopt -s histappend
 # Ignore redundant and don't put duplicate lines or lines starting with space in the history.
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:erasedups
 # Ignore more
-HISTIGNORE='ls:ll:ls -alh:pwd:clear:history'
+HISTIGNORE='ls:ll:la:ls -alh:ls -lah:exit:pwd:clear:history'
 # Set time format
 HISTTIMEFORMAT='%F %T '
 # Multiple commands on one line show up as a single line
