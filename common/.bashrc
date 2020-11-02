@@ -196,3 +196,8 @@ if [ $commands[fzf] ]; then
     echo "couldn't find fzf files"
   fi
 fi
+
+# miniconda
+if [ -f /opt/miniconda3/condabin/conda ]; then
+  export PATH="${PATH}":/opt/miniconda3/condabin
+fi
