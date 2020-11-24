@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# add_pyenvrc
+#
+
+/bin/cat <<EOF >./.envrc
+#!/usr/bin/env bash
+
+if [ ! -d ./.venv ]; then
+  python -mvenv .venv
+fi
+source .venv/bin/activate
+
+if [ ! -f pyproject.toml ]; then
+  poetry init -n
+fi
+
+if [ ! -d .git ]; then
+  git init
+fi
+
+if [ ! -f .gitignore ]; then
+  add_pygitignore
+fi
+
+
+## Per project jupyter configuration
+#mkdir -p .config_jupyter/
+#JUPYTER_CONFIG_DIR=.config_jupyter
+#JUPYTERLAB_DIR=.config_jupyter/lab/
+#
+#if [ ! -x .venv/bin/node ]; then
+#  poetry add -D nodeenv@latest
+#  # reactivate the virtualenv in order to get the nodeenv in the current PATH
+#  deactivate && source .venv/bin/activate
+#  # Create the node virtual env
+#  nodeenv -p --node=system
+#  # Reactivate the virtualenv in order to activate the newly created node venv
+#  deactivate && source .venv/bin/activate
+#fi
+EOF
