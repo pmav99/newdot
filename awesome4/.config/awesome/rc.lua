@@ -60,7 +60,7 @@ editor_cmd = terminal .. " -e " .. editor
 
 -- user defined
 naughty.config.defaults.icon_size = 64
-local browser    = "firefox"
+local browser    = "firefox -P default"
 local gui_editor = "gvim"
 local graphics   = "gimp"
 local tagnames   = { 1, 2, 3, 4, 5, 6, 7, 8, 9 }
