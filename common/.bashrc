@@ -44,6 +44,7 @@ source "${HOME}"/.bash_prompt.sh
 # Use vim keybindings
 set -o vi
 export EDITOR=vim
+export SYSTEMD_EDITOR=vim
 export PATH="${HOME}"/.local/my_bin:"${HOME}"/.local/bin:${PATH}
 
 # XDG BASE directories
