@@ -286,7 +286,7 @@ set nocompatible               " Be iMproved
   set softtabstop=2               " let backspace delete indent
   set expandtab                   " tabs are spaces, not tabs
   set formatoptions=qrn1
-  set colorcolumn=98
+  set colorcolumn=109
   set autoindent                  " indent at the same level of the previous line
 " Tabs, spaces }
 
