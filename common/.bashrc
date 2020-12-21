@@ -181,9 +181,21 @@ fi
 
 # fzf
 if [ -x "$(command -v fzf)" ]; then
-  export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
-  alias vv='gvim $(fzf)'
-  export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+  # configure
+  if [ -x "$(command -v bat)" ]; then
+    export FZF_DEFAULT_OPTS="--height 40% --reverse --border --preview 'bat --color=always --line-range :100 {}'"
+  else
+    export FZF_DEFAULT_OPTS="--height 40% --reverse --border --preview 'head -n100 {}'"
+  fi
+  # Use fd if it is available and fallback to ag
+  if [ $commands[fd] ]; then
+    export FZF_DEFAULT_COMMAND='fd --type f --color=never --hidden --follow --exclude .git --exclude .tox'
+    export FZF_ALT_C_COMMAND='fd --type d --color=never --hidden --follow --exclude .git --exclude .tox'
+  elif [ $commands[ag] ]; then
+    export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git --ignore .tox -g ""'
+  fi
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  # key bindings
   if [ -f /usr/share/fzf/key-bindings.bash ]; then
     source /usr/share/fzf/key-bindings.bash
     source /usr/share/fzf/completion.bash
@@ -194,8 +206,10 @@ if [ -x "$(command -v fzf)" ]; then
     source "${HOME}"/.fzf/shell/key-bindings.bash
     source "${HOME}"/.fzf/shell/completion.bash
   else
-    echo "couldn't find fzf files"
+    echo "couldn't find fzf key-bindings"
   fi
+  # aliases
+  alias vv='gvim $(fzf)'
 fi
 
 # miniconda
