@@ -1,3 +1,5 @@
+auto_activate_base: False
+changeps1: False
 channel_priority: strict
 channels:
   - conda-forge

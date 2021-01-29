@@ -211,12 +211,6 @@ update_awesome_menu() {
     fi
 }
 
-### Append folders to PATH
-if [ -f /opt/miniconda3/condabin/conda ]; then
-  export PATH="${PATH}":/opt/miniconda3/condabin/
-fi
-
-
 export R_LIBS="$HOME/.R"
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
@@ -266,4 +260,3 @@ fi
 if [ $commands[gnome-screensaver-command] ]; then
   alias lock='gnome-screensaver-command -l'
 fi
-

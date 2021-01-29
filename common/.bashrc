@@ -211,8 +211,3 @@ if [ -x "$(command -v fzf)" ]; then
   # aliases
   alias vv='gvim $(fzf)'
 fi
-
-# miniconda
-if [ -f /opt/miniconda3/condabin/conda ]; then
-  export PATH="${PATH}":/opt/miniconda3/condabin
-fi
