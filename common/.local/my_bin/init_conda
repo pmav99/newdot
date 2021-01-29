@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if   [ -f /opt/miniconda3/etc/profile.d/conda.sh ]; then
+  echo 'Found conda in /opt/miniconda3'
+  source /opt/miniconda3/etc/profile.d/conda.sh
+elif [ -f "${HOME}"/miniconda3/etc/profile.d/conda.sh ]; then
+  echo "Found conda in ${HOME}/miniconda3"
+  source "${HOME}"/miniconda3/etc/profile.d/conda.sh
+elif [ -f /opt/miniconda/etc/profile.d/conda.sh ]; then
+  echo 'Found conda in /opt/miniconda3'
+  source /opt/miniconda/etc/profile.d/conda.sh
+elif [ -f "${HOME}"/miniconda/etc/profile.d/conda.sh ]; then
+  echo "Found conda in ${HOME}/miniconda"
+  source "${HOME}"/miniconda/etc/profile.d/conda.sh
+else
+  echo "Couldn't found conda."
+  exit 1
+fi
