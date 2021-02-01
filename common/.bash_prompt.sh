@@ -32,7 +32,14 @@ LIGHT_GREEN="\[\033[1;32m\]"
  LIGHT_GRAY="\[\033[0;37m\]"
  COLOR_NONE="\[\e[0m\]"
 
-# Determine active Python virtualenv details.
+function set_user() {
+  if [ "$LOGNAME" = root ] || [ "`id -u`" -eq 0 ] ; then
+    PROMPT_USER="${RED}\u${COLOR_NONE}"
+  else
+    PROMPT_USER="${WHITE}\u${COLOR_NONE}"
+  fi
+}
+
 function set_virtualenv () {
   if test -z "${VIRTUAL_ENV}" ; then
     PYTHON_VIRTUALENV=""
@@ -60,10 +67,11 @@ function set_exit_status() {
 # Set the full bash prompt
 function set_bash_prompt () {
     # Set the PYTHON_VIRTUALENV variable.
+    set_user
     set_exit_status
     set_virtualenv
     set_conda
-    PS1="${CONDA_ENV}${PYTHON_VIRTUALENV}${debian_chroot:+($debian_chroot)}\D{%T} ${WHITE}\u${YELLOW}@${PURPLE}\h\[\033[00m\]:${BLUE}\w${YELLOW}$(__git_ps1)${EXIT_STATUS}"
+    PS1="${CONDA_ENV}${PYTHON_VIRTUALENV}${debian_chroot:+($debian_chroot)}\D{%T} ${PROMPT_USER}${YELLOW}@${PURPLE}\h\[\033[00m\]:${BLUE}\w${YELLOW}$(__git_ps1)${EXIT_STATUS}"
 }
 
 # Execute this function before displaying prompt
