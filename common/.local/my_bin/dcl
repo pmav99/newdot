@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-#
-# docker-compose logs
-
-docker-compose logs -ft $1
