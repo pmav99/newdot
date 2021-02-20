@@ -202,6 +202,9 @@ if [ -x "$(command -v fzf)" ]; then
   elif [ -f /usr/share/bash-completion/completions/fzf ]; then
     source /usr/share/bash-completion/completions/fzf
     source /usr/share/doc/fzf/examples/key-bindings.bash
+  elif [ -f /usr/share/doc/fzf/examples/completion.bash ]; then
+    source /usr/share/doc/fzf/examples/completion.bash
+    source /usr/share/doc/fzf/examples/key-bindings.bash
   elif [ -f "${HOME}"/.fzf/shell/key-bindings.bash ]; then
     source "${HOME}"/.fzf/shell/key-bindings.bash
     source "${HOME}"/.fzf/shell/completion.bash
