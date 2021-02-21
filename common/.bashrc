@@ -154,14 +154,6 @@ alias usctl='systemctl --user'
 alias status='sudo systemctl -l status'
 alias stop='sudo systemctl stop'
 
-# docker
-alias dc='docker'
-alias dcc='docker container'
-alias dci='docker image'
-alias dcn='docker network'
-alias dcv='docker volume'
-alias dcmp='docker-compose'
-
 # if gvim does not exist (i.e. in a server) use vim
 if ! [ -x "$(command -v gvim)" ]; then
   alias gvim='vim'
