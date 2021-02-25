@@ -20,5 +20,5 @@ elif [ -f "${HOME}"/miniconda/etc/profile.d/conda.sh ]; then
   source "${HOME}"/miniconda/etc/profile.d/conda.sh
 else
   echo "Couldn't found conda."
-  exit 1
+  return 1
 fi
