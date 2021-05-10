@@ -66,9 +66,8 @@ function set_exit_status() {
 
 # Set the full bash prompt
 function set_bash_prompt () {
-    # Set the PYTHON_VIRTUALENV variable.
-    set_user
     set_exit_status
+    set_user
     set_virtualenv
     set_conda
     PS1="${CONDA_ENV}${PYTHON_VIRTUALENV}${debian_chroot:+($debian_chroot)}\D{%T} ${PROMPT_USER}${YELLOW}@${PURPLE}\h\[\033[00m\]:${BLUE}\w${YELLOW}$(__git_ps1)${EXIT_STATUS}"
