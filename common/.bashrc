@@ -55,6 +55,8 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_RUNTIME_DIR=/var/run/user/$(id -u)
 mkdir -p $XDG_CONFIG_HOME $XDG_CACHE_HOME  $XDG_DATA_HOME
 
+export PYTHONSTARTUP=~/.pythonrc.py
+
 # Ipython and Jupyter
 # Both projects have decided not to follow XDG.
 # To circumvent this we need to add some ENV variables

@@ -233,6 +233,7 @@ if [ $commands[ruby] ]; then
   export GEM_HOME=$(ruby -e 'print Gem.user_dir')
 fi
 
+export PYTHONSTARTUP=~/.pythonrc.py
 
 # Ipython and Jupyter
 # Both projects have decided not to follow XDG.
