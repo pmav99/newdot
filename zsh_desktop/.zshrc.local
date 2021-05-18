@@ -96,6 +96,7 @@ fi
 # NTFY notifications
 if [ $commands[ntfy] ]; then
     eval "$(ntfy shell-integration)"
+    export AUTO_NTFY_DONE_IGNORE="vim gvim screen tmux"
 fi
 
 # ffind
