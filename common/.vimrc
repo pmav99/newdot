@@ -104,7 +104,6 @@ set nocompatible               " Be iMproved
 
   " Python {
     Plug 'tmhedberg/SimpylFold',              { 'for': 'python' }
-    Plug 'tmhedberg/SimpylFold',    { 'for': 'python' }
     Plug 'jeetsukumaran/vim-pythonsense',     { 'for': 'python' }
   " Python }
 
@@ -323,11 +322,11 @@ set nocompatible               " Be iMproved
   " Line return {
     " Make sure Vim returns to the same line when you reopen a file.
     augroup my_line_return
-    autocmd!
-    autocmd BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \     execute 'normal! g`"zvzz' |
-        \ endif
+      autocmd!
+      autocmd BufReadPost *
+          \ if line("'\"") > 0 && line("'\"") <= line("$") |
+          \     execute 'normal! g`"zvzz' |
+          \ endif
     augroup END
   " Line return }
 " Custom Autocmds }
