@@ -315,6 +315,7 @@ set nocompatible               " Be iMproved
 
   " gopass {
   augroup my_gopass
+    autocmd!
     autocmd BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
   augroup END
   " } gopass
