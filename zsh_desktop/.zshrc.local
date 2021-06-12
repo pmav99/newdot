@@ -41,7 +41,7 @@ SPACESHIP_PROMPT_ORDER=(
   pyenv         # Pyenv section
   #dotnet        # .NET section
   #ember         # Ember.js section
-  kubectl       # Kubectl context section
+  #kubectl       # Kubectl context section
   exec_time     # Execution time
   line_sep      # Line break
   #battery       # Battery level and status
