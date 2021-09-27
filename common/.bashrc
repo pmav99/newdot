@@ -208,3 +208,5 @@ if [ -x "$(command -v fzf)" ]; then
   # aliases
   alias vv='gvim $(fzf)'
 fi
+
+export GPG_TTY=$(tty)

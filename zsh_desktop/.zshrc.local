@@ -263,3 +263,5 @@ fi
 if [ $commands[gnome-screensaver-command] ]; then
   alias lock='gnome-screensaver-command -l'
 fi
+
+export GPG_TTY=$(tty)
