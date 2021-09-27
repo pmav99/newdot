@@ -7,5 +7,5 @@ function run {
   fi
 }
 
-#run parcellite
-#run kbdd
+run parcellite
+run kbdd
