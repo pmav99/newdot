@@ -67,6 +67,15 @@ export JUPYTER_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/jupyter
 # JUPYTERLAB_DIR defines where jupyter extensions are being installed.
 export JUPYTERLAB_DIR=${JUPYTER_CONFIG_DIR}/lab/
 
+# docker
+alias dc='docker'
+alias dcc='docker container'
+alias dci='docker image'
+alias dcv='docker volume'
+alias dcn='docker network'
+alias dcmp='docker-compose'
+
+
 # Go and R
 export GOPATH=~/Prog/go
 export GOBIN=~/Prog/go/bin
@@ -127,6 +136,8 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 alias mv="mv -vi"
 alias rm="rm -vi"
 alias cp="cp -vi"
+
+alias f="find ./ -name"
 
 alias grep='grep --color=auto'
 alias grepp='grep -P --color=auto'
