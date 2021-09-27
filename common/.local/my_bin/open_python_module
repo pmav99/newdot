@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+#
+
+set -euo pipefail
+
+display_usage () {
+    echo 'Open a python module in gvim'
+    echo 'Usage: open_python_module <module_name>'
+}
+
+# Bail out early
+if [[ ( $# -gt 1 ) || ( $# -eq 0) ]]; then
+    display_usage
+    exit 1
+fi
+
+# Read CLI arguments using getopt
+cli_options=$(getopt -o th --long help -- "$@")
+[ $? -eq 0 ] || {
+    echo "Incorrect options provided"
+    exit 1
+}
+eval set -- "$cli_options"
+# default values
+module_name=''
+# Parse getopt arguments
+while true; do
+    case "$1" in
+        -h | --help )           display_usage
+                                exit 0
+                                ;;
+        --)                     shift;
+                                module_name=$1;
+                                break;;
+    esac
+done
+
+module_path=$(python -c "import ${module_name}; print(${module_name})" | cut -d ' ' -f 4)
+echo $module_path
+# remove trailing '>'
+module_path="${module_path%\'>}"
+echo $module_path
+# remove first "'"
+module_path="${module_path:1}"
+echo $module_path
+gvim $module_path
