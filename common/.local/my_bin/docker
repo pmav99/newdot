@@ -3,4 +3,4 @@
 
 set -euo pipefail
 
-exec docker container "${@}"
+exec sudo -E /usr/bin/docker "${@}"
