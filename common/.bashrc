@@ -167,6 +167,15 @@ alias usctl='systemctl --user'
 alias status='sudo systemctl -l status'
 alias stop='sudo systemctl stop'
 
+# Systemctl user aliases
+alias usctl='systemctl --user'
+alias ustart='systemctl --user start'
+alias ustop='systemctl --user stop'
+alias ureload='systemctl --user reload'
+alias uenable='systemctl --user enable'
+alias udisable='systemctl --user disable'
+alias ustatus='systemctl --user status'
+
 # if gvim does not exist (i.e. in a server) use vim
 if ! [ -x "$(command -v gvim)" ]; then
   alias gvim='vim'
