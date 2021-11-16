@@ -170,6 +170,7 @@ alias stop='sudo systemctl stop'
 # Systemctl user aliases
 alias usctl='systemctl --user'
 alias ustart='systemctl --user start'
+alias urestart='systemctl --user restart'
 alias ustop='systemctl --user stop'
 alias ureload='systemctl --user reload'
 alias uenable='systemctl --user enable'
