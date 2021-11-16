@@ -41,6 +41,9 @@ fi
 # Setup prompt
 source "${HOME}"/.bash_prompt.sh
 
+# Setup aliases
+source ~/.shell_aliases
+
 # Use vim keybindings
 set -o vi
 export EDITOR=vim
@@ -67,15 +70,6 @@ export JUPYTER_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/jupyter
 # JUPYTERLAB_DIR defines where jupyter extensions are being installed.
 export JUPYTERLAB_DIR=${JUPYTER_CONFIG_DIR}/lab/
 
-# docker
-alias dc='docker'
-alias dcc='docker container'
-alias dci='docker image'
-alias dcv='docker volume'
-alias dcn='docker network'
-alias dcmp='docker-compose'
-
-
 # Go and R
 export GOPATH=~/Prog/go
 export GOBIN=~/Prog/go/bin
@@ -83,39 +77,9 @@ export GOARCH=amd64
 export GOOS=linux
 export R_LIBS="$HOME/.R"
 
-alias v='vim'
-alias i2="ipython2"
-alias i3="ipython3"
-
-alias gco='git checkout'
-alias gs='git stash'
-alias gsa='git stash apply'
-alias gsx='git stash drop'
-alias gsl='git stash list'
-
-#-------------------------------------------------------------
-# The 'ls' family (this assumes you use a recent GNU ls).
-#-------------------------------------------------------------
-# Add colors for filetype and  human-readable sizes by default on 'ls':
-alias ls='ls -h --color'
-alias lx='ls -lXB'         #  Sort by extension.
-alias lk='ls -lSr'         #  Sort by size, biggest last.
-alias lt='ls -ltr'         #  Sort by date, most recent last.
-alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
-alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
-
-# The ubiquitous 'll': directories first, with alphanumeric sorting:
-alias ll="ls -lv --group-directories-first"
-alias lm='ll |more'        #  Pipe through 'more'
-alias lr='ll -R'           #  Recursive ls.
-alias la='ll -A'           #  Show hidden files.
-alias tree='tree -Csuh'    #  Nice alternative to 'recursive ls' ...
-
 #-------------------------------------------------------------
 # Tailoring 'less'
 #-------------------------------------------------------------
-
-alias more='less'
 export PAGER=less
 export LESSCHARSET='utf-8'
 export LESSOPEN='|/usr/bin/lesspipe.sh %s 2>&-'
@@ -132,57 +96,6 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
-# Make some of the file manipulation programs verbose
-alias mv="mv -vi"
-alias rm="rm -vi"
-alias cp="cp -vi"
-
-alias f="find ./ -name"
-
-alias grep='grep --color=auto'
-alias grepp='grep -P --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-
-alias ping1='ping -c3 1.1.1.1'
-alias ping8='ping -c3 8.8.8.8'
-alias pingg='ping -c3 www.google.com'
-
-alias gtar='tar pcvzf'
-alias btar='tar pcvjf'
-alias untar='tar xvf'
-alias ungtar='tar xvzf'
-alias unbtar='tar xvjf'
-
-# Journalctl aliases
-alias jctl=journalctl
-alias jspy='jctl -f'
-
-# Systemctl aliases
-alias reload='sudo systemctl reload'
-alias restart='sudo systemctl restart'
-alias start='sudo systemctl start'
-alias sctl='sudo systemctl'
-alias usctl='systemctl --user'
-alias status='sudo systemctl -l status'
-alias stop='sudo systemctl stop'
-
-# Systemctl user aliases
-alias usctl='systemctl --user'
-alias ustart='systemctl --user start'
-alias urestart='systemctl --user restart'
-alias ustop='systemctl --user stop'
-alias ureload='systemctl --user reload'
-alias uenable='systemctl --user enable'
-alias udisable='systemctl --user disable'
-alias ustatus='systemctl --user status'
-
-# if gvim does not exist (i.e. in a server) use vim
-if ! [ -x "$(command -v gvim)" ]; then
-  alias gvim='vim'
-  alias gvimdiff='vimdiff'
-fi
-
 # direnv
 if [ -x "$(command -v direnv)" ]; then
     eval "$(direnv hook bash)"
@@ -192,6 +105,11 @@ fi
 if [ -x "$(command -v ntfy)" ]; then
     eval "$(ntfy shell-integration)"
     export AUTO_NTFY_DONE_IGNORE="vim gvim screen tmux"
+fi
+
+# kubernetes
+if [ $commands[kubectl] ]; then
+    source <(kubectl completion ${0});
 fi
 
 # fzf

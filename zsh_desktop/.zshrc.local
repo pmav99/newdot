@@ -59,35 +59,6 @@ if [ -s "$HOME/.dir_colors" ]; then
   eval "$(dircolors -b $HOME/.dir_colors)"
 fi
 
-# ansible
-if [ $commands[ansible] ]; then
-    alias ap="ansible-playbook"
-fi
-
-# kubernetes
-if [ $commands[minikube] ]; then
-    alias mk="minikube"
-fi
-if [ $commands[kubectl] ]; then
-    source <(kubectl completion zsh);
-    alias kc="kubectl"
-    alias kcg="kubectl get"
-    alias kcl="kubectl list"
-    alias kcd="kubectl describe"
-    alias kkc="kubectl --namespace kube-system"
-    alias kkcg="kubectl --namespace kube-system get"
-    alias kkcl="kubectl --namespace kube-system list"
-    alias kkcd="kubectl --namespace kube-system describe"
-fi
-if [ $commands[kubeadm] ]; then
-    alias ka="kubeadm"
-fi
-
-# virsh
-if [ $commands[virsh] ]; then
-    alias vrs="virsh --connect qemu:///system"
-fi
-
 # direnv
 if [ $commands[direnv] ]; then
     eval "$(direnv hook zsh)"
@@ -99,9 +70,9 @@ if [ $commands[ntfy] ]; then
     export AUTO_NTFY_DONE_IGNORE="vim gvim screen tmux"
 fi
 
-# ffind
-if [ $commands[ffind] ]; then
-    alias ff='ffind'
+# kubernetes
+if [ $commands[kubectl] ]; then
+    source <(kubectl completion ${0});
 fi
 
 # fzf
@@ -134,63 +105,12 @@ if [ $commands[fzf] ]; then
   alias vv='gvim $(fzf)'
 fi
 
-# aliases
+# zsh-only aliases
 alias ls="${aliases[ls]:-ls} -v"    # XXX ZSH ONLY!!! Make ls use natural sort
-#alias sudo='sudo '                  # Let the aliases work with sudo too!
-
-alias ping1='ping -c3 1.1.1.1'
-alias ping8='ping -c3 8.8.8.8'
-alias pingg='ping -c3 www.google.com'
 alias mmv='noglob zmv -W'
 
-alias v='gvim'
-alias vv='v $(fzf)'
-
-alias gtar='tar pcvzf'
-alias btar='tar pcvjf'
-alias untar='tar xvf'
-alias ungtar='tar xvzf'
-alias unbtar='tar xvjf'
-
-alias cputemp="watch -n 1 -d sensors"
-
-# Journalctl aliases
-alias jctl=journalctl
-alias jspy='jctl -f'
-
-# Systemctl aliases
-alias reload='sudo systemctl reload'
-alias restart='sudo systemctl restart'
-alias start='sudo systemctl start'
-alias sctl='sudo systemctl'
-alias usctl='systemctl --user'
-alias status='systemctl -l status'
-alias stop='sudo systemctl stop'
-
-# Systemctl user aliases
-alias usctl='systemctl --user'
-alias ustart='systemctl --user start'
-alias urestart='systemctl --user restart'
-alias ustop='systemctl --user stop'
-alias ureload='systemctl --user reload'
-alias uenable='systemctl --user enable'
-alias udisable='systemctl --user disable'
-alias ustatus='systemctl --user status'
-
-# docker
-alias dc='docker'
-alias dcc='docker container'
-alias dci='docker image'
-alias dcv='docker volume'
-alias dcn='docker network'
-alias dcmp='docker-compose'
-
-## Python aliases
-alias f="find ./ -name"
-alias qg='qgit --all'
-alias rmtex="find . -type f \( -name '*.aux' -o -name '*.glo' -o -name '*.idx' -o -name '*.log' -o -name '*.toc' -o -name '*.ist' -o -name '*.acn' -o -name '*.acr' -o -name '*.alg' -o -name '*.bbl' -o -name '*.blg' -o -name '*.dvi' -o -name '*.glg' -o -name '*.gls' -o -name '*.ilg' -o -name '*.ind' -o -name '*.lof' -o -name '*.lot' -o -name '*.maf' -o -name '*.mtc' -o -name '*.thm' -o -name '*.nav' -o -name '*.snm' -o -name '*.out' -o -name '*.synctex.gz' -o -name '*.mtc1' -name '*.bcf' -name '*.fls' -name '*.run.xml' \) -delete"
-
-### Useful commands
+# common aliases
+source ~/.shell_aliases
 
 gdrive_download () {
     if (( $# < 2 )); then
@@ -254,15 +174,5 @@ export IPYTHONDIR=${XDG_CONFIG_HOME:-$HOME/.config}/ipython
 export JUPYTER_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/jupyter
 # JUPYTERLAB_DIR defines where jupyter extensions are being installed.
 export JUPYTERLAB_DIR=${JUPYTER_CONFIG_DIR}/lab/
-
-alias i2="ipython2"
-alias i3="ipython3"
-alias jn="jupyter notebook"
-alias jl="jupyter lab"
-
-# lock screen
-if [ $commands[gnome-screensaver-command] ]; then
-  alias lock='gnome-screensaver-command -l'
-fi
 
 export GPG_TTY=$(tty)
