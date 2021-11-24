@@ -108,7 +108,7 @@ if [ -x "$(command -v ntfy)" ]; then
 fi
 
 # kubernetes
-if [ $commands[kubectl] ]; then
+if [ -x "$(command -v kubectl)" ]; then
     source <(kubectl completion ${0});
 fi
 
