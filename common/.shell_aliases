@@ -38,7 +38,7 @@ alias ll="ls -lv --group-directories-first"
 alias lm='ll |less'        #  Pipe through 'less'
 alias lr='ll -R'           #  Recursive ls.
 alias la='ll -A'           #  Show hidden files.
-alias tree='tree -Csuh'    #  Nice alternative to 'recursive ls' ...
+alias tree='tree -C'    #  Nice alternative to 'recursive ls' ...
 
 # Make some of the file manipulation programs verbose
 alias mv="mv -vi"
