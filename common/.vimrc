@@ -105,6 +105,7 @@ set nocompatible               " Be iMproved
   " Python {
     Plug 'tmhedberg/SimpylFold',              { 'for': 'python' }
     Plug 'jeetsukumaran/vim-pythonsense',     { 'for': 'python' }
+    Plug 'lepture/vim-jinja',                 { 'for': 'python' }
   " Python }
 
   call plug#end()
