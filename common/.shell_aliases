@@ -10,10 +10,8 @@ alias dcn='docker network'
 alias dcmp='docker-compose'
 
 # python
-alias i2="ipython2"
 alias i3="ipython3"
-alias jn="jupyter notebook"
-alias jl="jupyter lab"
+alias jl="jupyter-lab"
 
 # git
 alias gco='git checkout'
