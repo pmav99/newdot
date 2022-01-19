@@ -47,6 +47,10 @@ set nocompatible               " Be iMproved
     Plug 'Konfekt/FastFold'
     Plug 'pedrohdz/vim-yaml-folds'
 
+    " xml {
+    Plug 'sukima/xmledit/'
+    " } xml
+
     " pgsql {
     Plug 'lifepillar/pgsql.vim'
     let g:sql_type_default = 'pgsql'
@@ -312,6 +316,14 @@ set nocompatible               " Be iMproved
 " }
 
 " Custom Autocmds {
+
+  " XML {
+  augroup xml_config
+      autocmd!
+      let g:xml_syntax_folding=1
+      autocmd FileType xml setlocal foldmethod=syntax foldlevelstart=999 foldminlines=0
+  augroup END
+  " XML }
 
   " gopass {
   augroup my_gopass
