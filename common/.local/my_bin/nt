@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+
+set -euo pipefail
+
+#application_name='terminator'
+application_name=$(ps -o comm= -p "$(($(ps -o ppid= -p "$(($(ps -o sid= -p "$$")))")))")
+exec ${application_name} --working-directory=$(pwd) &
