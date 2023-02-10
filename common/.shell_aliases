@@ -83,12 +83,22 @@ alias ustart='systemctl --user start'
 alias ustatus='systemctl --user status'
 alias ustop='systemctl --user stop'
 
-# if gvim does not exist (i.e. in a server) use vim
-if ! [ -x "$(command -v gvim)" ]; then
+# Prefer nvim over vim
+# Prefer neovide over gvim
+# If gvim is not available fall back to vim
+if [ -x "$(command -v nvim)" ]; then
+  alias vim='nvim'
+fi
+if [ ! -x "$(command -v gvim)" ]; then
   alias gvim='vim'
-  alias gvimdiff='vimdiff'
+fi
+if [ -x "$(command -v neovide)" ]; then
+  alias neovide='neovide --multigrid --notabs'
+  alias neovide='neovide --multigrid'
+  alias gvim='nvim-qt'
 fi
 alias v='gvim'
+alias gv='/usr/bin/gvim'
 
 # ansible
 if [ $commands[ansible] ]; then
