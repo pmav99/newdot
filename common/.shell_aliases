@@ -1,4 +1,4 @@
-# vim: ft=bash
+#!/usr/bin/env bash
 #
 
 # docker
@@ -101,15 +101,15 @@ alias v='gvim'
 alias gv='/usr/bin/gvim'
 
 # ansible
-if [ $commands[ansible] ]; then
+if [ -x "$(command -v ansible)" ]; then
     alias ap="ansible-playbook"
 fi
 
 # kubernetes
-if [ $commands[minikube] ]; then
+if [ -x "$(command -v minikube)" ]; then
     alias mk="minikube"
 fi
-if [ $commands[kubectl] ]; then
+if [ -x "$(command -v kubectl)" ]; then
     alias kc="kubectl"
     alias kcg="kubectl get"
     alias kcl="kubectl list"
@@ -119,22 +119,22 @@ if [ $commands[kubectl] ]; then
     alias kkcl="kubectl --namespace kube-system list"
     alias kkcd="kubectl --namespace kube-system describe"
 fi
-if [ $commands[kubeadm] ]; then
+if [ -x "$(command -v kubeadm)" ]; then
     alias ka="kubeadm"
 fi
 
 # virsh
-if [ $commands[virsh] ]; then
+if [ -x "$(command -v virsh)" ]; then
     alias vrs="virsh --connect qemu:///system"
 fi
 
 # ffind
-if [ $commands[ffind] ]; then
+if [ -x "$(command -v ffind)" ]; then
     alias ff='ffind'
 fi
 
 # lock screen
-if [ $commands[gnome-screensaver-command] ]; then
+if [ -x "$(command -v gnome-screensaver-command)" ]; then
   alias lock='gnome-screensaver-command -l'
 fi
 
