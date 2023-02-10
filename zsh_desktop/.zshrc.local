@@ -109,6 +109,13 @@ fi
 alias ls="${aliases[ls]:-ls} -v"    # XXX ZSH ONLY!!! Make ls use natural sort
 alias mmv='noglob zmv -W'
 
+# Ruby
+if [ $commands[ruby] ]; then
+  export GEM_HOME=$(ruby -e 'puts Gem.user_dir')
+  export PATH="${PATH}":"${GEM_HOME}"/bin
+fi
+
+
 # common aliases
 source ~/.shell_aliases
 
@@ -157,11 +164,6 @@ export GOBIN=~/Prog/go/bin
 export GOARCH=amd64
 export GOOS=linux
 
-
-# Ruby
-if [ $commands[ruby] ]; then
-  export GEM_HOME=$(ruby -e 'print Gem.user_dir')
-fi
 
 export PYTHONSTARTUP=~/.pythonrc.py
 
