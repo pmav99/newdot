@@ -10,3 +10,5 @@ mkdir -p ~/.config/kitty/
 mkdir -p ~/.config/pgcli/
 mkdir -p ~/.config/pypoetry/
 mkdir -p ~/.local/bin/
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
