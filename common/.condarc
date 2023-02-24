@@ -1,6 +1,8 @@
-auto_activate_base: False
-changeps1: False
+auto_activate_base: false
+auto_stack: 0
+changeps1: false
 channel_priority: strict
 channels:
+  - gbrey
   - conda-forge
   - defaults
