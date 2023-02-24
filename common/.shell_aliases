@@ -148,6 +148,11 @@ if [ -x "$(command -v gnome-screensaver-command)" ]; then
   alias lock='gnome-screensaver-command -l'
 fi
 
+# kitty
+if [ "$TERM" = "xterm-kitty" ]; then
+  alias ssh="kitty +kitten ssh"
+fi
+
 # Various
 alias cputemp="watch -n 1 -d sensors"
 alias qg='qgit --all'
