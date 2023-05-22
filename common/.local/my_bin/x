@@ -48,6 +48,7 @@ for i; do
         *.exe) c=(cabextract);;
         *.rar) c=(unrar x);;
         *.zip) c=(unzip);;
+        *.tar.zst) c=(bsdtar xvf -l zstd);;
         *)     echo "$0: unrecognized file extension: \`$i'" >&2
                 continue;;
     esac
