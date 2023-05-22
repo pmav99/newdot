@@ -18,6 +18,9 @@ elif [ -f /opt/miniconda/etc/profile.d/conda.sh ]; then
 elif [ -f "${HOME}"/miniconda/etc/profile.d/conda.sh ]; then
   echo "Found conda in ${HOME}/miniconda"
   source "${HOME}"/miniconda/etc/profile.d/conda.sh
+elif [ -f /mnt/mambaforge/etc/profile.d/conda.sh ]; then
+  echo "Found conda in /mnt/mambaforge"
+  source /mnt/mambaforge/etc/profile.d/conda.sh
 else
   echo "Couldn't find conda."
   return 1
