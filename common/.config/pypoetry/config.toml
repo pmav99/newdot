@@ -1,9 +1,17 @@
 [virtualenvs]
 create = false
 in-project = true
+prefer-active-python = true
+
 
 [experimental]
 new-installer = true
+system-git-client = true
 
 [installer]
 parallel = true
+modern-installation = true
+
+[repositories]
+[repositories.testpypi]
+url = "https://test.pypi.org/legacy/"
