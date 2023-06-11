@@ -6,7 +6,17 @@
 #    source init_conda
 #
 
-if   [ -f /opt/miniconda3/etc/profile.d/conda.sh ]; then
+if [[ $(which micromamba) ]]; then
+  MAMBA_EXE=$(which micromamba)
+  MAMBA_ROOT_PREFIX="${HOME}"/.micromamba
+  echo "Found micromamba at: ${MAMBA_EXE}"
+  mkdir -p "${MAMBA_ROOT_PREFIX}"
+  export MAMBA_EXE
+  export MAMBA_ROOT_PREFIX
+  eval "$(micromamba shell hook)"
+  conda() { micromamba "${@}"; }
+  mamba() { micromamba "${@}"; }
+elif [ -f /opt/miniconda3/etc/profile.d/conda.sh ]; then
   echo 'Found conda in /opt/miniconda3'
   source /opt/miniconda3/etc/profile.d/conda.sh
 elif [ -f "${HOME}"/miniconda3/etc/profile.d/conda.sh ]; then
