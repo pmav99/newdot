@@ -8,12 +8,15 @@
 
 if [[ $(which micromamba) ]]; then
   MAMBA_EXE=$(which micromamba)
-  MAMBA_ROOT_PREFIX="${HOME}"/.micromamba
-  echo "Found micromamba at: ${MAMBA_EXE}"
+  MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
+  echo "mamba exe at   : ${MAMBA_EXE}"
+  echo "mamba prefix at: ${MAMBA_ROOT_PREFIX}"
   mkdir -p "${MAMBA_ROOT_PREFIX}"
   export MAMBA_EXE
   export MAMBA_ROOT_PREFIX
   eval "$(micromamba shell hook)"
+  # Since micromamba is not installing the conda and the mamba binaries,
+  # let's pretend that we have them!
   conda() { micromamba "${@}"; }
   mamba() { micromamba "${@}"; }
 elif [ -f /opt/miniconda3/etc/profile.d/conda.sh ]; then
