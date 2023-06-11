@@ -5,4 +5,3 @@ channel_priority: strict
 channels:
   - gbrey
   - conda-forge
-  - defaults
