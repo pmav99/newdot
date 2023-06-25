@@ -1,9 +1,3 @@
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
-
 export TERM=xterm-256color
 
 # Save 5,000 lines of history in memory
