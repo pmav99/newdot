@@ -8,7 +8,11 @@
 
 if [[ $(which micromamba) ]]; then
   MAMBA_EXE=$(which micromamba)
-  MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
+  if [[ -d /scratch ]]; then
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/scratch/mavropa/.micromamba}"
+  else
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
+  fi
   echo "mamba exe at   : ${MAMBA_EXE}"
   echo "mamba prefix at: ${MAMBA_ROOT_PREFIX}"
   mkdir -p "${MAMBA_ROOT_PREFIX}"
