@@ -143,3 +143,7 @@ if [ -x "$(command -v fzf)" ]; then
 fi
 
 export GPG_TTY=$(tty)
+
+if [[ -f "${HOME}"/.bashrc.custom ]]; then
+  source "${HOME}"/.bashrc.custom
+fi
