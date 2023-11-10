@@ -42,13 +42,14 @@ for i; do
         *.tlz) c=(bsdtar xvf);;
         *.tar.lz) c=(bsdtar xvf);;
 
+        *.tar.zst) c=(bsdtar xvf);;
+
         #*.t@(gz|lz|xz|b@(2|z?(2))|a@(z|r?(.@(Z|bz?(2)|gz|lzma|xz))))) c=(bsdtar xvf);;
         *.7z)  c=(7z x);;
         *.Z)   c=(uncompress);;
         *.exe) c=(cabextract);;
         *.rar) c=(unrar x);;
         *.zip) c=(unzip);;
-        *.tar.zst) c=(bsdtar xvf -l zstd);;
         *)     echo "$0: unrecognized file extension: \`$i'" >&2
                 continue;;
     esac
