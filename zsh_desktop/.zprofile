@@ -8,15 +8,15 @@
 #
 # Browser
 #
-export BROWSER='firefox'
+# export BROWSER='firefox'
 
 #
 # Editors
 #
-export EDITOR='vim'
-export SYSTEMD_EDITOR='vim'
-export VISUAL='vim'
-export PAGER='less'
+# export EDITOR='vim'
+# export SYSTEMD_EDITOR='vim'
+# export VISUAL='gvim'
+# export PAGER='less'
 
 #
 # Language

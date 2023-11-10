@@ -1,5 +1,48 @@
 #!/usr/bin/env bash
 #
+#
+
+# Browser
+#
+if [ -x "$(command -v firefox)" ]; then
+  export BROWSER='firefox'
+fi
+
+#
+# Editors
+#
+if [ -x "$(command -v nvim-qt)" ]; then
+  # If we have nvim-qt we assume that `nvim` is also available so let's use them
+  alias vim='nvim'
+  alias gvim='nvim-qt'
+  export EDITOR='nvim'
+  export SYSTEMD_EDITOR='nvim'
+  export VISUAL='nvim-qt'
+elif [ -x "$(command -v nvim)" ]; then   # Prefer nvim-qt over gvim
+  # we only have neovim (probably on a server or something. so use just neovim
+  alias vim='nvim'
+  alias gvim='nvim'
+  export EDITOR='nvim'
+  export SYSTEMD_EDITOR='nvim'
+  export VISUAL='nvim'
+elif [ -x "$(command -v gvim)" ]; then   # Prefer nvim-qt over gvim
+  # It seems we don't have nvim at all. Since we have gvim let's use it
+  export EDITOR='vim'
+  export SYSTEMD_EDITOR='vim'
+  export VISUAL='gvim'
+else
+  # It seems we don't even have gvim. Let's use plain vim
+  alias gvim='vim'
+  export EDITOR='vim'
+  export SYSTEMD_EDITOR='vim'
+  export VISUAL='gvim'
+fi
+
+
+# Pager
+if [ -x "$(command -v less)" ]; then
+  export PAGER='less'
+fi
 
 # docker
 alias dc='docker'
@@ -82,23 +125,6 @@ alias usctl='systemctl --user'
 alias ustart='systemctl --user start'
 alias ustatus='systemctl --user status'
 alias ustop='systemctl --user stop'
-
-# Prefer nvim over vim
-# Prefer neovide over gvim
-# If gvim is not available fall back to vim
-if [ -x "$(command -v nvim)" ]; then
-  alias vim='nvim'
-fi
-if [ ! -x "$(command -v gvim)" ]; then
-  alias gvim='vim'
-fi
-if [ -x "$(command -v neovide)" ]; then
-  alias neovide='neovide --multigrid --notabs'
-  alias neovide='neovide --multigrid'
-  alias gvim='nvim-qt'
-fi
-alias v='gvim'
-alias gv='/usr/bin/gvim'
 
 # ansible
 if [ -x "$(command -v ansible)" ]; then
