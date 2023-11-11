@@ -44,9 +44,10 @@ def main():
     data = {}
     for item in pkgutil.iter_modules():
         if item.ispkg:
-            data[item.name] = os.path.join(item.module_finder.path, item.name)
+            path = os.path.join(item.module_finder.path, item.name)
         else:
-            data[item.name] = os.path.join(item.module_finder.path, f"{item.name}.py")
+            path = os.path.join(item.module_finder.path, f"{item.name}.py")
+        data[item.name] = path
 
     if args.module not in data:
         raise sys.exit(f"The specified module was not found: {args.module}")
@@ -54,9 +55,6 @@ def main():
         path = data[args.module]
         print(path)
         run(editor=editor, path=path)
-        # sys.stdout.write(path)
-        # sys.stdout.flush()
-        # os.system(f"{editor} {path}")  # , *(path,))
 
 
 if __name__ == "__main__":
