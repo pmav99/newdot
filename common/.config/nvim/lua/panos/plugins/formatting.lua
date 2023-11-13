@@ -19,7 +19,7 @@ return {
         markdown = { "prettier" },
         graphql = { "prettier" },
         lua = { "stylua" },
-        python = { "reorder-python-imports", "black" },
+        python = { "reorder-python-imports" },
       },
       format_on_save = {
         lsp_fallback = true,

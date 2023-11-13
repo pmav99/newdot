@@ -35,9 +35,9 @@ keymap.set("n", "<C-Down>", ":resize +2<CR>", { desc = "Increase split size vert
 keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease split size horizontally ", noremap = true })
 keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase split size horizontally", noremap = true })
 
-keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" }) -- split window vertically
-keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" }) -- split window horizontally
-keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" }) -- make split windows equal width & height
+keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })     -- split window vertically
+keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })   -- split window horizontally
+keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })      -- make split windows equal width & height
 keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" }) -- close current split window
 
 -- buffers
@@ -50,20 +50,6 @@ keymap.set("n", "<leader>/", "<cmd>nohlsearch<CR>", { desc = "Clear search highl
 
 -- Paste
 keymap.set("v", "p", "P", { desc = "Paste before, not after the cursor", noremap = true })
-
--- Comment
-keymap.set(
-  "n",
-  "<leader>c",
-  "<cmd>lua require('Comment.api').toggle.linewise.current()<CR>",
-  { desc = "Comment current line", noremap = true }
-)
-keymap.set(
-  "x",
-  "<leader>c",
-  "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
-  { desc = "Comment selected lines", noremap = true }
-)
 
 -- Code folding
 keymap.set("n", "<leader>f0", ":set foldlevel=0<CR>", { desc = "Set foldlevel to 0", noremap = true })
