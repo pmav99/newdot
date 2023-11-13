@@ -2,6 +2,26 @@
 #
 #
 
+# Return true or false if we are on azure
+is_bdap() {
+  if grep -q jeodpp /etc/hostname; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+# https://stackoverflow.com/questions/54913218/detect-whether-running-on-azure-iaas-vm-net-application
+# https://stackoverflow.com/questions/50629815/quickly-detect-if-vm-is-running-on-azure
+# https://learn.microsoft.com/en-us/azure/security/fundamentals/azure-domains
+is_azure () {
+  if grep -q cloudapp /etc/resolv.conf; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 # Browser
 #
 if [ -x "$(command -v firefox)" ]; then
@@ -60,11 +80,21 @@ fi
 
 # XDG BASE directories
 # https://wiki.archlinux.org/index.php/XDG_Base_Directory
-export XDG_CONFIG_HOME=$HOME/.config
-export XDG_CACHE_HOME=$HOME/.cache
-export XDG_DATA_HOME=$HOME/.local/share
-export XDG_RUNTIME_DIR=/var/run/user/$(id -u)
+XDG_CONFIG_HOME=$HOME/.config
+if is_azure; then
+  XDG_CACHE_HOME=/mnt/cache
+elif is_bdap; then
+  XDG_CACHE_HOME=/scratch/"$(whoami)"/cache
+else
+  XDG_CACHE_HOME="${HOME}"/.cache
+fi
+XDG_DATA_HOME=$HOME/.local/share
+XDG_RUNTIME_DIR=/var/run/user/$(id -u)
 mkdir -p $XDG_DATA_HOME $XDG_CACHE_HOME $XDG_CONFIG_HOME
+export XDG_CONFIG_HOME
+export XDG_CACHE_HOME
+export XDG_DATA_HOME
+export XDG_RUNTIME_DIR
 
 export PYTHONSTARTUP=~/.pythonrc.py
 
@@ -87,6 +117,28 @@ export R_LIBS="$HOME/.R"
 export JAVA_OPTS="-Xmx2048M -Xms32M"
 
 export GPG_TTY=$(tty)
+
+# setup micromamba
+if [[ $(which micromamba) ]]; then
+  MAMBA_EXE=$(which micromamba)
+  if is_bdap; then
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/scratch/$(whoami)/.micromamba}"
+  elif is_azure; then
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/mnt/micromamba}"
+  else
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
+  fi
+  mkdir -p "${MAMBA_ROOT_PREFIX}"
+  echo "mamba exe at   : ${MAMBA_EXE}"
+  echo "mamba prefix at: ${MAMBA_ROOT_PREFIX}"
+  export MAMBA_EXE
+  export MAMBA_ROOT_PREFIX
+  eval "$(micromamba shell hook)"
+  # Since micromamba is not installing the conda and the mamba binaries,
+  # let's pretend that we have them!
+  conda() { micromamba "${@}"; }
+  mamba() { micromamba "${@}"; }
+fi
 
 # docker
 alias dc='docker'
@@ -268,3 +320,38 @@ alias qg='qgit --all'
 alias rmtex="find . -type f \( -name '*.aux' -o -name '*.glo' -o -name '*.idx' -o -name '*.log' -o -name '*.toc' -o -name '*.ist' -o -name '*.acn' -o -name '*.acr' -o -name '*.alg' -o -name '*.bbl' -o -name '*.blg' -o -name '*.dvi' -o -name '*.glg' -o -name '*.gls' -o -name '*.ilg' -o -name '*.ind' -o -name '*.lof' -o -name '*.lot' -o -name '*.maf' -o -name '*.mtc' -o -name '*.thm' -o -name '*.nav' -o -name '*.snm' -o -name '*.out' -o -name '*.synctex.gz' -o -name '*.mtc1' -name '*.bcf' -name '*.fls' -name '*.run.xml' \) -delete"
 alias calendar="python -m calendar"
 
+enable_aslr() {
+  echo 2 | sudo tee /proc/sys/kernel/randomize_va_space
+}
+
+enable_smt() {
+  # Enable SMT - https://access.redhat.com/solutions/rhel-smt
+  echo on | sudo tee /sys/devices/system/cpu/smt/control
+}
+
+disable_aslr() {
+  echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
+}
+
+disable_smt() {
+  # Disable SMT - https://access.redhat.com/solutions/rhel-smt
+  echo off | sudo tee /sys/devices/system/cpu/smt/control
+}
+
+enable_benchmarking() {
+  enable_aslr
+  enable_smt
+  # echo 0 | sudo tee /sys/devices/system/cpu/cpufreq/boost
+  # https://askubuntu.com/a/318476/893808
+  # echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
+  # export PYTHONHASHSEED=123
+}
+
+disable_benchmarking() {
+  disable_aslr
+  disable_smt
+  # echo 1 | sudo tee /sys/devices/system/cpu/cpufreq/boost
+  # https://askubuntu.com/a/318476/893808
+  # echo 2 | sudo tee /proc/sys/kernel/randomize_va_space
+  # unset PYTHONHASHSEED
+}
