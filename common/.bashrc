@@ -36,7 +36,7 @@ fi
 source "${HOME}"/.bash_prompt.sh
 
 # Setup aliases
-source ~/.shell_aliases
+source ~/.shell_common
 
 # Use vim keybindings
 set -o vi
@@ -49,7 +49,7 @@ fi
 
 # fzf
 if [ -x "$(command -v fzf)" ]; then
-  # The common configuration is in .shell_aliases
+  # The common configuration is in .shell_common
   # Here we have just the bash specific stuff
   # key bindings
   if [ -f /usr/share/fzf/key-bindings.bash ]; then
