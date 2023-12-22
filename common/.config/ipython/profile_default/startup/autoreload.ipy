@@ -1,2 +1,2 @@
 %load_ext autoreload
-%autoreload 2
+%autoreload 3 -p
