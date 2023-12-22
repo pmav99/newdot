@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+
+set -Eeuo pipefail
+
+declare -r notification="${@}"
+
+display_usage () {
+    echo 'Send an INFO notification to Slack'
+    echo 'Usage: sinfo <NOTIFICATION_TEXT>'
+}
+
+# Bail out early
+if [[ $# -eq 0 ]]; then
+    display_usage
+    exit 1
+fi
+
+declare -r webhook_url=$(<~/.config/my_notifications/info)
+
+curl \
+  --fail \
+  --silent \
+  --show-error \
+  -X POST \
+  -H 'Content-type: application/json' \
+  --data "{\"text\":\"${notification[@]}\"}" \
+  "${webhook_url}" \
+  > /dev/null
