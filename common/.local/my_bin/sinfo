@@ -3,7 +3,12 @@
 
 set -Eeuo pipefail
 
-declare -r notification="${@}"
+declare -r notification="${*}"
+declare webhook_path
+declare webhook_url
+
+webhook_path=~/.config/my_notifications/info
+readonly webhook_path
 
 display_usage () {
     echo 'Send an INFO notification to Slack'
@@ -16,7 +21,13 @@ if [[ $# -eq 0 ]]; then
     exit 1
 fi
 
-declare -r webhook_url=$(<~/.config/my_notifications/info)
+if [[ ! -f "${webhook_path}" && -r "${webhook_path}" ]]; then
+  printf 'Path does not exist or it is not readable: %s\n' "${webhook_path}"
+  exit 2
+fi
+
+webhook_url="$(<"${webhook_path}")"
+readonly webhook_url
 
 curl \
   --fail \
@@ -24,6 +35,6 @@ curl \
   --show-error \
   -X POST \
   -H 'Content-type: application/json' \
-  --data "{\"text\":\"${notification[@]}\"}" \
+  --data "{\"text\":\"${notification[*]}\"}" \
   "${webhook_url}" \
   > /dev/null
