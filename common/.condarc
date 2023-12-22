@@ -4,4 +4,5 @@ changeps1: false
 channel_priority: strict
 channels:
   - gbrey
+  - tomsail
   - conda-forge
