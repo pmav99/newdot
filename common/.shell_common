@@ -55,7 +55,7 @@ else
   alias gvim='vim'
   export EDITOR='vim'
   export SYSTEMD_EDITOR='vim'
-  export VISUAL='gvim'
+  export VISUAL='vim'
 fi
 
 
@@ -149,7 +149,7 @@ alias dcn='docker network'
 alias dcmp='docker-compose'
 
 # python
-alias i3="ipython3"
+alias i3="ipython"
 alias jl="jupyter-lab"
 
 # git
@@ -172,10 +172,9 @@ alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
 
 # The ubiquitous 'll': directories first, with alphanumeric sorting:
 alias ll="ls -lv --group-directories-first"
-alias lm='ll |less'        #  Pipe through 'less'
 alias lr='ll -R'           #  Recursive ls.
 alias la='ll -A'           #  Show hidden files.
-alias tree='tree -C'    #  Nice alternative to 'recursive ls' ...
+alias tree='tree -C'       #  Nice alternative to 'recursive ls' ...
 
 # Make some of the file manipulation programs verbose
 alias mv="mv -vi"
@@ -312,6 +311,11 @@ fi
 # kitty
 if [ "$TERM" = "xterm-kitty" ]; then
   alias ssh="kitty +kitten ssh"
+fi
+
+if is_bdap; then
+  export S=/scratch/"$(whoami)"
+  export E=/eos/jeodpp/data/projects/FLOODS-COAST
 fi
 
 # Various
