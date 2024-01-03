@@ -35,6 +35,6 @@ curl \
   --show-error \
   -X POST \
   -H 'Content-type: application/json' \
-  --data "{\"text\":\"${notification[*]}\"}" \
+  --data "{\"text\":\"$(hostname) - $(date -Iseconds):\n${notification[*]}\"}" \
   "${webhook_url}" \
   > /dev/null

@@ -12,7 +12,7 @@ readonly webhook_path
 
 display_usage () {
     echo 'Send a SHELL notification to Slack'
-    echo 'Usage: sshell <NOTIFICATION_TEXT>'
+    echo 'Usage: nshell <NOTIFICATION_TEXT>'
 }
 
 # Bail out early
@@ -35,6 +35,6 @@ curl \
   --show-error \
   -X POST \
   -H 'Content-type: application/json' \
-  --data "{\"text\":\"${notification[*]}\"}" \
+  --data "{\"text\":\"$(hostname) - $(date -Iseconds):\n${notification[*]}\"}" \
   "${webhook_url}" \
   > /dev/null
