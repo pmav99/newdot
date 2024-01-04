@@ -1,3 +1,5 @@
+export PATH="${HOME}"/.local/my_bin:"${HOME}"/.local/bin:${PATH}
+
 export TERM=xterm-256color
 
 # Save 5,000 lines of history in memory
@@ -40,7 +42,6 @@ source ~/.shell_common
 
 # Use vim keybindings
 set -o vi
-export PATH="${HOME}"/.local/my_bin:"${HOME}"/.local/bin:${PATH}
 
 # direnv
 if [ -x "$(command -v direnv)" ]; then
