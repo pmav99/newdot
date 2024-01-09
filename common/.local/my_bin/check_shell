@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+#
+# Get the name of the current shell
+# Check Interactive v.s. Non-Interactive
+# Check Login v.s. Non-Login
+
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  echo "ERROR: This script is meant to be sourced, not executed!" > /dev/stderr
+  exit 1
+fi
+
+declare -l _shell_name
+declare -l _interactive
+declare -l _login
+
+_print_output() {
+  echo " Shell name: ${_shell_name}"
+  echo "Interactive: ${_interactive}"
+  echo "      Login: ${_login}"
+}
+
+_check_bash() {
+  [[ $- == *i* ]] && _interactive='true' || _interactive='false'
+  shopt -q login_shell && _login='true' || _login='false'
+  _print_output
+}
+
+_check_zsh() {
+  [[ -o _interactive ]] && _interactive="true" || _interactive="false"
+  [[ -o _login ]] && _login='true' || _login='false'
+  _print_output
+}
+
+# Use a case statement to match the shell name
+_shell_name=$(ps -p $$ -ocomm=)
+case "$_shell_name" in
+  *bash*)
+    _check_bash
+    ;;
+  *zsh*)
+    _check_zsh
+    ;;
+  *)
+    echo "Don't know how to handle ${_shell_name}"
+    ;;
+esac
