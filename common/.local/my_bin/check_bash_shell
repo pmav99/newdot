@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-#
-
-set -eo pipefail
-
-echo -n 'Interactive: '
-[[ $- == *i* ]] && echo 'true' || echo 'false'
-echo -n 'Login      : '
-shopt -q login_shell && echo 'true' || echo 'false'
