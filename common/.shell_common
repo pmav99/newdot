@@ -2,25 +2,32 @@
 #
 #
 
-# Return true or false if we are on azure
+# Return true or false if we are on BDAP
 is_bdap() {
-  if grep -q jeodpp /etc/hostname; then
-    return 0
-  else
-    return 1
-  fi
+  grep -q jeodpp /etc/hostname
 }
 
 # https://stackoverflow.com/questions/54913218/detect-whether-running-on-azure-iaas-vm-net-application
 # https://stackoverflow.com/questions/50629815/quickly-detect-if-vm-is-running-on-azure
 # https://learn.microsoft.com/en-us/azure/security/fundamentals/azure-domains
 is_azure () {
-  if grep -q cloudapp /etc/resolv.conf; then
-    return 0
-  else
-    return 1
-  fi
+  grep -q cloudapp /etc/resolv.conf
 }
+
+is_meluxina() {
+  grep -q meluxina /etc/hostname
+}
+
+if is_bdap; then
+  S=/scratch/"$(whoami)"
+  export S
+  export E=/eos/jeodpp/data/projects/FLOODS-COAST
+fi
+
+
+if is_meluxina; then
+  export P=/project/home/p200232
+fi
 
 # Browser
 #
@@ -90,7 +97,7 @@ else
 fi
 XDG_DATA_HOME=$HOME/.local/share
 XDG_RUNTIME_DIR=/var/run/user/$(id -u)
-mkdir -p $XDG_DATA_HOME $XDG_CACHE_HOME $XDG_CONFIG_HOME
+mkdir -p "${XDG_DATA_HOME}" "${XDG_CACHE_HOME}" "${XDG_CONFIG_HOME}"
 export XDG_CONFIG_HOME
 export XDG_CACHE_HOME
 export XDG_DATA_HOME
@@ -116,15 +123,18 @@ export GOOS=linux
 export R_LIBS="$HOME/.R"
 export JAVA_OPTS="-Xmx2048M -Xms32M"
 
-export GPG_TTY=$(tty)
+GPG_TTY=$(tty)
+export GPG_TTY
 
 # setup micromamba
-if [[ $(which micromamba) ]]; then
+if [[ -x "$(command -v micromamba)" ]]; then
   MAMBA_EXE=$(which micromamba)
   if is_bdap; then
     MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/scratch/$(whoami)/.micromamba}"
   elif is_azure; then
     MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/mnt/micromamba}"
+  elif is_meluxina; then
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/project/home/p200232/.micromamba}"
   else
     MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
   fi
@@ -134,10 +144,14 @@ if [[ $(which micromamba) ]]; then
   export MAMBA_EXE
   export MAMBA_ROOT_PREFIX
   eval "$(micromamba shell hook)"
-  # Since micromamba is not installing the conda and the mamba binaries,
-  # let's pretend that we have them!
-  conda() { micromamba "${@}"; }
-  mamba() { micromamba "${@}"; }
+  # Micromamba is not installing the conda and the mamba binaries,
+  # so if we don't have them, let's pretend that we have them!
+  if [[ -x "$(command -v conda)" ]]; then
+    conda() { micromamba "${@}"; }
+  fi
+  if [[ -x "$(command -v mamba)" ]]; then
+    mamba() { micromamba "${@}"; }
+  fi
 fi
 
 # docker
@@ -223,12 +237,13 @@ alias ustop='systemctl --user stop'
 
 # Setup .dircolors
 if [ -s "$HOME/.dir_colors" ]; then
-  eval "$(dircolors -b $HOME/.dir_colors)"
+  eval "$(dircolors -b "$HOME"/.dir_colors)"
 fi
 
 # Ruby
 if [[ -x "$(command -v ruby)" ]]; then
-  export GEM_HOME=$(ruby -e 'puts Gem.user_dir')
+  GEM_HOME=$(ruby -e 'puts Gem.user_dir')
+  export GEM_HOME
   export PATH="${PATH}":"${GEM_HOME}"/bin
 fi
 
@@ -253,10 +268,10 @@ if [ -x "$(command -v fzf)" ]; then
     export FZF_DEFAULT_OPTS="--height 40% --reverse --border --preview 'head -n100 {}'"
   fi
   # Use fd if it is available and fallback to ag
-  if [ $commands[fd] ]; then
+  if [ -x "$(command -v fd)" ]; then
     export FZF_DEFAULT_COMMAND='fd --type f --color=never --hidden --follow --exclude .git --exclude .tox'
     export FZF_ALT_C_COMMAND='fd --type d --color=never --hidden --follow --exclude .git --exclude .tox'
-  elif [ $commands[ag] ]; then
+  elif [ -x "$(command -v ag)" ]; then
     export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git --ignore .tox -g ""'
   fi
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -269,7 +284,7 @@ if [ -x "$(command -v minikube)" ]; then
     alias mk="minikube"
 fi
 if [ -x "$(command -v kubectl)" ]; then
-    source <(kubectl completion ${0});
+    source <(kubectl completion "${0}");
     alias kc="kubectl"
     alias kcg="kubectl get"
     alias kcl="kubectl list"
@@ -311,11 +326,6 @@ fi
 # kitty
 if [ "$TERM" = "xterm-kitty" ]; then
   alias ssh="kitty +kitten ssh"
-fi
-
-if is_bdap; then
-  export S=/scratch/"$(whoami)"
-  export E=/eos/jeodpp/data/projects/FLOODS-COAST
 fi
 
 # Various
