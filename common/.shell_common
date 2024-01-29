@@ -27,6 +27,7 @@ fi
 
 if is_meluxina; then
   export P=/project/home/p200232
+  umask 007
 fi
 
 # Browser
