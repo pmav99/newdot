@@ -72,3 +72,7 @@ keymap.set("n", "<leader>φ6", ":set foldlevel=6<CR>", { desc = "Set foldlevel t
 keymap.set("n", "<leader>φ7", ":set foldlevel=7<CR>", { desc = "Set foldlevel to 7", noremap = true })
 keymap.set("n", "<leader>φ8", ":set foldlevel=8<CR>", { desc = "Set foldlevel to 8", noremap = true })
 keymap.set("n", "<leader>φ9", ":set foldlevel=99<CR>", { desc = "Set foldlevel to 99", noremap = true })
+
+-- Indenting in visual mode
+keymap.set("v", "<", "<gv", { desc = "Reselect previous visual selection after indenting out", noremap = true })
+keymap.set("v", ">", ">gv", { desc = "Reselect previous visual selection after indenting in", noremap = true })
