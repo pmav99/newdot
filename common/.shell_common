@@ -50,10 +50,10 @@ if [[ -x "$(command -v micromamba)" ]]; then
   eval "$(micromamba shell hook)"
   # Micromamba is not installing the conda and the mamba binaries,
   # so if we don't have them, let's pretend that we have them!
-  if [[ -x "$(command -v conda)" ]]; then
+  if [[ ! -x "$(command -v conda)" ]]; then
     conda() { micromamba "${@}"; }
   fi
-  if [[ -x "$(command -v mamba)" ]]; then
+  if [[ ! -x "$(command -v mamba)" ]]; then
     mamba() { micromamba "${@}"; }
   fi
 fi
