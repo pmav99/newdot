@@ -71,3 +71,6 @@
 	newHighlight = green bold 22
 [interactive]
   diffFilter = delta --color-only --features=interactive
+[status]
+	short = true
+	branch = true
