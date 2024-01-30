@@ -31,7 +31,7 @@ return {
       notify_on_error = true,
     })
 
-    vim.keymap.set({ "n", "v" }, "<leader>mp", function()
+    vim.keymap.set({ "n", "v" }, "<leader>fmt", function()
       conform.format({
         lsp_fallback = true,
         async = false,
