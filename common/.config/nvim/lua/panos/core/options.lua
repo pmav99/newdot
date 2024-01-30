@@ -51,3 +51,7 @@ opt.splitright = true -- split vertical window to the right
 opt.splitbelow = true -- split horizontal window to the bottom
 
 --vim.opt.clipboard = "unnamedplus"               -- allows neovim to access the system clipboard
+--
+-- Timeouts
+opt.timeout = true
+opt.timeoutlen = 300  -- How long to wait for a mapped sequence to complete
