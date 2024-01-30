@@ -1,3 +1,5 @@
+echo START .bashrc
+
 export PATH="${HOME}"/.local/my_bin:"${HOME}"/.local/bin:${PATH}
 
 export TERM=xterm-256color
@@ -65,6 +67,9 @@ if [ -x "$(command -v fzf)" ]; then
   elif [ -f "${HOME}"/.fzf/shell/key-bindings.bash ]; then
     source "${HOME}"/.fzf/shell/key-bindings.bash
     source "${HOME}"/.fzf/shell/completion.bash
+  elif [ -f "${CONDA_PREFIX}"/share/fzf/shell/key-bindings.bash ]; then
+    source "${CONDA_PREFIX}"/share/fzf/shell/key-bindings.bash
+    source "${CONDA_PREFIX}"/share/fzf/shell/completion.bash
   else
     echo "couldn't find fzf key-bindings"
   fi
