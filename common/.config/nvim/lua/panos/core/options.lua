@@ -50,8 +50,13 @@ opt.clipboard:append("unnamedplus") -- use system clipboard as default register
 opt.splitright = true -- split vertical window to the right
 opt.splitbelow = true -- split horizontal window to the bottom
 
+opt.showtabline = 2 -- Always show tabline
+
+-- Undo
+opt.undofile = true -- Persist undos
+
 --vim.opt.clipboard = "unnamedplus"               -- allows neovim to access the system clipboard
 --
 -- Timeouts
 opt.timeout = true
-opt.timeoutlen = 300  -- How long to wait for a mapped sequence to complete
+opt.timeoutlen = 50  -- How long to wait for a mapped sequence to complete
