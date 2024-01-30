@@ -7,6 +7,8 @@ return {
 
     conform.setup({
       formatters_by_ft = {
+        -- Use the "*" filetype to run formatters on all filetypes.
+        ["*"] = { "codespell", "trim_whitespace" },
         javascript = { "prettier" },
         typescript = { "prettier" },
         javascriptreact = { "prettier" },
@@ -21,11 +23,12 @@ return {
         lua = { "stylua" },
         python = { "reorder-python-imports" },
       },
-      format_on_save = {
-        lsp_fallback = true,
-        async = false,
-        timeout_ms = 1000,
-      },
+      -- format_on_save = {
+      --   lsp_fallback = false,
+      --   async = false,
+      --   timeout_ms = 1000,
+      -- },
+      notify_on_error = true,
     })
 
     vim.keymap.set({ "n", "v" }, "<leader>mp", function()
