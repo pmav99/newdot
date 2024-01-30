@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#
+
+set -Eeuo pipefail
+
+
+declare -a pager_programs=(
+  delta
+  diff-so-fancy
+  less
+)
+
+for name in "${pager_programs[@]}"; do
+  if [[ -x "$(command -v "${name}")" ]]; then
+    exec "${name}" "${@}"
+  fi
+done
+
+echo "Couldn't find any of the following pagers: ${pager_programs[@]}"
+exit 1

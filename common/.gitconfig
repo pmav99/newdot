@@ -27,6 +27,12 @@
 [core]
   autocrlf = input
   editor = vim
+  pager = ,pager
+[delta]
+  navigate = true
+  light = false
+  side-by-side = true
+  line-numbers = true
 [grep]
   linenumber = true
 [github]
@@ -58,3 +64,10 @@
   program = gpg2
 [init]
 	defaultBranch = master
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[interactive]
+  diffFilter = delta --color-only --features=interactive
