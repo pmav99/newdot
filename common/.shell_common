@@ -30,11 +30,44 @@ if is_meluxina; then
   umask 007
 fi
 
+# setup micromamba
+if [[ -x "$(command -v micromamba)" ]]; then
+  MAMBA_EXE=$(which micromamba)
+  if is_bdap; then
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/scratch/$(whoami)/.micromamba}"
+  elif is_azure; then
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/mnt/micromamba}"
+  elif is_meluxina; then
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/project/home/p200232/.micromamba}"
+  else
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
+  fi
+  mkdir -p "${MAMBA_ROOT_PREFIX}"
+  echo "mamba exe at   : ${MAMBA_EXE}"
+  echo "mamba prefix at: ${MAMBA_ROOT_PREFIX}"
+  export MAMBA_EXE
+  export MAMBA_ROOT_PREFIX
+  eval "$(micromamba shell hook)"
+  # Micromamba is not installing the conda and the mamba binaries,
+  # so if we don't have them, let's pretend that we have them!
+  if [[ -x "$(command -v conda)" ]]; then
+    conda() { micromamba "${@}"; }
+  fi
+  if [[ -x "$(command -v mamba)" ]]; then
+    mamba() { micromamba "${@}"; }
+  fi
+fi
+
+if is_meluxina; then
+  micromamba activate panos
+fi
+
 # Browser
-#
 if [ -x "$(command -v firefox)" ]; then
   export BROWSER='firefox'
 fi
+
+
 
 #
 # Editors
@@ -126,34 +159,6 @@ export JAVA_OPTS="-Xmx2048M -Xms32M"
 
 GPG_TTY=$(tty)
 export GPG_TTY
-
-# setup micromamba
-if [[ -x "$(command -v micromamba)" ]]; then
-  MAMBA_EXE=$(which micromamba)
-  if is_bdap; then
-    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/scratch/$(whoami)/.micromamba}"
-  elif is_azure; then
-    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/mnt/micromamba}"
-  elif is_meluxina; then
-    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/project/home/p200232/.micromamba}"
-  else
-    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
-  fi
-  mkdir -p "${MAMBA_ROOT_PREFIX}"
-  echo "mamba exe at   : ${MAMBA_EXE}"
-  echo "mamba prefix at: ${MAMBA_ROOT_PREFIX}"
-  export MAMBA_EXE
-  export MAMBA_ROOT_PREFIX
-  eval "$(micromamba shell hook)"
-  # Micromamba is not installing the conda and the mamba binaries,
-  # so if we don't have them, let's pretend that we have them!
-  if [[ -x "$(command -v conda)" ]]; then
-    conda() { micromamba "${@}"; }
-  fi
-  if [[ -x "$(command -v mamba)" ]]; then
-    mamba() { micromamba "${@}"; }
-  fi
-fi
 
 # docker
 alias dc='docker'
