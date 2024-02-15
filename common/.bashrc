@@ -77,8 +77,7 @@ fi
 
 if [[ -f "${HOME}"/.bashrc.custom ]]; then
   source "${HOME}"/.bashrc.custom
-fi
-
-if [[ -f "${HOME}"/.bashrc.bdap ]]; then
-  source "${HOME}"/.bashrc.bdap
+  if [[ -n "${DEFAULT_CONDA_ENV}" ]]; then
+    micromamba activate "${DEFAULT_CONDA_ENV}"
+  fi
 fi
