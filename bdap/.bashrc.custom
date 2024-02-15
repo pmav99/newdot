@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+S=/scratch/"$(whoami)"
+mkdir -p "${S}"
+export S
+export E=/eos/jeodpp/data/projects/FLOODS-COAST
+export PIPX_HOME="${S}"/.pipx
+export DEFAULT_CONDA_ENV='bdap'

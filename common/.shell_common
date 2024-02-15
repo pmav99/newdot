@@ -4,7 +4,7 @@
 
 # Return true or false if we are on BDAP
 is_bdap() {
-  grep -q jeodpp /etc/hostname
+  grep -q jeodpp /etc/hostname || [[ -d /etc/jeodpp ]]
 }
 
 # https://stackoverflow.com/questions/54913218/detect-whether-running-on-azure-iaas-vm-net-application
@@ -17,18 +17,6 @@ is_azure () {
 is_meluxina() {
   grep -q meluxina /etc/hostname
 }
-
-if is_bdap; then
-  S=/scratch/"$(whoami)"
-  export S
-  export E=/eos/jeodpp/data/projects/FLOODS-COAST
-fi
-
-
-if is_meluxina; then
-  export P=/project/home/p200232
-  umask 007
-fi
 
 # setup micromamba
 if [[ -x "$(command -v micromamba)" ]]; then
@@ -56,18 +44,13 @@ if [[ -x "$(command -v micromamba)" ]]; then
   if [[ ! -x "$(command -v mamba)" ]]; then
     mamba() { micromamba "${@}"; }
   fi
-fi
-
-if is_meluxina; then
-  micromamba activate panos
+  micromamba deactivate
 fi
 
 # Browser
 if [ -x "$(command -v firefox)" ]; then
   export BROWSER='firefox'
 fi
-
-
 
 #
 # Editors
