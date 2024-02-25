@@ -31,8 +31,10 @@ if [[ -x "$(command -v micromamba)" ]]; then
     MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
   fi
   mkdir -p "${MAMBA_ROOT_PREFIX}"
-  echo "mamba exe at   : ${MAMBA_EXE}"
-  echo "mamba prefix at: ${MAMBA_ROOT_PREFIX}"
+  if [[ $- == *i* ]]; then
+    echo "mamba exe at   : ${MAMBA_EXE}"
+    echo "mamba prefix at: ${MAMBA_ROOT_PREFIX}"
+  fi
   export MAMBA_EXE
   export MAMBA_ROOT_PREFIX
   eval "$(micromamba shell hook)"

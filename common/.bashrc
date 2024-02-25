@@ -1,4 +1,6 @@
-echo START .bashrc
+if shopt -q login_shell; then
+  echo START .bashrc
+fi
 
 export PATH="${HOME}"/.local/my_bin:"${HOME}"/.local/bin:${PATH}
 
@@ -71,7 +73,9 @@ if [ -x "$(command -v fzf)" ]; then
     source "${CONDA_PREFIX}"/share/fzf/shell/key-bindings.bash
     source "${CONDA_PREFIX}"/share/fzf/shell/completion.bash
   else
-    echo "couldn't find fzf key-bindings"
+    if shopt -q login_shell; then
+      echo "couldn't find fzf key-bindings"
+    fi
   fi
 fi
 
@@ -80,4 +84,8 @@ if [[ -f "${HOME}"/.bashrc.custom ]]; then
   if [[ -n "${DEFAULT_CONDA_ENV}" ]]; then
     micromamba activate "${DEFAULT_CONDA_ENV}"
   fi
+fi
+
+if shopt -q login_shell; then
+  echo END .bashrc
 fi
