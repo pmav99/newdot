@@ -47,11 +47,6 @@ source ~/.shell_common
 # Use vim keybindings
 set -o vi
 
-# direnv
-if [ -x "$(command -v direnv)" ]; then
-    eval "$(direnv hook bash)"
-fi
-
 # fzf
 if [ -x "$(command -v fzf)" ]; then
   # The common configuration is in .shell_common
@@ -84,6 +79,12 @@ if [[ -f "${HOME}"/.bashrc.custom ]]; then
   if [[ -n "${DEFAULT_CONDA_ENV}" ]]; then
     micromamba activate "${DEFAULT_CONDA_ENV}"
   fi
+fi
+
+# we might be installing direnv via conda!
+# Therefore direnv must load after the default conda env
+if [ -x "$(command -v direnv)" ]; then
+    eval "$(direnv hook bash)"
 fi
 
 if shopt -q login_shell; then
