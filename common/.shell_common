@@ -15,7 +15,7 @@ is_azure () {
 }
 
 is_meluxina() {
-  grep -q meluxina /etc/hostname
+  hostname -d | grep -q meluxina.lxp.lu
 }
 
 # setup micromamba
