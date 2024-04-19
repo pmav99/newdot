@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+export M=/dev/shm
+export E=/eos/bdap/projects/FLOODS-COAST
+export S=/scratch/(id -u)
+mkdir -p "${S}"
+
+export XDG_CACHE_HOME="${S}"/cache
+export MAMBA_ROOT_PREFIX="${S}"/micromamba"

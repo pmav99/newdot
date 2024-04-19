@@ -2,8 +2,11 @@ if shopt -q login_shell; then
   echo START .bashrc
 fi
 
-export PATH="${HOME}"/.local/my_bin:"${HOME}"/.local/bin:${PATH}
+if [[ -f "${HOME}"/.bashrc.pre ]]; then
+  source "${HOME}"/.bashrc.pre
+fi
 
+export PATH="${HOME}"/.local/my_bin:"${HOME}"/.local/bin:${PATH}
 export TERM=xterm-256color
 
 # Save 5,000 lines of history in memory
@@ -74,11 +77,13 @@ if [ -x "$(command -v fzf)" ]; then
   fi
 fi
 
-if [[ -f "${HOME}"/.bashrc.custom ]]; then
-  source "${HOME}"/.bashrc.custom
-  if [[ -n "${DEFAULT_CONDA_ENV}" ]]; then
-    micromamba activate "${DEFAULT_CONDA_ENV}"
-  fi
+if [[ -f "${HOME}"/.bashrc.post ]]; then
+  source "${HOME}"/.bashrc.post
+fi
+
+# Activate the default conda env
+if [[ -n "${DEFAULT_CONDA_ENV}" ]]; then
+  micromamba activate "${DEFAULT_CONDA_ENV}"
 fi
 
 # we might be installing direnv via conda!

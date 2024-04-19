@@ -21,15 +21,15 @@ is_meluxina() {
 # setup micromamba
 if [[ -x "$(command -v micromamba)" ]]; then
   MAMBA_EXE=$(which micromamba)
-  if is_bdap; then
-    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/scratch/$(whoami)/.micromamba}"
-  elif is_azure; then
-    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/mnt/micromamba}"
-  elif is_meluxina; then
-    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/project/home/p200232/.micromamba}"
-  else
-    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
-  fi
+  MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
+  # if is_bdap; then
+  #   MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/scratch/$(whoami)/.micromamba}"
+  # elif is_azure; then
+  #   MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/mnt/micromamba}"
+  # elif is_meluxina; then
+  #   MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/project/home/p200232/.micromamba}"
+  # else
+  # fi
   mkdir -p "${MAMBA_ROOT_PREFIX}"
   if [[ $- == *i* ]]; then
     echo "mamba exe at   : ${MAMBA_EXE}"
@@ -46,7 +46,7 @@ if [[ -x "$(command -v micromamba)" ]]; then
   if [[ ! -x "$(command -v mamba)" ]]; then
     mamba() { micromamba "${@}"; }
   fi
-  micromamba deactivate
+  # micromamba deactivate
 fi
 
 # Browser
@@ -84,7 +84,6 @@ else
   export VISUAL='vim'
 fi
 
-
 # Pager
 if [ -x "$(command -v less)" ]; then
   export PAGER='less'
@@ -106,16 +105,10 @@ fi
 
 # XDG BASE directories
 # https://wiki.archlinux.org/index.php/XDG_Base_Directory
-XDG_CONFIG_HOME=$HOME/.config
-if is_azure; then
-  XDG_CACHE_HOME=/mnt/cache
-elif is_bdap; then
-  XDG_CACHE_HOME=/scratch/"$(whoami)"/cache
-else
-  XDG_CACHE_HOME="${HOME}"/.cache
-fi
-XDG_DATA_HOME=$HOME/.local/share
-XDG_RUNTIME_DIR=/var/run/user/$(id -u)
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
+XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/var/run/user/$(id -u)}"
 mkdir -p "${XDG_DATA_HOME}" "${XDG_CACHE_HOME}" "${XDG_CONFIG_HOME}"
 export XDG_CONFIG_HOME
 export XDG_CACHE_HOME
@@ -129,10 +122,10 @@ export PYTHONSTARTUP=~/.pythonrc.py
 # To circumvent this we need to add some ENV variables
 # https://ipython.readthedocs.io/en/7.2.0/development/config.html#configuration-file-location
 # https://github.com/jupyter/notebook/issues/1355#
-export IPYTHONDIR=${XDG_CONFIG_HOME:-$HOME/.config}/ipython
-export JUPYTER_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/jupyter
+export IPYTHONDIR=${IPYTHONDIR:-${XDG_CONFIG_HOME}/ipython}
+export JUPYTER_CONFIG_DIR=${JUPYTER_CONFIG_DIR:-${XDG_CONFIG_HOME}/jupyter}
 # JUPYTERLAB_DIR defines where jupyter extensions are being installed.
-export JUPYTERLAB_DIR=${JUPYTER_CONFIG_DIR}/lab/
+export JUPYTERLAB_DIR=${JUPYTERLAB_DIR:-${JUPYTER_CONFIG_DIR}/lab/}
 
 # Go and R
 export GOPATH=~/Prog/go

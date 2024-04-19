@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+export M=/dev/shm
+export P=/project/home/p200232
+export XDG_CONFIG_HOME="${P}"/panos/config
+export XDG_CACHE_HOME="${P}"/panos/cache
+export MAMBA_ROOT_PREFIX="${P}"/.micromamba
+
+mkdir -p "${XDG_CONFIG_HOME}" "${XDG_CACHE_HOME}"
