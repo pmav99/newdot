@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export P=/project/home/p200232
 export PIPX_HOME=$P/.pipx
+export PYTHONDONTWRITEBYTECODE=1
 umask 007
 export DEFAULT_CONDA_ENV='panos'
