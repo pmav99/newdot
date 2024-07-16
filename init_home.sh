@@ -7,6 +7,7 @@ mkdir -p ~/.config/
 mkdir -p ~/.config/direnv/
 mkdir -p ~/.config/ipython/profile_default/
 mkdir -p ~/.config/ipython/profile_default/startup/
+mkdir -p ~/.config/jupyter/
 mkdir -p ~/.config/kitty/
 mkdir -p ~/.config/my_notifications/
 mkdir -p ~/.config/nvim/
