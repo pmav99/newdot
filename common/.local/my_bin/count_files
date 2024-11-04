@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+## Script to list directories, files, symlinks, and subdirectories in a given directory
+
+usage() {
+  echo "Usage: $0 <base_directory>"
+  echo "  Prints a table of directories, files, symlinks, and subdirectories."
+  echo "  <base_directory> is the directory to scan."
+}
+
+if [[ $# -eq 0 ]]; then
+  usage
+  exit 1
+fi
+
+set -Eeuo pipefail
+
+base_dir="${1}"
+
+
+printf "%-20s\t%10s\t%10s\t%11s\n" "Directory" "Files" "Symlinks" "Directories"
+
+for dir in $(fd -u -td --max-depth 1 '.*' "${base_dir}"); do
+    relative_dir=$(basename "$dir")
+    no_files=$(fd -u -tf '.*' "${dir}" | wc -l)
+    no_symlinks=$(fd -u -tl '.*' "${dir}" | wc -l)
+    no_directories=$(fd -u -td '.*' "${dir}" | wc -l)
+    printf "%-20s\t%10d\t%10d\t%11d\n" "${relative_dir}" "${no_files}" "${no_symlinks}" "${no_directories}"
+done
