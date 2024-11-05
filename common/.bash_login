@@ -1,0 +1,9 @@
+# .bash_login
+#
+if shopt -q login_shell; then
+  echo START .bash_login
+fi
+
+if shopt -q login_shell; then
+  echo END .bash_login
+fi
