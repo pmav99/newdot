@@ -102,11 +102,11 @@ return {
     -- })
 
     -- configure ruff server
-    -- lspconfig["pyright"].setup({
-    --   capabilities = capabilities,
-    --   on_attach = on_attach,
-    --   filetypes = { "python" },
-    -- })
+    lspconfig["pyright"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { "python" },
+    })
 
     lspconfig["ruff_lsp"].setup({
       capabilities = capabilities,

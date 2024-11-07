@@ -11,14 +11,12 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup(
-  {
-    { import = "panos.plugins" },
-    { import = "panos.plugins.lsp" }
-  }, 
-  {
-  install = { 
-    colorscheme = { "nightfly" }, 
+require("lazy").setup({
+  { import = "panos.plugins" },
+  { import = "panos.plugins.lsp" },
+}, {
+  install = {
+    colorscheme = { "nightfly" },
   },
   checker = {
     enabled = true,
