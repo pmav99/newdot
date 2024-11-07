@@ -8,7 +8,7 @@ return {
     conform.setup({
       formatters_by_ft = {
         -- Use the "*" filetype to run formatters on all filetypes.
-        ["*"] = { "codespell", "trim_whitespace" },
+        ["*"] = { "trim_whitespace" },
         javascript = { "prettier" },
         typescript = { "prettier" },
         javascriptreact = { "prettier" },
@@ -20,8 +20,11 @@ return {
         yaml = { "prettier" },
         markdown = { "prettier" },
         graphql = { "prettier" },
-        lua = { "stylua" },
-        python = { "reorder-python-imports" },
+        -- lua = { "stylua" },
+        python = {},
+      },
+      format_after_save = {
+        lsp_fallback = false,
       },
       -- format_on_save = {
       --   lsp_fallback = false,

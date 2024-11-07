@@ -76,3 +76,7 @@ keymap.set("n", "<leader>φ9", ":set foldlevel=99<CR>", { desc = "Set foldlevel 
 -- Indenting in visual mode
 keymap.set("v", "<", "<gv", { desc = "Reselect previous visual selection after indenting out", noremap = true })
 keymap.set("v", ">", ">gv", { desc = "Reselect previous visual selection after indenting in", noremap = true })
+
+-- Formatting, TextMate-style
+-- keymap.set("n", "w", "qgip", { desc = "Format using textmate style", noremap = true })
+-- keymap.set("v", "w", "qg", { desc = "Format using textmate style", noremap = true })
