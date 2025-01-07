@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+
+set -Eeuo pipefail
+
+gvim ~/ai_query.txt

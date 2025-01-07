@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import sys
+import urllib.parse
+
+
+CMD = """
+firefox \
+  "https://www.google.com/search?q={encoded}" \
+  "https://www.bing.com/search?showconv=1&sendquery=1&q={encoded}" \
+  "https://chat.openai.com/?model=gpt-4&q={encoded}" \
+  "https://chat.mistral.ai/chat?q={encoded}" \
+  "https://claude.ai/new?q={encoded}"
+"""
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Process a file path.')
+    parser.add_argument(
+        "query",
+        nargs="*",
+        help="The query",
+    )
+    parser.add_argument(
+        '--path',
+        nargs="?",
+        default=os.path.expanduser('~/ai_query.txt'),
+        help='Path to the file (default: ~/ai_query.txt)',
+    )
+    args = parser.parse_args()
+    return args
+
+
+def read_query(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            query = file.read()
+    except Exception as exc:
+        sys.exit(str(exc))
+    if not query:
+        sys.exit("Empty file. Please provide a query")
+    return query
+
+
+def main():
+    args = parse_args()
+    if args.query:
+        query = " ".join(args.query)
+    else:
+        query = read_query(args.path)
+    encoded = urllib.parse.quote(query)
+    os.system(CMD.format(encoded=encoded))
+
+
+if __name__ == '__main__':
+    main()
