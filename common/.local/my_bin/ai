@@ -12,7 +12,8 @@ firefox \
   "https://www.bing.com/search?showconv=1&sendquery=1&q={encoded}" \
   "https://chat.openai.com/?model=gpt-4&q={encoded}" \
   "https://chat.mistral.ai/chat?q={encoded}" \
-  "https://claude.ai/new?q={encoded}"
+  "https://claude.ai/new?q={encoded}" \
+  "https://www.perplexity.ai/search?q={encoded}" \
 """
 
 def parse_args():
@@ -24,7 +25,6 @@ def parse_args():
     )
     parser.add_argument(
         '--path',
-        nargs="?",
         default=os.path.expanduser('~/ai_query.txt'),
         help='Path to the file (default: ~/ai_query.txt)',
     )
