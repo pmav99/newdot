@@ -4,6 +4,8 @@
 # Authors:
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
+#
+echo zshrc.local
 
 # Setup PATH
 # https://superuser.com/a/598924/258915
