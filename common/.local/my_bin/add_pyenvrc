@@ -1,13 +1,25 @@
-#!/usr/bin/env bash
-#
-# add_pyenvrc
-#
+#!/usr/bin/env python
 
-/bin/cat <<EOF >./.envrc
+
+import argparse
+import json
+import pathlib
+import shlex
+import subprocess
+import sys
+
+CWD = pathlib.Path.cwd()
+
+ENVRC = """
 #!/usr/bin/env bash
+
+set -e
+
+eval "$(micromamba shell hook --shell bash)"
+micromamba activate {name}
 
 if [ ! -d ./.venv ]; then
-  python3.11 -mvenv .venv
+  $CONDA_PREFIX/bin/python -mvenv .venv
 fi
 source .venv/bin/activate
 
@@ -22,20 +34,64 @@ fi
 if [ ! -f .gitignore ]; then
   add_pygitignore
 fi
+"""
 
 
-## Per project jupyter configuration
-#mkdir -p .config_jupyter/
-#JUPYTER_CONFIG_DIR=.config_jupyter
-#JUPYTERLAB_DIR=.config_jupyter/lab/
-#
-#if [ ! -x .venv/bin/node ]; then
-#  poetry add -D nodeenv@latest
-#  # reactivate the virtualenv in order to get the nodeenv in the current PATH
-#  deactivate && source .venv/bin/activate
-#  # Create the node virtual env
-#  nodeenv -p --node=system
-#  # Reactivate the virtualenv in order to activate the newly created node venv
-#  deactivate && source .venv/bin/activate
-#fi
-EOF
+def parse_args():
+    parser = argparse.ArgumentParser(description="Setup .envrc")
+    parser.add_argument(
+        "name",
+        nargs="?",
+        help="The name of the conda environment. Defaults to the name of the current directory.",
+        default=CWD.name,
+    )
+    parser.add_argument(
+        "-p",
+        "--python-version",
+        help="The version of the python version to use in the conda env",
+        default="3.12",
+    )
+    args = parser.parse_args()
+    return args
+
+
+def get_existing_conda_environment_names() -> set[str]:
+    proc = subprocess.run(
+        shlex.split("micromamba env list --json"),
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    envs = json.loads(proc.stdout)["envs"][1:]
+    names = {pathlib.Path(env).name for env in envs}
+    return names
+
+
+def create_conda_env(name: str, python_version: str) -> None:
+    subprocess.run(
+        shlex.split(
+            f"micromamba env create --yes --name {name} --offline python={python_version}"
+        ),
+        check=True,
+    )
+
+
+def create_envrc(name: str):
+    contents = ENVRC.format(name=name)
+    (CWD / ".envrc").write_text(contents)
+
+
+def main() -> None:
+    args = parse_args()
+    print(args)
+    existing_conda_names = get_existing_conda_environment_names()
+    if args.name in existing_conda_names:
+        msg = f"A Conda environment named '{args.name}' already exists. Please choose a different one"
+        sys.exit(msg)
+    create_conda_env(args.name, args.python_version)
+    create_envrc(args.name)
+    print()
+
+
+if __name__ == "__main__":
+    main()
