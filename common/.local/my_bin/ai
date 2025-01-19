@@ -35,7 +35,7 @@ def parse_args():
 def read_query(file_path):
     try:
         with open(file_path, 'r') as file:
-            query = file.read()
+            query = "\n".join(line for line in file.readlines() if not line.startswith("#"))
     except Exception as exc:
         sys.exit(str(exc))
     if not query:
