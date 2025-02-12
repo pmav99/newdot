@@ -4,3 +4,6 @@ export PIPX_HOME=$P/.pipx
 export PYTHONDONTWRITEBYTECODE=1
 umask 007
 export DEFAULT_CONDA_ENV='panos'
+export SEAREPORT_DATA_DIR=$P/.cache/seareport_data
+
+shopt -s direxpand
