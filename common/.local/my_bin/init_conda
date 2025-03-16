@@ -6,10 +6,24 @@
 #    source init_conda
 #
 
-if [[ $(which micromamba) ]]; then
+# Return true or false if we are on BDAP
+is_bdap() {
+  grep -q jeodpp /etc/hostname
+}
+
+# https://stackoverflow.com/questions/54913218/detect-whether-running-on-azure-iaas-vm-net-application
+# https://stackoverflow.com/questions/50629815/quickly-detect-if-vm-is-running-on-azure
+# https://learn.microsoft.com/en-us/azure/security/fundamentals/azure-domains
+is_azure () {
+  grep -q cloudapp /etc/resolv.conf
+}
+
+if which micromamba; then
   MAMBA_EXE=$(which micromamba)
-  if [[ -d /scratch ]]; then
-    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/scratch/mavropa/.micromamba}"
+  if is_bdap; then
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/scratch/$(whoami)/.micromamba}"
+  elif is_azure; then
+    MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/mnt/micromamba}"
   else
     MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
   fi
