@@ -5,21 +5,26 @@ import argparse
 import json
 import pathlib
 import shlex
+import stat
 import subprocess
 import sys
 
 CWD = pathlib.Path.cwd()
+
+ENVRC_CONDA = """
+eval "$(micromamba shell hook --shell bash)"
+micromamba activate {name}
+""".strip()
 
 ENVRC = """
 #!/usr/bin/env bash
 
 set -e
 
-eval "$(micromamba shell hook --shell bash)"
-micromamba activate {name}
+{conda}
 
 if [ ! -d ./.venv ]; then
-  $CONDA_PREFIX/bin/python -mvenv .venv
+  python{python_version} -mvenv .venv
 fi
 source .venv/bin/activate
 
@@ -34,7 +39,27 @@ fi
 if [ ! -f .gitignore ]; then
   add_pygitignore
 fi
+
+touch README.md
 """
+
+INSTALL_PACKAGES = """
+#!/usr/bin/env bash
+#
+
+set -euo pipefail
+
+micromamba install \\
+  --yes \\
+  --name "${{CONDA_DEFAULT_ENV}}" \\
+  --override-channels \\
+  --strict-channel-priority \\
+  --channel gbrey \\
+  --channel conda-forge \\
+  python={python_version} \\
+  tk='*=xft_*' \\
+ ;
+""".strip()
 
 
 def parse_args():
@@ -43,7 +68,15 @@ def parse_args():
         "name",
         nargs="?",
         help="The name of the conda environment. Defaults to the name of the current directory.",
-        default=CWD.name,
+        default=f"{CWD.name}_env",
+    )
+    parser.add_argument(
+        "-s",
+        "--skip",
+        nargs="?",
+        const=True,
+        help="Whether to skip the conda env",
+        default=False,
     )
     parser.add_argument(
         "-p",
@@ -70,27 +103,40 @@ def get_existing_conda_environment_names() -> set[str]:
 def create_conda_env(name: str, python_version: str) -> None:
     subprocess.run(
         shlex.split(
-            f"micromamba env create --yes --name {name} --offline python={python_version}"
+            f"micromamba env create --yes --name {name} --offline python={python_version} tk='*=xft_*'"
         ),
         check=True,
     )
 
 
-def create_envrc(name: str):
-    contents = ENVRC.format(name=name)
+def create_envrc(skip: bool, name: str, python_version: str) -> None:
+    conda = ENVRC_CONDA.format(name=name)
+    if skip:
+        # Add the conda lines as comments
+        conda = "\n".join(f"# {line}" for line in conda.splitlines())
+
+    contents = ENVRC.format(name=name, python_version=python_version, conda=conda)
     (CWD / ".envrc").write_text(contents)
+
+
+def create_install_packages_script(python_version: str) -> None:
+    contents = INSTALL_PACKAGES.format(python_version=python_version)
+    path = CWD / "install_conda_packages.sh"
+    path.write_text(contents)
+    path.chmod(path.stat().st_mode | stat.S_IEXEC)
 
 
 def main() -> None:
     args = parse_args()
     print(args)
-    existing_conda_names = get_existing_conda_environment_names()
-    if args.name in existing_conda_names:
-        msg = f"A Conda environment named '{args.name}' already exists. Please choose a different one"
-        sys.exit(msg)
-    create_conda_env(args.name, args.python_version)
-    create_envrc(args.name)
-    print()
+    if not args.skip:
+        existing_conda_names = get_existing_conda_environment_names()
+        if args.name in existing_conda_names:
+            msg = f"A Conda environment named '{args.name}' already exists. Please choose a different one"
+            sys.exit(msg)
+        create_conda_env(args.name, args.python_version)
+        create_install_packages_script(args.python_version)
+    create_envrc(skip=args.skip, name=args.name, python_version=args.python_version)
 
 
 if __name__ == "__main__":
