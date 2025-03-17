@@ -46,5 +46,6 @@ micromamba install \
   xorg-libxcursor  \
   xorg-libxft  \
   xorg-libxinerama  \
+  yazi \
   zstd \
 ;
