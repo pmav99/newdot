@@ -35,6 +35,7 @@ return {
         -- "graphql",
         -- "emmet_ls",
         -- "prismals",
+        "basedpyright",
         "pyright",
         "lua_ls",
         "ruff_lsp",
