@@ -13,4 +13,10 @@ def la(line):
     "Call `ls -lah`"
     return get_ipython().run_line_magic("ls", f" -lah {line}")
 
-del bat, la
+@_register_line_magic
+def tree(line):
+    "Call `ls -lah`"
+    return get_ipython().run_line_magic("tree", f"{line}")
+
+
+del bat, la, tree
