@@ -13,20 +13,22 @@ end
 
 bootstrap_paq()
 require "paq" {
-  { "akinsho/bufferline.nvim" },
   -- { "beauwilliams/statusline.lua" },
+  { "akinsho/bufferline.nvim" },
   { "dstein64/vim-startuptime" },
   { "folke/which-key.nvim" },
   { "junegunn/fzf" },
   { "junegunn/fzf.vim" },
   { "neovim/nvim-lspconfig" },
-  { 'nvim-lua/plenary.nvim' },
+  { "numToStr/Comment.nvim" },
   { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   { "nvim-telescope/telescope.nvim", branch = "0.1.x" },
-  { "nvim-tree/nvim-web-devicons" },
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+  { "nvim-tree/nvim-web-devicons" },
+  { "okuuva/auto-save.nvim" },
   { "rebelot/kanagawa.nvim" },
   { "savq/paq-nvim" }, -- Let Paq manage itself
+  { 'nvim-lua/plenary.nvim' },
 }
 
 -----------------------------------------------
@@ -329,3 +331,16 @@ keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy f
 keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
 keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
 keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
+
+
+------------------------------------------------
+------------------- Comment --------------------
+------------------------------------------------
+require('Comment').setup({
+  toggler = {
+      line = '<leader>c',
+  },
+  opleader = {
+      line = '<leader>c',
+  },
+})
