@@ -20,10 +20,13 @@ require "paq" {
   { "junegunn/fzf" },
   { "junegunn/fzf.vim" },
   { "neovim/nvim-lspconfig" },
+  { 'nvim-lua/plenary.nvim' },
+  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  { "nvim-telescope/telescope.nvim", branch = "0.1.x" },
   { "nvim-tree/nvim-web-devicons" },
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
   { "rebelot/kanagawa.nvim" },
   { "savq/paq-nvim" }, -- Let Paq manage itself
-  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
 }
 
 -----------------------------------------------
@@ -303,3 +306,26 @@ kanagawa.load("wave")
 ------------------- Bufferline -------------------
 --------------------------------------------------
 require("bufferline").setup()
+
+--------------------------------------------------
+------------------- Telescope --------------------
+--------------------------------------------------
+local telescope  = require("telescope")
+local telescope_actions = require("telescope.actions")
+telescope.setup({
+  defaults = {
+    path_display = { "smart" },
+    mappings = {
+      i = {
+        ["<C-k>"] = telescope_actions.move_selection_previous, -- move to prev result
+        ["<C-j>"] = telescope_actions.move_selection_next, -- move to next result
+        ["<C-q>"] = telescope_actions.send_selected_to_qflist + telescope_actions.open_qflist,
+      },
+    },
+  },
+})
+telescope.load_extension("fzf")
+keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })
+keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
+keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
+keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
