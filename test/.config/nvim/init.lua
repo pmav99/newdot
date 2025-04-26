@@ -13,13 +13,17 @@ end
 
 bootstrap_paq()
 require "paq" {
-  "beauwilliams/statusline.lua",
-  "dstein64/vim-startuptime",
-  "folke/which-key.nvim",
-  "junegunn/fzf",
-  "junegunn/fzf.vim",
-  "neovim/nvim-lspconfig",
-  "savq/paq-nvim", -- Let Paq manage itself
+  { "akinsho/bufferline.nvim" },
+  -- { "beauwilliams/statusline.lua" },
+  { "dstein64/vim-startuptime" },
+  { "folke/which-key.nvim" },
+  { "junegunn/fzf" },
+  { "junegunn/fzf.vim" },
+  { "neovim/nvim-lspconfig" },
+  { "nvim-tree/nvim-web-devicons" },
+  { "rebelot/kanagawa.nvim" },
+  { "savq/paq-nvim" }, -- Let Paq manage itself
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
 }
 
 -----------------------------------------------
@@ -172,8 +176,130 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 ------------------- LSPs -------------------
 --------------------------------------------
 local lspconfig = require("lspconfig")
-local lsps = { "basedpyright", "ruff" }
-for _, lsp in pairs(lsps) do
-    local setup = {}
-    lspconfig[lsp].setup(setup)
-end
+lspconfig["basedpyright"].setup({})
+lspconfig["ruff"].setup({})
+
+--------------------------------------------------
+------------------- Treesitter -------------------
+--------------------------------------------------
+require("nvim-treesitter.configs").setup {
+  -- A list of parser names, or "all" (the listed parsers MUST always be installed)
+  ensure_installed = {
+    "bash",
+    "cmake",
+    "cpp",
+    "csv",
+    "cuda",
+    "c",
+    "diff",
+    "dockerfile",
+    "editorconfig",
+    "fortran",
+    "gitattributes",
+    "gitcommit",
+    "gitignore",
+    "git_config",
+    "git_rebase",
+    "html",
+    "http",
+    "java",
+    "jinja",
+    "jinja_inline",
+    "jq",
+    "json5",
+    "json",
+    "lua",
+    "make",
+    "markdown",
+    "markdown_inline",
+    "matlab",
+    "requirements",
+    "psv",
+    "python",
+    "regex",
+    "rst",
+    "r",
+    "sql",
+    "ssh_config",
+    "strace",
+    "toml",
+    "tsv",
+    "vimdoc",
+    "vim",
+    "xml",
+    "yaml",
+  },
+
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- Automatically install missing parsers when entering buffer
+  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+  auto_install = true,
+
+  -- List of parsers to ignore installing (or "all")
+  ignore_install = { "javascript" },
+
+  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
+  -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+
+  highlight = {
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+    --disable = { "c", "rust" },
+    -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+    disable = function(lang, buf)
+        local max_filesize = 100 * 1024 -- 100 KB
+        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        if ok and stats and stats.size > max_filesize then
+            return true
+        end
+    end,
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+
+---------------------------------------------------
+------------------- Colorscheme -------------------
+---------------------------------------------------
+local kanagawa = require("kanagawa")
+kanagawa.setup({
+  compile = true,
+  dimInactive = true,
+  colors = {
+    theme = {
+      all = {
+        ui = {
+          bg_gutter = "none"
+        }
+      }
+    }
+  },
+  overrides = function(colors)
+    local theme = colors.theme
+    return {
+      TelescopeTitle = { fg = theme.ui.special, bold = true },
+      TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+      TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+      TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+      TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+      TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+      TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+    }
+  end,
+})
+kanagawa.load("wave")
+
+--------------------------------------------------
+------------------- Bufferline -------------------
+--------------------------------------------------
+require("bufferline").setup()
