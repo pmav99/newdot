@@ -71,11 +71,11 @@ def parse_args():
         default=f"{CWD.name}_env",
     )
     parser.add_argument(
-        "-s",
-        "--skip",
+        "-c",
+        "--conda",
         nargs="?",
         const=True,
-        help="Whether to skip the conda env",
+        help="Whether to create the conda env",
         default=False,
     )
     parser.add_argument(
@@ -109,9 +109,9 @@ def create_conda_env(name: str, python_version: str) -> None:
     )
 
 
-def create_envrc(skip: bool, name: str, python_version: str) -> None:
+def create_envrc(create_conda: bool, name: str, python_version: str) -> None:
     conda = ENVRC_CONDA.format(name=name)
-    if skip:
+    if not create_conda:
         # Add the conda lines as comments
         conda = "\n".join(f"# {line}" for line in conda.splitlines())
 
@@ -128,15 +128,14 @@ def create_install_packages_script(python_version: str) -> None:
 
 def main() -> None:
     args = parse_args()
-    print(args)
-    if not args.skip:
+    if args.conda:
         existing_conda_names = get_existing_conda_environment_names()
         if args.name in existing_conda_names:
             msg = f"A Conda environment named '{args.name}' already exists. Please choose a different one"
             sys.exit(msg)
         create_conda_env(args.name, args.python_version)
         create_install_packages_script(args.python_version)
-    create_envrc(skip=args.skip, name=args.name, python_version=args.python_version)
+    create_envrc(create_conda=args.conda, name=args.name, python_version=args.python_version)
 
 
 if __name__ == "__main__":
