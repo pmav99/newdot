@@ -2,12 +2,12 @@
 
 export M=/dev/shm
 export P=/project/home/p200653
-export PDEV=/project/home/p200653
-export PREG=/project/home/p200764
+export DEV=/project/home/p200653
+export REG=/project/home/p200764
 export S=/project/scratch/p200764
 export SREG=/project/scratch/p200764
-export XDG_CONFIG_HOME="${P}"/panos/config
-export XDG_CACHE_HOME="${P}"/panos/cache
-export MAMBA_ROOT_PREFIX="${P}"/.micromamba
+export XDG_CONFIG_HOME="${HOME}"/.config
+export XDG_CACHE_HOME="${DEV}"/panos/.cache
+export MAMBA_ROOT_PREFIX="${DEV}"/.micromamba
 
 mkdir -p "${XDG_CONFIG_HOME}" "${XDG_CACHE_HOME}"
