@@ -62,6 +62,7 @@ if [ -x "$(command -v nvim-qt)" ]; then
   # If we have nvim-qt we assume that `nvim` is also available so let's use them
   alias vim='nvim'
   alias gvim='nvim-qt'
+  alias cvim='nvim-qt -- --clean'
   export EDITOR='nvim'
   export SYSTEMD_EDITOR='nvim'
   export VISUAL='nvim-qt'
@@ -69,17 +70,20 @@ elif [ -x "$(command -v nvim)" ]; then   # Prefer nvim-qt over gvim
   # we only have neovim (probably on a server or something. so use just neovim
   alias vim='nvim'
   alias gvim='nvim'
+  alias cvim='nvim --clean'
   export EDITOR='nvim'
   export SYSTEMD_EDITOR='nvim'
   export VISUAL='nvim'
 elif [ -x "$(command -v gvim)" ]; then   # Prefer nvim-qt over gvim
   # It seems we don't have nvim at all. Since we have gvim let's use it
+  alias cvim='gvim --clean'
   export EDITOR='vim'
   export SYSTEMD_EDITOR='vim'
   export VISUAL='gvim'
 else
   # It seems we don't even have gvim. Let's use plain vim
   alias gvim='vim'
+  alias cvim='vim -u NONE'
   export EDITOR='vim'
   export SYSTEMD_EDITOR='vim'
   export VISUAL='vim'
