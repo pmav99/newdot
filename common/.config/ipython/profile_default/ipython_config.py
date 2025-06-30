@@ -11,3 +11,7 @@ VerboseTB.tb_highlight_style = "monokai"
 c.TerminalInteractiveShell.editing_mode = 'vi'
 c.TerminalInteractiveShell.emacs_bindings_in_vi_insert_mode = False
 c.InteractiveShell.ast_node_interactivity = "all"
+
+c.InteractiveShell.history_length = 200000
+c.InteractiveShell.history_load_length = 20000
+#c.TerminalInteractiveShell.prompts_class = "IPython.terminal.prompts.ClassicPrompts"
