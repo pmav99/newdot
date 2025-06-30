@@ -18,6 +18,8 @@ is_meluxina() {
   hostname -d | grep -q meluxina.lxp.lu
 }
 
+SHELL=$(ps -p $$ -o comm=)
+
 # setup micromamba
 if [[ -x "$(command -v micromamba)" ]]; then
   MAMBA_EXE=$(which micromamba)
@@ -37,7 +39,7 @@ if [[ -x "$(command -v micromamba)" ]]; then
   fi
   export MAMBA_EXE
   export MAMBA_ROOT_PREFIX
-  eval "$(micromamba shell hook)"
+  eval "$(micromamba shell hook --shell "${SHELL}")"
   # Micromamba is not installing the conda and the mamba binaries,
   # so if we don't have them, let's pretend that we have them!
   if [[ ! -x "$(command -v conda)" ]]; then
@@ -46,7 +48,6 @@ if [[ -x "$(command -v micromamba)" ]]; then
   if [[ ! -x "$(command -v mamba)" ]]; then
     mamba() { micromamba "${@}"; }
   fi
-  # micromamba deactivate
 fi
 
 # Browser
