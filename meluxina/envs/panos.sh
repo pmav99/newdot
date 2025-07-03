@@ -38,6 +38,7 @@ micromamba install \
   'rsync' \
   'ruff' \
   'rust' \
+  'shellcheck' \
   'stow' \
   'tar' \
   'the_silver_searcher' \
