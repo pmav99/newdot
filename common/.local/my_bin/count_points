@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+
+set -Eeuo pipefail
+
+usage() {
+    echo "Usage: $0 GPKG_PATH [LAYER_NAME]"
+    echo "Calculate total points in a GeoPackage layer"
+    echo ""
+    echo "Arguments:"
+    echo "  GPKG_PATH    Path to GeoPackage file (required)"
+    echo "  LAYER_NAME   Layer name to analyze (default: coastlines)"
+    exit 1
+}
+
+# Check for at least one argument
+if [ $# -lt 1 ]; then
+    usage
+fi
+
+GPKG_PATH="$1"
+LAYER_NAME="${2:-coastlines}"
+
+no_points=$(ogrinfo -sql "SELECT SUM(ST_NPoints(geom)) AS total_points FROM \"${LAYER_NAME}\"" "${GPKG_PATH}" | ag total_points | tail -n1 | cut -d = -f2 | xargs)
+echo "${GPKG_PATH}: ${no_points}"
