@@ -22,6 +22,7 @@ micromamba install \
   'git-delta' \
   'imagemagick' \
   'libabseil' \
+  'libgdal-hdf5' \
   'libglu' \
   'libhwloc' \
   'moreutils' \
