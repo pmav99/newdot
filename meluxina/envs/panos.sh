@@ -18,6 +18,7 @@ micromamba install \
   'ffmpeg' \
   'fzf' \
   'gdal' \
+  'gh' \
   'git' \
   'git-delta' \
   'imagemagick' \
