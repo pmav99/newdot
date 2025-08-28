@@ -26,6 +26,8 @@ micromamba install \
   'libgdal-hdf5' \
   'libglu' \
   'libhwloc' \
+  'metis' \
+  'metview-batch' \
   'moreutils' \
   'mosh' \
   'ncdu' \
