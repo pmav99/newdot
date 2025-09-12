@@ -82,7 +82,7 @@ def parse_args():
         "-p",
         "--python-version",
         help="The version of the python version to use in the conda env",
-        default="3.12",
+        default=f"3.{sys.version_info.minor}",
     )
     args = parser.parse_args()
     return args
