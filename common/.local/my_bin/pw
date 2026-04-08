@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+
+set -Eeuo pipefail
+
+
+PREFIX="${PASSAGE_DIR:-$HOME/.passage/store}"
+name="$(fd --type f . "${PREFIX}" | sed -e "s|$PREFIX/||" -e 's|\.age$||' | fzf --height 40% --reverse --no-multi)"
+passage "${@}" "${name}"
