@@ -13,6 +13,9 @@ mkdir -p ~/.config/my_notifications/
 mkdir -p ~/.config/nvim/
 mkdir -p ~/.config/pgcli/
 mkdir -p ~/.config/pypoetry/
+mkdir -p ~/.config/systemd/user
+mkdir -p ~/.config/wezterm/
 mkdir -p ~/.local/bin/
+mkdir -p ~/Prog/
 mkdir -p ~/.ssh
 chmod 700 ~/.ssh
