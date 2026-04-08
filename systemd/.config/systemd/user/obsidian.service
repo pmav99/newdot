@@ -1,0 +1,10 @@
+[Unit]
+Description=Start obsidian
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=obsidian
+
+[Install]
+WantedBy=default.target

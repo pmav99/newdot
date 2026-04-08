@@ -1,0 +1,10 @@
+[Unit]
+Description=Start btop on kitty
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/kitty --start-as fullscreen btop
+
+[Install]
+WantedBy=default.target

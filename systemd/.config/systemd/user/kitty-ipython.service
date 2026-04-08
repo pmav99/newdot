@@ -1,0 +1,11 @@
+[Unit]
+Description=Start btop on kitty
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+PassEnvironment=IPYTHONDIR
+ExecStart=/usr/bin/kitty --start-as fullscreen jupyter console
+
+[Install]
+WantedBy=default.target

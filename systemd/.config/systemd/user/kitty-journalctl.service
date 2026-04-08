@@ -1,0 +1,10 @@
+[Unit]
+Description=Start journalctl --boot on kitty
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/kitty --start-as fullscreen journalctl --boot --follow --lines 1000
+
+[Install]
+WantedBy=default.target

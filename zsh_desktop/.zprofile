@@ -74,10 +74,9 @@ if [[ ! -d "$TMPPREFIX" ]]; then
 fi
 
 # Set keyboard layout switcher
-
-if which setxkbmap &>/dev/null; then
-    setxkbmap -option grp:switch,grp:alt_shift_toggle,grp_led:scroll us,gr
-fi
+#if which setxkbmap &>/dev/null; then
+#    setxkbmap -option grp:switch,grp:alt_shift_toggle,grp_led:scroll us,gr
+#fi
 
 
 echo zprofile
