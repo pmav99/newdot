@@ -20,10 +20,24 @@ is_meluxina() {
 
 SHELL=$(ps -p $$ -o comm=)
 
+# XDG BASE directories
+# https://wiki.archlinux.org/index.php/XDG_Base_Directory
+if [[ "${XDG_CONFIG_HOME}" != "${HOME}"* ]]; then XDG_CONFIG_HOME="${HOME}/.config"; fi
+if [[ "${XDG_CACHE_HOME}" != "${HOME}"* ]]; then XDG_CACHE_HOME="${HOME}/.cache"; fi
+if [[ "${XDG_DATA_HOME}" != "${HOME}"* ]]; then XDG_DATA_HOME="${HOME}/.local/share"; fi
+XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/var/run/user/$(id -u)}"
+mkdir -p "${XDG_DATA_HOME}" "${XDG_CACHE_HOME}" "${XDG_CONFIG_HOME}"
+export XDG_CONFIG_HOME
+export XDG_CACHE_HOME
+export XDG_DATA_HOME
+export XDG_RUNTIME_DIR
+
 # setup micromamba
 if [[ -x "$(command -v micromamba)" ]]; then
   MAMBA_EXE=$(which micromamba)
-  MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-"${HOME}"/.micromamba}"
+  if [[ "${MAMBA_ROOT_PREFIX}" != "${HOME}"* ]]; then
+    MAMBA_ROOT_PREFIX="${HOME}/.micromamba"
+  fi
   # if is_bdap; then
   #   MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-/scratch/$(whoami)/.micromamba}"
   # elif is_azure; then
@@ -114,18 +128,6 @@ if [ -x "$(command -v ts)" ]; then
   alias TS='ts -i "%H:%M:%.S" | ts -s "%H:%M:%.S"'
 fi
 
-# XDG BASE directories
-# https://wiki.archlinux.org/index.php/XDG_Base_Directory
-XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
-XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/var/run/user/$(id -u)}"
-mkdir -p "${XDG_DATA_HOME}" "${XDG_CACHE_HOME}" "${XDG_CONFIG_HOME}"
-export XDG_CONFIG_HOME
-export XDG_CACHE_HOME
-export XDG_DATA_HOME
-export XDG_RUNTIME_DIR
-
 export PYTHONSTARTUP=~/.pythonrc.py
 
 # Ipython and Jupyter
@@ -137,6 +139,9 @@ export IPYTHONDIR=${IPYTHONDIR:-${XDG_CONFIG_HOME}/ipython}
 export JUPYTER_CONFIG_DIR=${JUPYTER_CONFIG_DIR:-${XDG_CONFIG_HOME}/jupyter}
 # JUPYTERLAB_DIR defines where jupyter extensions are being installed.
 export JUPYTERLAB_DIR=${JUPYTERLAB_DIR:-${JUPYTER_CONFIG_DIR}/lab/}
+
+# Node
+export npm_config_prefix="${HOME}/.local"
 
 # Go and R
 export GOPATH=~/Prog/go
@@ -249,10 +254,10 @@ fi
 
 
 # NTFY notifications
-if [ -x "$(command -v ntfy)" ]; then
-    eval "$(ntfy shell-integration)"
-    export AUTO_NTFY_DONE_IGNORE="vim nvim gvim screen tmux"
-fi
+#if [ -x "$(command -v ntfy)" ]; then
+#    eval "$(ntfy shell-integration)"
+#    export AUTO_NTFY_DONE_IGNORE="vim nvim gvim screen tmux"
+#fi
 
 # Common fzf configuration
 if [ -x "$(command -v fzf)" ]; then
