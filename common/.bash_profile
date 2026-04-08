@@ -19,3 +19,7 @@ fi
 if shopt -q login_shell; then
   echo END .bash_profile
 fi
+
+if which startx &>/dev/null; then
+    [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && startx
+fi
