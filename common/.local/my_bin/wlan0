@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#
+
+set -Eeuo pipefail
+set -x
+
+sudo iwctl station wlan0 "${@}"
