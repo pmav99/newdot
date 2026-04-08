@@ -109,6 +109,7 @@ opt.undofile = true -- Persist undos
 opt.timeout = true
 opt.timeoutlen = 500 -- How long to wait for a mapped sequence to complete
 
+
 -----------------------------------------------
 ------------------- KEYMAPS -------------------
 -----------------------------------------------
@@ -220,56 +221,52 @@ vim.api.nvim_create_autocmd('FileType', {
 --------------------------------------------
 ------------------- LSPs -------------------
 --------------------------------------------
-local lspconfig = require("lspconfig")
-lspconfig["basedpyright"].setup({})
-lspconfig["ruff"].setup({})
+-- LSP keybindings on attach
+vim.api.nvim_create_autocmd('LspAttach', {
+  desc = 'LSP keybindings',
+  callback = function(args)
+    local bufnr = args.buf
+    local opts = { noremap = true, silent = true, buffer = bufnr }
 
-local opts = { noremap = true, silent = true }
-local on_attach = function(client, bufnr)
-  opts.buffer = bufnr
+    opts.desc = "Show LSP references"
+    keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
 
-  -- set keybinds
-  opts.desc = "Show LSP references"
-  keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
+    opts.desc = "Go to declaration"
+    keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
 
-  opts.desc = "Go to declaration"
-  keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
+    opts.desc = "Show LSP definitions"
+    keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
 
-  opts.desc = "Show LSP definitions"
-  keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
+    opts.desc = "Show LSP implementations"
+    keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
 
-  opts.desc = "Show LSP implementations"
-  keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
+    opts.desc = "Show LSP type definitions"
+    keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
 
-  opts.desc = "Show LSP type definitions"
-  keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
+    opts.desc = "See available code actions"
+    keymap.set({ "n", "v" }, "<leader>za", vim.lsp.buf.code_action, opts)
 
-  opts.desc = "See available code actions"
-  keymap.set({ "n", "v" }, "<leader>za", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
+    opts.desc = "Smart rename"
+    keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 
-  opts.desc = "Smart rename"
-  keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
+    opts.desc = "Show buffer diagnostics"
+    keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
 
-  opts.desc = "Show buffer diagnostics"
-  keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
+    opts.desc = "Show line diagnostics"
+    keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
 
-  opts.desc = "Show line diagnostics"
-  keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
+    opts.desc = "Go to previous diagnostic"
+    keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
 
-  opts.desc = "Go to previous diagnostic"
-  keymap.set("n", "[d", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
+    opts.desc = "Go to next diagnostic"
+    keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, opts)
 
-  opts.desc = "Go to next diagnostic"
-  keymap.set("n", "]d", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
+    opts.desc = "Restart LSP"
+    keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)
+  end,
+})
 
-  opts.desc = "Show documentation for what is under cursor"
-  keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
-
-  opts.desc = "Restart LSP"
-  keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
-end
-
--- used to enable autocompletion (assign to every lsp server config)
+-- Autocompletion capabilities
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local capabilities = cmp_nvim_lsp.default_capabilities()
 
@@ -280,26 +277,24 @@ capabilities.textDocument.foldingRange = {
 }
 
 -- Change the Diagnostic symbols in the sign column (gutter)
--- (not in youtube nvim video)
-local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-end
-
--- configure ruff server
-lspconfig["basedpyright"].setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  filetypes = { "python" },
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = " ",
+      [vim.diagnostic.severity.WARN] = " ",
+      [vim.diagnostic.severity.HINT] = "󰠠 ",
+      [vim.diagnostic.severity.INFO] = " ",
+    },
+  },
 })
 
--- configure ruff server
-lspconfig["ruff"].setup({
+-- Configure and enable LSP servers
+vim.lsp.config('*', {
   capabilities = capabilities,
-  on_attach = on_attach,
-  filetypes = { "python" },
+  position_encoding = 'utf-8',
 })
+
+vim.lsp.enable({ 'basedpyright', 'ruff' })
 
 --------------------------------------------------
 ------------------- Treesitter -------------------
@@ -376,7 +371,7 @@ require("nvim-treesitter.configs").setup {
     -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
     disable = function(lang, buf)
         local max_filesize = 100 * 1024 -- 100 KB
-        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
         if ok and stats and stats.size > max_filesize then
             return true
         end
@@ -387,6 +382,10 @@ require("nvim-treesitter.configs").setup {
     -- Using this option may slow down your editor, and you may see some duplicate highlights.
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
+  },
+
+  indent = {
+    enable = true,
   },
 }
 
@@ -421,12 +420,32 @@ kanagawa.setup({
 })
 kanagawa.load("wave")
 
+-- LSP semantic token overrides
+-- Unlink generic LSP tokens that trample treesitter highlighting
+vim.api.nvim_set_hl(0, '@lsp.type.string', {})
+vim.api.nvim_set_hl(0, '@lsp.type.variable.python', {})
+vim.api.nvim_set_hl(0, '@lsp.type.class.python', {})
+vim.api.nvim_set_hl(0, '@string.documentation', { link = 'Comment' })
+
+-- Use LSP tokens for things treesitter can't infer
+vim.api.nvim_set_hl(0, '@lsp.type.property', { link = '@property' })
+vim.api.nvim_set_hl(0, '@lsp.type.enumMember', { link = '@property' })
+vim.api.nvim_set_hl(0, '@lsp.type.parameter', { link = '@variable.parameter' })
+vim.api.nvim_set_hl(0, '@lsp.type.typeParameter', { link = '@variable.parameter' })
+vim.api.nvim_set_hl(0, '@lsp.typemod.variable.defaultLibrary', { link = '@variable.builtin' })
+vim.api.nvim_set_hl(0, '@lsp.typemod.function.defaultLibrary', { link = '@function.builtin' })
+vim.api.nvim_set_hl(0, '@lsp.typemod.enumMember.static', { link = '@constant' })
+vim.api.nvim_set_hl(0, '@lsp.typemod.method.static', { link = '@constant' })
+vim.api.nvim_set_hl(0, '@lsp.typemod.property.static', { link = '@constant' })
+vim.api.nvim_set_hl(0, '@lsp.typemod.variable.readonly.python', { link = '@constant' })
+
 --------------------------------------------------
 ------------------- Bufferline -------------------
 ------------------- lsp-file-operations -------------------
 --------------------------------------------------
 require("bufferline").setup()
 require("lsp-file-operations").setup()
+require("auto-save").setup()
 
 --------------------------------------------------
 ------------------- Telescope --------------------
