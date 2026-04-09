@@ -2,9 +2,44 @@
 
 set -euo pipefail
 
-if [ -x "$(command -v xclip)" ]; then
+have_command() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+have_wayland_clipboard() {
+  [ -n "${WAYLAND_DISPLAY:-}" ] &&
+    [ -n "${XDG_RUNTIME_DIR:-}" ] &&
+    [ -S "${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}" ]
+}
+
+have_x11_clipboard() {
+  [ -n "${DISPLAY:-}" ] || return 1
+
+  if have_command xset; then
+    xset q >/dev/null 2>&1
+    return
+  fi
+
+  if have_command timeout; then
+    timeout 1 xclip -selection clipboard -o >/dev/null 2>&1 </dev/null
+    return
+  fi
+
+  xclip -selection clipboard -o >/dev/null 2>&1 </dev/null
+}
+
+if have_command xclip && have_x11_clipboard; then
   exec xclip -selection clipboard
-else
-  echo 'xclip is not installed'
-  exit 1
 fi
+
+if have_command wl-copy && have_wayland_clipboard; then
+  exec wl-copy
+fi
+
+if ! have_command wl-copy && ! have_command xclip; then
+  printf '%s\n' 'No clipboard tool found: install wl-copy or xclip.' >&2
+else
+  printf '%s\n' 'No clipboard backend is accessible: need a working Wayland session or X11 display auth.' >&2
+fi
+
+exit 1
