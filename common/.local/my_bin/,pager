@@ -4,17 +4,17 @@
 set -Eeuo pipefail
 
 
-declare -a pager_programs=(
-  delta
-  diff-so-fancy
-  less
-)
+if command -v delta >/dev/null 2>&1; then
+  exec delta "${@}"
+fi
 
-for name in "${pager_programs[@]}"; do
-  if [[ -x "$(command -v "${name}")" ]]; then
-    exec "${name}" "${@}"
-  fi
-done
+if command -v diff-so-fancy >/dev/null 2>&1 && command -v less >/dev/null 2>&1; then
+  exec "${BASH}" -o pipefail -c 'diff-so-fancy "$@" | less --tabs=4 -RFX' bash "${@}"
+fi
 
-echo "Couldn't find any of the following pagers: ${pager_programs[@]}"
+if command -v less >/dev/null 2>&1; then
+  exec less "${@}"
+fi
+
+echo "Couldn't find any of the following pagers: delta, diff-so-fancy + less, less" >&2
 exit 1
