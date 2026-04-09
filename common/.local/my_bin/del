@@ -1,41 +1,117 @@
 #!/usr/bin/env bash
 #
-# Move a file to /tmp
+# Move files or directories to a trash directory.
 #
 
-#set -euxo pipefail
 set -euo pipefail
 
 
 display_usage () {
-    echo 'Move a file to /tmp'
-    echo 'Usage: del <path>'
+    echo 'Move files or directories to the trash directory.'
+    echo 'Usage: del [--strict] <path> [path ...]'
+    echo
+    echo 'Environment:'
+    echo '  TRASHCAN   Trash directory (default: ~/.trashcan)'
+    echo
+    echo 'Missing paths are skipped unless --strict is provided.'
 }
-# Bail out early
-if [[ ( $# -gt 2 ) || ( $# -eq 0) ]]; then
-    display_usage
+
+
+expand_home () {
+    local path="$1"
+
+    case "${path}" in
+        "~")    printf '%s\n' "${HOME}" ;;
+        "~/"*)  printf '%s/%s\n' "${HOME}" "${path:2}" ;;
+        *)      printf '%s\n' "${path}" ;;
+    esac
+}
+
+
+build_destination () {
+    local trash_dir="$1"
+    local source_path="$2"
+    local name=''
+    local timestamp=''
+    local candidate=''
+    local counter=0
+
+    name=$(basename -- "${source_path}")
+    candidate="${trash_dir}/${name}"
+    if [[ ! -e "${candidate}" && ! -L "${candidate}" ]]; then
+        printf '%s\n' "${candidate}"
+        return 0
+    fi
+
+    timestamp=$(date +"%Y%m%d_%H%M%S")
+    while true; do
+        candidate="${trash_dir}/${name}.${timestamp}.${counter}"
+        if [[ ! -e "${candidate}" && ! -L "${candidate}" ]]; then
+            printf '%s\n' "${candidate}"
+            return 0
+        fi
+        counter=$((counter + 1))
+    done
+}
+
+
+if ! cli_options=$(getopt -o hs --long help,strict -- "$@"); then
+    echo 'Incorrect options provided' >&2
     exit 1
 fi
-# Read CLI arguments using getopt
-cli_options=$(getopt -o th --long help -- "$@")
-[ $? -eq 0 ] || {
-    echo "Incorrect options provided"
-    exit 1
-}
-eval set -- "$cli_options"
-# default values
-extension='bak'
-path=''
-# Parse getopt arguments
+eval set -- "${cli_options}"
+
+strict=0
 while true; do
     case "$1" in
-        -h | --help )           display_usage
-                                exit 0
-                                ;;
-        --)                     shift;
-                                path=$1;
-                                break;;
+        -h | --help )   display_usage
+                        exit 0
+                        ;;
+        -s | --strict ) strict=1
+                        shift
+                        ;;
+        -- )            shift
+                        break
+                        ;;
+        * )             echo "Unexpected option: $1" >&2
+                        exit 1
+                        ;;
     esac
 done
 
-/usr/bin/mv -f "${path}" /tmp
+if [[ $# -eq 0 ]]; then
+    display_usage >&2
+    exit 1
+fi
+
+trash_dir=$(expand_home "${TRASHCAN:-~/.trashcan}")
+mkdir -p -- "${trash_dir}"
+trash_dir_real=$(realpath -- "${trash_dir}")
+
+exit_code=0
+for path in "$@"; do
+    if [[ ! -e "${path}" && ! -L "${path}" ]]; then
+        if [[ ${strict} -eq 1 ]]; then
+            echo "del: path does not exist: ${path}" >&2
+            exit_code=1
+        else
+            echo "del: skipping missing path: ${path}" >&2
+        fi
+        continue
+    fi
+
+    path_real=$(realpath -- "${path}")
+    if [[ "${path_real}" == "${trash_dir_real}" || "${path_real}" == "${trash_dir_real}"/* ]]; then
+        echo "del: refusing to operate on path inside trashcan: ${path}" >&2
+        exit_code=1
+        continue
+    fi
+
+    destination=$(build_destination "${trash_dir}" "${path}")
+    if ! mv -- "${path}" "${destination}"; then
+        echo "del: failed to move '${path}' to '${destination}'" >&2
+        exit_code=1
+    fi
+done
+
+exit "${exit_code}"
