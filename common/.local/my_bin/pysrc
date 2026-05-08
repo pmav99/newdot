@@ -1,0 +1,438 @@
+#!/usr/bin/env python3
+"""Search Python class/function definitions and render the selected source.
+
+Deferred ideas:
+- Add ``--color=auto|always|never`` and thread it through fzf previews and bat output.
+- Add a ctags backend only if multi-language lookup or prebuilt indexes become useful.
+- Add an imprecise regex backend only if syntax-broken files need best-effort lookup.
+- Add ``--scope`` later if needed; default should stay ``all``.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import shutil
+import subprocess
+import sys
+import tokenize
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Literal
+
+Backend = Literal["auto", "tree-sitter", "treesitter", "ast"]
+
+
+@dataclass(frozen=True)
+class Definition:
+    name: str
+    qualname: str
+    path: Path
+    start_line: int
+    end_line: int
+
+    def to_tsv(self) -> str:
+        return f"{self.name}\t{self.qualname}\t{self.path}\t{self.start_line}\t{self.end_line}"
+
+    @classmethod
+    def from_tsv(cls, line: str) -> Definition:
+        name, qualname, path, start_line, end_line = line.split("\t", maxsplit=4)
+        return cls(
+            name=name,
+            qualname=qualname,
+            path=Path(path),
+            start_line=int(start_line),
+            end_line=int(end_line),
+        )
+
+
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="pysrc",
+        description="Search Python class/function definitions and preview the selection with fzf.",
+    )
+    _ = parser.add_argument(
+        "--no-filename",
+        action="store_true",
+        help="suppress the filename header in the selected source output",
+    )
+    _ = parser.add_argument(
+        "--line-numbers",
+        action="store_true",
+        help="show line numbers in source output and fzf previews",
+    )
+    _ = parser.add_argument(
+        "--backend",
+        choices=("auto", "tree-sitter", "treesitter", "ast"),
+        default="auto",
+        type=str,
+        help="definition scanner to use; defaults to auto",
+    )
+    _ = parser.add_argument(
+        "--exact",
+        action="store_true",
+        help="match only definitions whose name or qualified name exactly equals the query",
+    )
+    _ = parser.add_argument("query", nargs="*", help="initial query")
+    args = parser.parse_args(argv)
+    args.query = " ".join(args.query)
+    return args
+
+
+def require_command(*names: str) -> None:
+    if not any(shutil.which(name) is not None for name in names):
+        joined = " or ".join(names)
+        print(f"pysrc: {joined} is required", file=sys.stderr)
+        raise SystemExit(127)
+
+
+def file_list_command() -> list[str]:
+    if shutil.which("rg") is not None:
+        return ["rg", "--files"]
+    if shutil.which("ag") is not None:
+        return ["ag", "-g", ""]
+    print("pysrc: rg or ag is required", file=sys.stderr)
+    raise SystemExit(127)
+
+
+def has_python_shebang(path: Path) -> bool:
+    try:
+        with path.open("rb") as stream:
+            first_line = stream.readline(200)
+    except OSError:
+        return False
+    return first_line.startswith(b"#!") and b"python" in first_line.lower()
+
+
+def is_python_file(path: Path) -> bool:
+    return path.suffix in {".py", ".pyi", ".pyw"} or has_python_shebang(path)
+
+
+def python_files() -> list[Path]:
+    result = subprocess.run(
+        file_list_command(),
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if result.returncode not in {0, 1}:
+        print(result.stderr, file=sys.stderr, end="")
+        raise SystemExit(result.returncode)
+
+    paths: list[Path] = []
+    for line in result.stdout.splitlines():
+        if not line:
+            continue
+        path = Path(line)
+        if is_python_file(path):
+            paths.append(path)
+    if not paths:
+        print("pysrc: no Python files found", file=sys.stderr)
+        raise SystemExit(1)
+    return paths
+
+
+def point_row(point: Any) -> int:
+    row = getattr(point, "row", None)
+    if isinstance(row, int):
+        return row
+    return int(point[0])
+
+
+def tree_sitter_node_text(source: bytes, node: Any) -> str:
+    if isinstance(node.text, bytes):
+        return node.text.decode("utf-8", errors="replace")
+    return source[node.start_byte : node.end_byte].decode("utf-8", errors="replace")
+
+
+def tree_sitter_definitions(path: Path, parser: Any) -> list[Definition]:
+    try:
+        source = path.read_bytes()
+    except OSError as error:
+        print(f"pysrc: skipped {path}: {error}", file=sys.stderr)
+        return []
+
+    tree = parser.parse(source)
+    definitions: list[Definition] = []
+    stack: list[str] = []
+
+    def record_definition(node: Any, range_node: Any) -> None:
+        name_node = node.child_by_field_name("name")
+        if name_node is not None:
+            name = tree_sitter_node_text(source, name_node)
+            qualname = ".".join([*stack, name])
+            definitions.append(
+                Definition(
+                    name=name,
+                    qualname=qualname,
+                    path=path,
+                    start_line=point_row(range_node.start_point) + 1,
+                    end_line=point_row(range_node.end_point) + 1,
+                )
+            )
+
+            stack.append(name)
+            for child in node.named_children:
+                walk(child)
+            stack.pop()
+
+    def walk(node: Any) -> None:
+        if node.type == "decorated_definition":
+            definition_node = node.child_by_field_name("definition")
+            if definition_node is not None and definition_node.type in {
+                "class_definition",
+                "function_definition",
+            }:
+                record_definition(definition_node, node)
+                return
+
+        if node.type in {"class_definition", "function_definition"}:
+            record_definition(node, node)
+            return
+
+        for child in node.named_children:
+            walk(child)
+
+    walk(tree.root_node)
+    return definitions
+
+
+def ast_definitions(path: Path) -> list[Definition]:
+    try:
+        with tokenize.open(path) as stream:
+            source = stream.read()
+        tree = ast.parse(source, filename=str(path))
+    except (OSError, SyntaxError, UnicodeDecodeError) as error:
+        print(f"pysrc: skipped {path}: {error}", file=sys.stderr)
+        return []
+
+    definitions: list[Definition] = []
+
+    class Visitor(ast.NodeVisitor):
+        def __init__(self) -> None:
+            self.stack: list[str] = []
+
+        def visit_ClassDef(self, node: ast.ClassDef) -> None:
+            self._visit_definition(node)
+
+        def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+            self._visit_definition(node)
+
+        def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+            self._visit_definition(node)
+
+        def _visit_definition(
+            self, node: ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef
+        ) -> None:
+            start_line = node.lineno
+            if node.decorator_list:
+                start_line = min(decorator.lineno for decorator in node.decorator_list)
+
+            definitions.append(
+                Definition(
+                    name=node.name,
+                    qualname=".".join([*self.stack, node.name]),
+                    path=path,
+                    start_line=start_line,
+                    end_line=node.end_lineno or node.lineno,
+                )
+            )
+            self.stack.append(node.name)
+            self.generic_visit(node)
+            self.stack.pop()
+
+    Visitor().visit(tree)
+    return definitions
+
+
+def load_tree_sitter_parser(backend: Backend) -> Any | None:
+    try:
+        from tree_sitter import Language, Parser
+        import tree_sitter_python
+    except ImportError as error:
+        if backend != "auto":
+            print(f"pysrc: Tree-sitter dependency missing: {error}", file=sys.stderr)
+            raise SystemExit(127) from error
+        print(f"pysrc: Tree-sitter unavailable, using ast fallback: {error}", file=sys.stderr)
+        return None
+
+    language = Language(tree_sitter_python.language())
+    return Parser(language)
+
+
+def collect_definitions(paths: list[Path], backend: Backend) -> list[Definition]:
+    if backend == "ast":
+        return [definition for path in paths for definition in ast_definitions(path)]
+
+    parser = load_tree_sitter_parser(backend)
+    if parser is None:
+        return [definition for path in paths for definition in ast_definitions(path)]
+
+    return [definition for path in paths for definition in tree_sitter_definitions(path, parser)]
+
+
+def exact_matches(definitions: list[Definition], query: str) -> list[Definition]:
+    return [
+        definition
+        for definition in definitions
+        if definition.name == query or definition.qualname == query
+    ]
+
+
+def literal_matches(definitions: list[Definition], query: str) -> list[Definition]:
+    return [
+        definition
+        for definition in definitions
+        if query in definition.name or definition.qualname == query
+    ]
+
+
+def definitions_input(definitions: list[Definition]) -> str:
+    return "\n".join(definition.to_tsv() for definition in definitions) + "\n"
+
+
+def is_interactive() -> bool:
+    return sys.stdin.isatty() and sys.stderr.isatty()
+
+
+def fail_ambiguous_query(query: str, matches: list[Definition]) -> None:
+    if not query:
+        print("pysrc: query is required when not running interactively", file=sys.stderr)
+    elif matches:
+        print(
+            f"pysrc: {len(matches)} exact matches for {query!r}; refusing to guess", file=sys.stderr
+        )
+    else:
+        print(f"pysrc: no exact match for {query!r}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def definition_header(definition: Definition) -> str:
+    return f"{definition.path}:{definition.start_line}-{definition.end_line}"
+
+
+def bat_style(*, line_numbers: bool) -> str:
+    return "numbers" if line_numbers else "plain"
+
+
+def fzf_preview_command(*, line_numbers: bool) -> str:
+    style = bat_style(line_numbers=line_numbers)
+    return (
+        "bash -c '"
+        'file="$1"; start="$2"; end="$3"; '
+        'printf "%s:%s-%s\\n" "$file" "$start" "$end"; '
+        f'bat --style={style} --color=always --highlight-line "$start" '
+        '--line-range "$start:$end" "$file"'
+        "' _ {3} {4} {5}"
+    )
+
+
+def fzf_choose(definitions: list[Definition], query: str, *, line_numbers: bool) -> Definition:
+    require_command("fzf")
+    result = subprocess.run(
+        [
+            "fzf",
+            "--query",
+            query,
+            "--delimiter",
+            "\t",
+            "--nth",
+            "1,2",
+            "--with-nth",
+            "2,3",
+            "--preview",
+            fzf_preview_command(line_numbers=line_numbers),
+        ],
+        check=False,
+        input=definitions_input(definitions),
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise SystemExit(result.returncode)
+
+    lines = [line for line in result.stdout.splitlines() if line]
+    if not lines:
+        raise SystemExit(1)
+    return Definition.from_tsv(lines[0])
+
+
+def choose_definition(
+    definitions: list[Definition],
+    query: str,
+    *,
+    exact: bool,
+    interactive: bool,
+    line_numbers: bool,
+) -> Definition:
+    if exact and query:
+        matches = exact_matches(definitions, query)
+        if len(matches) == 1:
+            return matches[0]
+        if interactive and matches:
+            return fzf_choose(matches, query, line_numbers=line_numbers)
+        fail_ambiguous_query(query, matches)
+
+    if interactive and query:
+        matches = literal_matches(definitions, query)
+        if len(matches) == 1:
+            return matches[0]
+
+    if interactive:
+        return fzf_choose(definitions, query, line_numbers=line_numbers)
+
+    matches = exact_matches(definitions, query)
+    if len(matches) == 1:
+        return matches[0]
+    fail_ambiguous_query(query, matches)
+
+
+def render_definition(definition: Definition, show_filename: bool, *, line_numbers: bool) -> None:
+    if show_filename:
+        print(definition_header(definition), flush=True)
+
+    result = subprocess.run(
+        [
+            "bat",
+            "--paging=never",
+            f"--style={bat_style(line_numbers=line_numbers)}",
+            "--color=always",
+            "--highlight-line",
+            str(definition.start_line),
+            "--line-range",
+            f"{definition.start_line}:{definition.end_line}",
+            str(definition.path),
+        ],
+        check=False,
+    )
+    raise SystemExit(result.returncode)
+
+
+def main(argv: list[str]) -> None:
+    args = parse_args(argv)
+    backend = args.backend
+    if backend not in {"auto", "tree-sitter", "treesitter", "ast"}:
+        print(f"pysrc: unknown backend: {backend}", file=sys.stderr)
+        raise SystemExit(2)
+
+    require_command("rg", "ag")
+    require_command("bat")
+
+    definitions = collect_definitions(python_files(), backend)
+    if not definitions:
+        print("pysrc: no Python definitions found", file=sys.stderr)
+        raise SystemExit(1)
+
+    selected = choose_definition(
+        definitions,
+        args.query,
+        exact=args.exact,
+        interactive=is_interactive(),
+        line_numbers=args.line_numbers,
+    )
+    render_definition(selected, show_filename=not args.no_filename, line_numbers=args.line_numbers)
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
