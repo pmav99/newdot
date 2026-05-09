@@ -1,0 +1,421 @@
+#!/usr/bin/env python3
+"""Send a desktop notification for the current coding-agent session.
+
+The script detects the caller from session environment variables and reads the
+agent's local JSONL session file directly.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import math
+import os
+import shlex
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any, Iterable, NoReturn
+
+PROG = "agent-notify"
+DEFAULT_NOTIFIER_COMMANDS = ("ninfo", "ntfy send", "notify-send")
+
+CODEX_BASELINE_TOKENS = 12_000
+
+CLAUDE_DEFAULT_CONTEXT_WINDOW = 200_000
+CLAUDE_EXTENDED_CONTEXT_WINDOW = 1_000_000
+CLAUDE_EXTENDED_MODELS = {"claude-opus-4-7"}
+
+
+def log(message: str) -> None:
+    print(f"{PROG}: {message}", file=sys.stderr)
+
+
+def fail(message: str, code: int = 2) -> NoReturn:
+    log(message)
+    sys.exit(code)
+
+
+def round_half_up(value: float) -> int:
+    return math.floor(value + 0.5)
+
+
+def as_int(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value)
+    if isinstance(value, str):
+        try:
+            return int(value)
+        except ValueError:
+            return None
+    return None
+
+
+def read_jsonl(path: Path) -> Iterable[dict[str, Any]]:
+    with path.open("r", encoding="utf-8", errors="replace") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                item = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(item, dict):
+                yield item
+
+
+def is_truthy(value: str | None) -> bool:
+    if not value:
+        return False
+    return value.strip().lower() not in {"", "0", "false", "no", "off"}
+
+
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog=PROG,
+        description="Send a desktop notification for the current coding-agent session.",
+        epilog=f"""\
+Agent detection:
+  Codex        CODEX_THREAD_ID
+  Claude Code  CLAUDE_SESSION_ID
+
+Examples:
+  {PROG} done
+  {PROG} --notifier ninfo done
+  {PROG} --notifier "ntfy send" done
+  {PROG} --codex-thread-id THREAD_ID done
+  {PROG} --claude-session-id SESSION_ID done
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    _ = parser.add_argument(
+        "--notifier",
+        metavar="COMMAND",
+        default=None,
+        help=(
+            "notifier command to run; defaults to the first available of "
+            + ", ".join(DEFAULT_NOTIFIER_COMMANDS)
+        ),
+    )
+    agent = parser.add_mutually_exclusive_group()
+    _ = agent.add_argument(
+        "--codex-thread-id",
+        metavar="ID",
+        help="Codex thread ID; defaults to CODEX_THREAD_ID when omitted",
+    )
+    _ = agent.add_argument(
+        "--claude-session-id",
+        metavar="ID",
+        help="Claude Code session ID; defaults to CLAUDE_SESSION_ID when omitted",
+    )
+    _ = parser.add_argument("message", nargs="+", help="message text to include in the notification")
+    return parser.parse_args(argv[1:])
+
+
+def split_notifier_command(configured: str) -> list[str]:
+    try:
+        command = shlex.split(configured)
+    except ValueError as exc:
+        fail(f"invalid notifier command: {exc}")
+
+    if not command:
+        fail("notifier command is empty.")
+    if shutil.which(command[0]) is None:
+        fail(f"{command[0]} is required.")
+    return command
+
+
+def notifier_command(configured: str | None) -> list[str]:
+    if configured is not None:
+        return split_notifier_command(configured)
+
+    missing: list[str] = []
+    for candidate in DEFAULT_NOTIFIER_COMMANDS:
+        command = shlex.split(candidate)
+        if shutil.which(command[0]) is not None:
+            return command
+        missing.append(command[0])
+
+    fail("no notifier command found; tried " + ", ".join(missing))
+
+
+def git_branch(cwd: str | None) -> str | None:
+    if not cwd:
+        return None
+    try:
+        branch = subprocess.run(
+            ["git", "-C", cwd, "branch", "--show-current"],
+            capture_output=True,
+            text=True,
+            check=False,
+        ).stdout.strip()
+        if branch:
+            return branch
+
+        commit = subprocess.run(
+            ["git", "-C", cwd, "rev-parse", "--short", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=False,
+        ).stdout.strip()
+        if commit:
+            return f"detached@{commit}"
+    except FileNotFoundError:
+        return None
+    return None
+
+
+def resolve_agent(
+    codex_thread_id: str | None,
+    claude_session_id: str | None,
+) -> tuple[str, str]:
+    if codex_thread_id is not None:
+        if not codex_thread_id:
+            fail("--codex-thread-id is empty.")
+        return "codex", codex_thread_id
+
+    if claude_session_id is not None:
+        if not claude_session_id:
+            fail("--claude-session-id is empty.")
+        return "claude", claude_session_id
+
+    codex_thread_id = os.environ.get("CODEX_THREAD_ID")
+    claude_session_id = os.environ.get("CLAUDE_SESSION_ID")
+
+    codex = bool(codex_thread_id)
+    claude = bool(claude_session_id)
+
+    if codex and claude:
+        fail("both CODEX_THREAD_ID and CLAUDE_SESSION_ID are set; cannot choose an agent.")
+    if codex:
+        return "codex", codex_thread_id
+    if claude:
+        return "claude", claude_session_id
+    fail("no supported agent session environment found; expected CODEX_THREAD_ID or CLAUDE_SESSION_ID.")
+
+
+def codex_home() -> Path:
+    return Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex")
+
+
+def find_codex_session_file(thread_id: str) -> Path | None:
+    sessions_dir = codex_home() / "sessions"
+    if not sessions_dir.is_dir():
+        fail(f"Codex sessions directory not found: {sessions_dir}")
+
+    matches = sorted(
+        path
+        for path in sessions_dir.rglob(f"*{thread_id}*.jsonl")
+        if path.is_file()
+    )
+    return matches[-1] if matches else None
+
+
+def codex_token_info(entry: dict[str, Any]) -> dict[str, Any] | None:
+    entry_type = entry.get("type")
+    payload = entry.get("payload")
+    payload = payload if isinstance(payload, dict) else {}
+
+    if entry_type in {"token_count", "TokenCount"}:
+        info = entry.get("info")
+        if info is None:
+            info = payload.get("info")
+    elif payload.get("type") in {"token_count", "TokenCount"}:
+        info = payload.get("info")
+    else:
+        return None
+
+    return info if isinstance(info, dict) else None
+
+
+def codex_context_percentage(info: dict[str, Any]) -> int | None:
+    # Mirrors Codex TUI context-used:
+    # https://github.com/openai/codex/blob/76845d716b720ca701b2c91fec75431532e66c74/codex-rs/tui/src/token_usage.rs#L9-L52
+    # https://github.com/openai/codex/blob/76845d716b720ca701b2c91fec75431532e66c74/codex-rs/tui/src/chatwidget.rs#L6478-L6480
+    usage = info.get("last_token_usage")
+    if not isinstance(usage, dict):
+        return None
+
+    total_tokens = as_int(usage.get("total_tokens"))
+    window = as_int(info.get("model_context_window"))
+    if total_tokens is None or window is None:
+        return None
+
+    if window <= CODEX_BASELINE_TOKENS:
+        return 100
+
+    effective_window = window - CODEX_BASELINE_TOKENS
+    used = max(total_tokens - CODEX_BASELINE_TOKENS, 0)
+    remaining = max(effective_window - used, 0)
+    remaining_percent = round_half_up(remaining * 100 / effective_window)
+    return max(0, min(100, 100 - remaining_percent))
+
+
+def codex_session_cwd(entry: dict[str, Any]) -> str | None:
+    if entry.get("type") not in {"session_meta", "turn_context"}:
+        return None
+    payload = entry.get("payload")
+    if not isinstance(payload, dict):
+        return None
+    cwd = payload.get("cwd")
+    return cwd if isinstance(cwd, str) and cwd else None
+
+
+def collect_codex_status(thread_id: str) -> tuple[int | None, str, str | None]:
+    session_file = find_codex_session_file(thread_id)
+    if session_file is None:
+        fail(f"no session JSONL found for CODEX_THREAD_ID={thread_id}")
+
+    context_percentage: int | None = None
+    session_cwd: str | None = None
+
+    for entry in read_jsonl(session_file):
+        info = codex_token_info(entry)
+        if info is not None:
+            percentage = codex_context_percentage(info)
+            if percentage is not None:
+                context_percentage = percentage
+
+        cwd = codex_session_cwd(entry)
+        if cwd:
+            session_cwd = cwd
+
+    session_cwd = session_cwd or os.environ.get("PWD") or ""
+    return context_percentage, session_cwd, git_branch(session_cwd or None)
+
+
+def claude_home() -> Path:
+    override = os.environ.get("CLAUDE_CONFIG_DIR")
+    if override:
+        return Path(override)
+    return Path.home() / ".claude"
+
+
+def find_claude_session_file(session_id: str) -> Path | None:
+    projects_dir = claude_home() / "projects"
+    if not projects_dir.is_dir():
+        return None
+
+    matches = sorted(
+        projects_dir.glob(f"*/{session_id}.jsonl"),
+        key=lambda path: path.stat().st_mtime,
+    )
+    return matches[-1] if matches else None
+
+
+def claude_context_window_for(model: str | None) -> int:
+    if is_truthy(os.environ.get("DISABLE_COMPACT")):
+        override = os.environ.get("CLAUDE_CODE_MAX_CONTEXT_TOKENS")
+        if override:
+            value = as_int(override)
+            if value and value > 0:
+                return value
+
+    if not model:
+        return CLAUDE_DEFAULT_CONTEXT_WINDOW
+    if "[1m]" in model.lower():
+        return CLAUDE_EXTENDED_CONTEXT_WINDOW
+    if model in CLAUDE_EXTENDED_MODELS:
+        return CLAUDE_EXTENDED_CONTEXT_WINDOW
+    return CLAUDE_DEFAULT_CONTEXT_WINDOW
+
+
+def claude_assistant_usage(entry: dict[str, Any]) -> tuple[dict[str, Any], str | None] | None:
+    if entry.get("type") != "assistant":
+        return None
+    message = entry.get("message")
+    if not isinstance(message, dict):
+        return None
+    usage = message.get("usage")
+    if not isinstance(usage, dict):
+        return None
+    if "input_tokens" not in usage:
+        return None
+
+    model = message.get("model")
+    return usage, model if isinstance(model, str) else None
+
+
+def claude_context_percentage(usage: dict[str, Any], model: str | None) -> int:
+    window = claude_context_window_for(model)
+    used_tokens = (
+        (as_int(usage.get("input_tokens")) or 0)
+        + (as_int(usage.get("cache_creation_input_tokens")) or 0)
+        + (as_int(usage.get("cache_read_input_tokens")) or 0)
+    )
+    percent = round_half_up(used_tokens / window * 100)
+    return max(0, min(100, percent))
+
+
+def collect_claude_status(session_id: str) -> tuple[int | None, str, str | None]:
+    session_file = find_claude_session_file(session_id)
+    if session_file is None:
+        fail(f"no session JSONL found for CLAUDE_SESSION_ID={session_id}")
+
+    context_percentage: int | None = None
+    session_cwd: str | None = None
+    branch: str | None = None
+
+    for entry in read_jsonl(session_file):
+        usage = claude_assistant_usage(entry)
+        if usage is not None:
+            context_percentage = claude_context_percentage(*usage)
+
+        cwd = entry.get("cwd")
+        if isinstance(cwd, str) and cwd:
+            session_cwd = cwd
+
+        git_branch_value = entry.get("gitBranch")
+        if isinstance(git_branch_value, str) and git_branch_value:
+            branch = git_branch_value
+
+    session_cwd = session_cwd or os.environ.get("PWD") or ""
+    branch = branch or git_branch(session_cwd or None)
+    return context_percentage, session_cwd, branch
+
+
+def build_notification(
+    agent: str,
+    message: str,
+    context_percentage: int | None,
+    session_cwd: str,
+    branch: str | None,
+) -> str:
+    parts = [f"agent: {agent}"]
+    if context_percentage is not None:
+        parts.append(f"ctx: {context_percentage}%")
+    if branch:
+        parts.append(f"branch: {branch}")
+
+    lines = [" | ".join(parts)]
+    if session_cwd:
+        lines.append(f"cwd: {session_cwd}")
+    lines.append(f"msg: {message}")
+    return "\n".join(lines)
+
+
+def main(argv: list[str]) -> int:
+    args = parse_args(argv)
+    message = " ".join(args.message)
+    agent, session_id = resolve_agent(args.codex_thread_id, args.claude_session_id)
+    command = notifier_command(args.notifier)
+
+    if agent == "codex":
+        status = collect_codex_status(session_id)
+    elif agent == "claude":
+        status = collect_claude_status(session_id)
+    else:
+        fail(f"unsupported agent: {agent}")
+
+    notification = build_notification(agent, message, *status)
+    return subprocess.run([*command, notification], check=False).returncode
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
