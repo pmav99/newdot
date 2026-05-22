@@ -1,16 +1,27 @@
 #!/usr/bin/env bash
 
-set -xeuo pipefail
+set -euo pipefail
+
+name='panos'
+
+if micromamba env list | grep -q "${name}"; then
+  echo "${name} already exists";
+else
+  micromamba create -y -n "${name}";
+fi
 
 micromamba install \
   --yes \
   --channel conda-forge \
   --name panos \
   'basedpyright' \
+  'ipython'
   'bash' \
   'bat' \
+  'bison' \
   'btop' \
   'cdo' \
+  'cmake' \
   'compilers' \
   'direnv' \
   'eccodes' \
@@ -22,12 +33,14 @@ micromamba install \
   'git' \
   'git-delta' \
   'imagemagick' \
+  'inspectds' \
   'libabseil' \
+  'llvm-openmp' \
+  'libnetcdf' \
   'libgdal-hdf5' \
   'libglu' \
   'libhwloc' \
   'metis' \
-  'metview-batch' \
   'moreutils' \
   'mosh' \
   'ncdu' \
@@ -35,9 +48,11 @@ micromamba install \
   'nodejs' \
   'nvim=0.11.*' \
   'ocl-icd-system' \
+  'parallel' \
   'pipx' \
+  'poetry' \
   'pynvim' \
-  'python=3.12.*' \
+  'python=3.13.*' \
   'ripgrep' \
   'rsync' \
   'ruff' \
@@ -48,7 +63,9 @@ micromamba install \
   'the_silver_searcher' \
   'tig' \
   'tree' \
+  'uv' \
   'vim' \
+  'viu' \
   'vmtouch' \
   'xorg-libxcursor ' \
   'xorg-libxft ' \

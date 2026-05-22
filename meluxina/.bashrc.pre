@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 export M=/dev/shm
-export P=/project/home/p200653
-export DEV=/project/home/p200653
-export REG=/project/home/p200764
-export S=/project/scratch/p200764
-export SREG=/project/scratch/p200764
+export P=/project/home/p201203
+export DEV=/project/home/p201203
+export REG=/project/home/p201203
+export S=/project/scratch/p201203
+export SREG=/project/scratch/p201203
 export XDG_CONFIG_HOME="${HOME}"/.config
 export XDG_CACHE_HOME="${DEV}"/panos/.cache
 export MAMBA_ROOT_PREFIX="${DEV}"/.micromamba
