@@ -76,21 +76,6 @@ if [ -x "$(command -v fzf)" ]; then
   fi
 fi
 
-if [[ -f "${HOME}"/.bashrc.post ]]; then
-  source "${HOME}"/.bashrc.post
-fi
-
-# Activate the default conda env
-if [[ -n "${DEFAULT_CONDA_ENV}" ]]; then
-  micromamba activate "${DEFAULT_CONDA_ENV}"
-fi
-
-# we might be installing direnv via conda!
-# Therefore direnv must load after the default conda env
-if [ -x "$(command -v direnv)" ]; then
-    eval "$(direnv hook bash)"
-fi
-
 if [[ $- == *i* ]]; then
   echo END .bashrc.main
 fi

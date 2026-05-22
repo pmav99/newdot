@@ -6,6 +6,9 @@ umask 007
 export DEFAULT_CONDA_ENV='panos'
 export SEAREPORT_DATA_DIR=$P/.cache/seareport_data
 export SDATA_CACHE_DIR=$P/.cache/sdata
-export PATH=$P/bin:$PATH
+case ":${PATH}:" in
+  *":${P}/bin:"*) ;;
+  *) export PATH=$P/bin:$PATH ;;
+esac
 
 shopt -s direxpand

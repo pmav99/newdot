@@ -22,9 +22,9 @@ SHELL=$(ps -p $$ -o comm=)
 
 # XDG BASE directories
 # https://wiki.archlinux.org/index.php/XDG_Base_Directory
-if [[ "${XDG_CONFIG_HOME}" != "${HOME}"* ]]; then XDG_CONFIG_HOME="${HOME}/.config"; fi
-if [[ "${XDG_CACHE_HOME}" != "${HOME}"* ]]; then XDG_CACHE_HOME="${HOME}/.cache"; fi
-if [[ "${XDG_DATA_HOME}" != "${HOME}"* ]]; then XDG_DATA_HOME="${HOME}/.local/share"; fi
+: "${XDG_CONFIG_HOME:=${HOME}/.config}"
+: "${XDG_CACHE_HOME:=${HOME}/.cache}"
+: "${XDG_DATA_HOME:=${HOME}/.local/share}"
 XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/var/run/user/$(id -u)}"
 mkdir -p "${XDG_DATA_HOME}" "${XDG_CACHE_HOME}" "${XDG_CONFIG_HOME}"
 export XDG_CONFIG_HOME
@@ -34,8 +34,8 @@ export XDG_RUNTIME_DIR
 
 # setup micromamba
 if [[ -x "$(command -v micromamba)" ]]; then
-  MAMBA_EXE=$(which micromamba)
-  if [[ "${MAMBA_ROOT_PREFIX}" != "${HOME}"* ]]; then
+  MAMBA_EXE=$(command -v micromamba)
+  if [[ -z "${MAMBA_ROOT_PREFIX:-}" ]]; then
     MAMBA_ROOT_PREFIX="${HOME}/.micromamba"
   fi
   # if is_bdap; then
