@@ -24,6 +24,14 @@ if [[ $- == *i* ]] && command -v direnv >/dev/null 2>&1; then
   eval "$(direnv hook bash)"
 fi
 
+# ts may come from the default conda env, so load it after activation.
+if [ -x "$(command -v ts)" ]; then
+  alias TSI='ts -i "%H:%M:%.S"'
+  alias TSS='ts -s "%H:%M:%.S"'
+  alias TS='ts -i "%H:%M:%.S" | ts -s "%H:%M:%.S"'
+fi
+
+
 force_path_front() {
   local dir=$1
   local rest=":${PATH}:"
