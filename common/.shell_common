@@ -18,8 +18,6 @@ is_meluxina() {
   hostname -d | grep -q meluxina.lxp.lu
 }
 
-SHELL=$(ps -p $$ -o comm=)
-
 # XDG BASE directories
 # https://wiki.archlinux.org/index.php/XDG_Base_Directory
 : "${XDG_CONFIG_HOME:=${HOME}/.config}"
@@ -53,7 +51,7 @@ if [[ -x "$(command -v micromamba)" ]]; then
   fi
   export MAMBA_EXE
   export MAMBA_ROOT_PREFIX
-  eval "$(micromamba shell hook --shell "${SHELL}")"
+  eval "$(micromamba shell hook)"
   # Micromamba is not installing the conda and the mamba binaries,
   # so if we don't have them, let's pretend that we have them!
   if [[ ! -x "$(command -v conda)" ]]; then
