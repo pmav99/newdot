@@ -24,6 +24,17 @@ if [[ $- == *i* ]] && command -v direnv >/dev/null 2>&1; then
   eval "$(direnv hook bash)"
 fi
 
+force_path_front() {
+  local dir=$1
+  local rest=":${PATH}:"
+  rest=${rest//:${dir}:/:}
+  rest=${rest#:}
+  rest=${rest%:}
+  export PATH="${dir}${rest:+:${rest}}"
+}
+
+force_path_front "${HOME}/.local/my_bin"
+
 if shopt -q login_shell; then
   echo END .bashrc
 fi
