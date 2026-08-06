@@ -15,14 +15,15 @@ micromamba install \
   --channel conda-forge \
   --name panos \
   'basedpyright' \
-  'ipython'
   'bash' \
   'bat' \
   'bison' \
   'btop' \
   'cdo' \
   'cmake' \
+  'codex' \
   'compilers' \
+  'conda-pack' \
   'direnv' \
   'eccodes' \
   'fd-find' \
@@ -34,12 +35,14 @@ micromamba install \
   'git-delta' \
   'imagemagick' \
   'inspectds' \
+  'ipython' \
+  'jq' \
   'libabseil' \
-  'llvm-openmp' \
-  'libnetcdf' \
   'libgdal-hdf5' \
   'libglu' \
   'libhwloc' \
+  'libnetcdf' \
+  'llvm-openmp' \
   'metis' \
   'moreutils' \
   'mosh' \
@@ -50,6 +53,7 @@ micromamba install \
   'ocl-icd-system' \
   'parallel' \
   'pipx' \
+  'poethepoet' \
   'poetry' \
   'pynvim' \
   'python=3.13.*' \
@@ -57,7 +61,9 @@ micromamba install \
   'rsync' \
   'ruff' \
   'rust' \
+  'setuptools' \
   'shellcheck' \
+  'squashfs-tools' \
   'stow' \
   'tar' \
   'the_silver_searcher' \
