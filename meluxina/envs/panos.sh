@@ -19,6 +19,7 @@ micromamba install \
   'bat' \
   'bison' \
   'btop' \
+  'bubblewrap' \
   'cdo' \
   'cmake' \
   'codex' \
