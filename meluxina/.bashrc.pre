@@ -2,6 +2,7 @@
 
 export M=/dev/shm
 export P=/project/home/p201203
+export V=/project/home/p201203/schism_runs/validation
 export DEV=/project/home/p201203
 export REG=/project/home/p201203
 export S=/project/scratch/p201203
