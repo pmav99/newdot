@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+LOG_DIR="${BRUN_LOG_DIR:-./logs}"
+mkdir -p "$LOG_DIR"
+
+if (($# == 0)); then
+    echo "Usage: brun COMMAND [ARGS...]" >&2
+    exit 2
+fi
+
+uid="$(id -u)"
+timestamp="$(date '+%Y%m%d-%H%M%S')"
+command_text="$*"
+
+slug="$(
+    printf '%s' "$command_text" |
+        tr '[:upper:]' '[:lower:]' |
+        sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//' |
+        cut -c1-100
+)"
+
+hash="$(
+    printf '%s\0' "$@" |
+        sha256sum |
+        cut -c1-8
+)"
+
+base="${timestamp}-u${uid}-${slug}-${hash}"
+tmp_log="${LOG_DIR}/${base}.log"
+
+nohup "$@" >"$tmp_log" 2>&1 < /dev/null &
+pid=$!
+
+log="${LOG_DIR}/${base}-p${pid}.log"
+mv -- "$tmp_log" "$log"
+
+printf 'PID: %s\nLog: %s\n' "$pid" "$log"
