@@ -16,6 +16,8 @@ mkdir -p ~/.config/pypoetry/
 mkdir -p ~/.config/systemd/user
 mkdir -p ~/.config/wezterm/
 mkdir -p ~/.local/bin/
+mkdir -p ~/.local/share/
 mkdir -p ~/Prog/
 mkdir -p ~/.ssh
+
 chmod 700 ~/.ssh

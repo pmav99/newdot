@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script="$HOME/.local/share/pvx/pvx.py"
+
+inputs_file="$(mktemp "${TMPDIR:-/tmp}/pvx-inputs.XXXXXX")"
+trap 'rm -f "$inputs_file"' EXIT
+
+if (($#)); then
+    printf '%s\0' "$@" > "$inputs_file"
+else
+    : > "$inputs_file"
+fi
+
+export PVX_INPUTS_FILE="$inputs_file"
+
+paraview --script="$script"
