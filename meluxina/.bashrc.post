@@ -6,5 +6,22 @@ umask 007
 export DEFAULT_CONDA_ENV='panos'
 export SEAREPORT_DATA_DIR=$P/.cache/seareport_data
 export SDATA_CACHE_DIR=$P/.cache/sdata
+export SEA_DATA_ROOT=$P/data
+
+export V=/project/home/p201203/schism_runs/validation
+export V06="${V}"/r0600
+export V07="${V}"/r0700
+export V08="${V}"/r0800
+export V09="${V}"/r0900
+export V10="${V}"/r1000
+export V11="${V}"/r1100
+export V12="${V}"/r1200
+export V13="${V}"/r1300
+export V14="${V}"/r1400
+export V15="${V}"/r1500
+export V16="${V}"/r1600
+export V17="${V}"/r1700
+export V18="${V}"/r1800
+export V19="${V}"/r1900
 
 shopt -s direxpand
