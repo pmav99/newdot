@@ -14,6 +14,7 @@ micromamba install \
   --yes \
   --channel conda-forge \
   --name panos \
+  'apptainer' \
   'basedpyright' \
   'bash' \
   'bat' \
@@ -22,6 +23,7 @@ micromamba install \
   'bubblewrap' \
   'cdo' \
   'cmake' \
+  'codex' \
   'codex' \
   'compilers' \
   'conda-pack' \
@@ -38,6 +40,7 @@ micromamba install \
   'inspectds' \
   'ipython' \
   'jq' \
+  'lftp' \
   'libabseil' \
   'libgdal-hdf5' \
   'libglu' \
@@ -52,8 +55,10 @@ micromamba install \
   'nodejs' \
   'nvim=0.11.*' \
   'ocl-icd-system' \
+  'oh-my-posh'
   'parallel' \
   'pipx' \
+  'pi-coding-agent' \
   'poethepoet' \
   'poetry' \
   'pynvim' \
@@ -69,6 +74,7 @@ micromamba install \
   'tar' \
   'the_silver_searcher' \
   'tig' \
+  'timg-hzeller' \
   'tree' \
   'uv' \
   'vim' \
