@@ -20,7 +20,7 @@
           "foreground_templates": [
             "{{ if .Root }}#e06c75{{ else if eq .Env.DOTFILES_POSH_MELUXINA \"1\" }}#c678dd{{ else if .SSHSession }}#e5c07b{{ else }}#98c379{{ end }}"
           ],
-          "template": "{{ if .SSHSession }}[SSH] {{ end }}{{ if eq .Env.DOTFILES_POSH_MELUXINA \"1\" }}[MELUXINA] {{ end }}{{ .UserName }}@{{ .HostName }} "
+          "template": "{{ if .SSHSession }}[SSH] {{ end }}{{ if eq .Env.DOTFILES_POSH_MELUXINA \"1\" }}[MELUXINA] {{ end }}{{ .UserName }}@{{ .HostName | splitList \".\" | first }} "
         },
         {
           "type": "path",
@@ -40,14 +40,14 @@
           "type": "git",
           "style": "plain",
           "foreground": "#c678dd",
-          "template": " git:{{ .HEAD }}{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} staged:{{ .Staging.String }}{{ end }}",
+          "template": " ⑂ {{ .HEAD }}{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} staged:{{ .Staging.String }}{{ end }}",
           "options": { "disable_with_jj": true, "branch_icon": "" }
         },
         {
           "type": "python",
           "style": "plain",
           "foreground": "#e5c07b",
-          "template": "{{ if .Env.CONDA_DEFAULT_ENV }} conda:{{ .Env.CONDA_DEFAULT_ENV }}{{ end }}{{ if .Env.VIRTUAL_ENV }} venv:{{ .Env.VIRTUAL_ENV | base }}{{ else if not .Env.CONDA_DEFAULT_ENV }} py:{{ .Venv }}{{ end }}",
+          "template": "{{ if .Env.CONDA_DEFAULT_ENV }} c:{{ .Env.CONDA_DEFAULT_ENV }}{{ end }}{{ if .Env.VIRTUAL_ENV }} <#56b6c2>v:{{ .Env.VIRTUAL_ENV | base }}</>{{ else if not .Env.CONDA_DEFAULT_ENV }} <#56b6c2>v:{{ .Venv }}</>{{ end }}",
           "options": { "display_mode": "environment", "fetch_virtual_env": true, "home_enabled": true, "display_default": true }
         },
         {
