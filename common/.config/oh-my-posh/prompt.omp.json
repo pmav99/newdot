@@ -53,7 +53,7 @@
         {
           "type": "executiontime",
           "style": "plain",
-          "foreground": "#e5c07b",
+          "foreground": "#abb2bf",
           "template": " {{ .FormattedMs }}",
           "options": { "threshold": 2000, "style": "round" }
         },
