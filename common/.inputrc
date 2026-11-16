@@ -23,6 +23,8 @@ set completion-prefix-display-length 1
 
 # different cursor for insert mode
 set show-mode-in-prompt on
+# Readline uses integer milliseconds; allow time for SSH escape sequences.
+set keyseq-timeout 100
 $if term=linux
 	set vi-ins-mode-string \1\e[?0c\2
 	set vi-cmd-mode-string \1\e[?8c\2
@@ -35,12 +37,12 @@ $endif
 $if mode=vi
   set keymap vi-command
   # these are for vi-command mode
-  "\e[A": history-search-backward
-  "\e[B": history-search-forward
-  j: history-search-forward
-  k: history-search-backward
+  "\e[A": history-substring-search-backward
+  "\e[B": history-substring-search-forward
+  j: history-substring-search-forward
+  k: history-substring-search-backward
   set keymap vi-insert
   # these are for vi-insert mode
-  "\e[A": history-search-backward
-  "\e[B": history-search-forward
+  "\e[A": history-substring-search-backward
+  "\e[B": history-substring-search-forward
 $endif

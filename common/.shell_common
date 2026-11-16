@@ -253,11 +253,12 @@ fi
 
 # Common fzf configuration
 if [ -x "$(command -v fzf)" ]; then
-  # configure
+  # Keep general options safe for history and other non-file pickers.
+  export FZF_DEFAULT_OPTS="--height 40% --reverse --border"
   if [ -x "$(command -v bat)" ]; then
-    export FZF_DEFAULT_OPTS="--height 40% --reverse --border --preview 'bat --color=always --line-range :100 {}'"
+    export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :100 -- {}'"
   else
-    export FZF_DEFAULT_OPTS="--height 40% --reverse --border --preview 'head -n100 {}'"
+    export FZF_CTRL_T_OPTS="--preview 'head -n100 -- {}'"
   fi
   # Use fd if it is available and fallback to ag
   if [ -x "$(command -v fd)" ]; then
@@ -268,7 +269,7 @@ if [ -x "$(command -v fzf)" ]; then
   fi
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   # aliases
-  alias vv='gvim $(fzf)'
+  alias vv='gvim $(FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf)'
 fi
 
 # kubernetes

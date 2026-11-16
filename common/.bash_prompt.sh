@@ -92,6 +92,16 @@ function set_bash_prompt () {
     PS1="${CONDA_ENV}${PYTHON_VIRTUALENV}${debian_chroot:+($debian_chroot)}\D{%T} ${PROMPT_USER}${YELLOW}@${PURPLE}\h\[\033[00m\]:${BLUE}\w${YELLOW}$(__git_ps1)${EXIT_STATUS}"
 }
 
-# Execute this function before displaying prompt
-PROMPT_COMMAND=set_bash_prompt
+# Render the prompt first so it sees the previous command's exit status.
+# Keep other hooks (including direnv) and avoid duplicates when re-sourced.
+_bash_prompt_hooks=(set_bash_prompt sync_bash_history)
+for _bash_prompt_hook in "${PROMPT_COMMAND[@]}"; do
+    case $_bash_prompt_hook in
+        set_bash_prompt|sync_bash_history|'') ;;
+        *) _bash_prompt_hooks+=("$_bash_prompt_hook") ;;
+    esac
+done
+PROMPT_COMMAND=("${_bash_prompt_hooks[@]}")
+export -n PROMPT_COMMAND
+unset _bash_prompt_hooks _bash_prompt_hook
 
