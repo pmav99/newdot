@@ -55,7 +55,7 @@ micromamba install \
   'nodejs' \
   'nvim=0.11.*' \
   'ocl-icd-system' \
-  'oh-my-posh'
+  'oh-my-posh' \
   'parallel' \
   'pipx' \
   'pi-coding-agent' \
