@@ -77,7 +77,7 @@ if [ -x "$(command -v nvim-qt)" ]; then
   alias cvim='nvim-qt -- --clean'
   export EDITOR='nvim'
   export SYSTEMD_EDITOR='nvim'
-  export VISUAL='nvim-qt'
+  export VISUAL='nvim-qt --nofork'
 elif [ -x "$(command -v nvim)" ]; then   # Prefer nvim-qt over gvim
   # we only have neovim (probably on a server or something. so use just neovim
   alias vim='nvim'
@@ -91,7 +91,7 @@ elif [ -x "$(command -v gvim)" ]; then   # Prefer nvim-qt over gvim
   alias cvim='gvim --clean'
   export EDITOR='vim'
   export SYSTEMD_EDITOR='vim'
-  export VISUAL='gvim'
+  export VISUAL='gvim -f'
 else
   # It seems we don't even have gvim. Let's use plain vim
   alias gvim='vim'
@@ -105,8 +105,14 @@ fi
 if [ -x "$(command -v less)" ]; then
   export PAGER='less'
   export LESSCHARSET='utf-8'
-  export LESSOPEN='|/usr/bin/lesspipe.sh %s 2>&-'
-                  # Use this if lesspipe.sh exists.
+  unset LESSOPEN
+  for lesspipe_cmd in lesspipe lesspipe.sh; do
+    if command -v "$lesspipe_cmd" >/dev/null 2>&1; then
+      export LESSOPEN="|$(command -v "$lesspipe_cmd") %s 2>&-"
+      break
+    fi
+  done
+  unset lesspipe_cmd
   export LESS='-i -w -z-4 -g -e -M -X -F -R -P%t?f%f \
   :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
 
@@ -269,7 +275,12 @@ if [ -x "$(command -v fzf)" ]; then
   fi
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   # aliases
-  alias vv='gvim $(FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf)'
+  vv() {
+    local file
+    file=$(FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf) || return
+    [[ -n "$file" ]] || return
+    gvim -- "$file"
+  }
 fi
 
 # kubernetes
@@ -293,9 +304,6 @@ fi
 
 if [ -x "$(command -v terraform)" ]; then
     alias tf='terraform'
-fi
-if [ -x "$(command -v terraform)" ]; then
-    alias tg='terragrunt'
 fi
 if [ -x "$(command -v terraspace)" ]; then
     alias trs='terraspace'
@@ -324,7 +332,6 @@ fi
 # Various
 alias cputemp="watch -n 1 -d sensors"
 alias qg='qgit --all'
-alias rmtex="find . -type f \( -name '*.aux' -o -name '*.glo' -o -name '*.idx' -o -name '*.log' -o -name '*.toc' -o -name '*.ist' -o -name '*.acn' -o -name '*.acr' -o -name '*.alg' -o -name '*.bbl' -o -name '*.blg' -o -name '*.dvi' -o -name '*.glg' -o -name '*.gls' -o -name '*.ilg' -o -name '*.ind' -o -name '*.lof' -o -name '*.lot' -o -name '*.maf' -o -name '*.mtc' -o -name '*.thm' -o -name '*.nav' -o -name '*.snm' -o -name '*.out' -o -name '*.synctex.gz' -o -name '*.mtc1' -name '*.bcf' -name '*.fls' -name '*.run.xml' \) -delete"
 alias calendar="python -m calendar"
 
 enable_aslr() {
@@ -366,4 +373,14 @@ disable_benchmarking() {
 
 if [ -x "$(command -v claude)" ]; then
   export CLAUDE_CODE_DISABLE_1M_CONTEXT=1
+  alias opus='claude --model opus --effort xhigh'
+  alias sonnet='claude --model sonnet --effort medium'
+fi
+
+
+if [ -x "$(command -v pi)" ]; then
+  alias astra='pi --model openai-codex/astra'
+  alias sol='pi --model openai-codex/sol'
+  alias terra='pi --model openai-codex/terra'
+  alias luna='pi --model openai-codex/luna'
 fi

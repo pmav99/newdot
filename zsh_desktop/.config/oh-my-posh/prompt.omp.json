@@ -1,0 +1,79 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "version": 4,
+  "final_space": true,
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "time",
+          "style": "plain",
+          "foreground": "#888888",
+          "template": "{{ .CurrentDate | date \"15:04:05\" }} "
+        },
+        {
+          "type": "session",
+          "style": "plain",
+          "foreground": "#98c379",
+          "template": "{{ .UserName }}@{{ .HostName }} "
+        },
+        {
+          "type": "path",
+          "style": "plain",
+          "foreground": "#61afef",
+          "template": "{{ .Path }}",
+          "options": { "style": "full" }
+        },
+        {
+          "type": "jujutsu",
+          "style": "plain",
+          "foreground": "#c678dd",
+          "template": " jj:{{ .ChangeID }}{{ if .ClosestBookmarks }} [{{ .ClosestBookmarks }}]{{ end }}{{ if .Desc }} {{ .Desc }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}",
+          "options": { "change_id_min_len": 8, "ignore_working_copy": true }
+        },
+        {
+          "type": "git",
+          "style": "plain",
+          "foreground": "#c678dd",
+          "template": " git:{{ .HEAD }}{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} staged:{{ .Staging.String }}{{ end }}",
+          "options": { "disable_with_jj": true, "branch_icon": "" }
+        },
+        {
+          "type": "python",
+          "style": "plain",
+          "foreground": "#e5c07b",
+          "template": "{{ if .Env.CONDA_DEFAULT_ENV }} conda:{{ .Env.CONDA_DEFAULT_ENV }}{{ end }}{{ if .Env.VIRTUAL_ENV }} venv:{{ .Env.VIRTUAL_ENV | base }}{{ else if not .Env.CONDA_DEFAULT_ENV }} py:{{ .Venv }}{{ end }}",
+          "options": { "display_mode": "environment", "fetch_virtual_env": true, "home_enabled": true, "display_default": true }
+        },
+        {
+          "type": "executiontime",
+          "style": "plain",
+          "foreground": "#e5c07b",
+          "template": " {{ .FormattedMs }}",
+          "options": { "threshold": 2000, "style": "round" }
+        },
+        {
+          "type": "status",
+          "style": "plain",
+          "foreground": "#e06c75",
+          "template": " exit:{{ .Code }}"
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "#98c379",
+          "template": "❯"
+        }
+      ]
+    }
+  ]
+}

@@ -47,27 +47,6 @@ fi
 alias ls="${aliases[ls]:-ls} -v"    # XXX ZSH ONLY!!! Make ls use natural sort
 alias mmv='noglob zmv -W'
 
-gdrive_download () {
-    if (( $# < 2 )); then
-        echo 'usage: gdrive_download url output_filename'
-        return 1
-    else
-        url=$1
-        filename=$2
-    fi
-
-    # extract the id from the url
-    case "$url" in
-        'https://drive.google.com/open?id='*) id=$(echo "$url" | awk -F'=|&' '{printf"%s",$2}');;
-        'https://drive.google.com/file/d/'*|'https://docs.google.com/file/d/'*) id=$(echo "$url" | awk -F'/' '{printf"%s",$6}');;
-    esac
-
-    # download the file
-    CONFIRM=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate "https://docs.google.com/uc?export=download&id=$1" -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')
-    wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$CONFIRM&id=$id" -O $filename
-    rm -rf /tmp/cookies.txt
-}
-
 update_awesome_menu() {
     if [ $commands[xdg_menu] ]; then
         rm -rf ~/.config/awesome/archmenu.lua
@@ -76,3 +55,8 @@ update_awesome_menu() {
         echo "Please install xdg-menu (archlinux-xdg-menu)."
     fi
 }
+
+# Prompt (keep Prezto for editing, completion, and other shell features).
+if (( $+commands[oh-my-posh] )); then
+    eval "$(oh-my-posh init zsh --config "${XDG_CONFIG_HOME:-$HOME/.config}/oh-my-posh/prompt.omp.json")"
+fi

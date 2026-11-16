@@ -3,5 +3,7 @@
 
 set -xeuo pipefail
 
-find ./ -name '*.pyc' -delete;
-find ./ -name '__pycache__' -delete;
+fd --glob '*.pyc' -x rm
+fd --glob '__pycache__' -x rm -rf
+#find ./ -name '*.pyc' -delete;
+#find ./ -name '__pycache__' -delete;

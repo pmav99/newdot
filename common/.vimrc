@@ -188,14 +188,14 @@ set nocompatible               " Be iMproved
 " Font {
   " Choose font for linux, mac and windows.
   if has("gui_gtk2")
-      set guifont=Ubuntu\ Mono\ 12
+      set guifont=Ubuntu\ Mono\ 14
   elseif has("gui_win32")
       set guifont=Consolas:h14
   else
       set guifont=Hack\ Nerd\ Font\ 12,
       set guifont=Ubuntu\ Mono\ 12
       set guifont=Fira\ Code\ 11
-      set guifont=Iosevka\ Regular\ 12
+      set guifont=Iosevka\ Regular\ 14
   end
 " Font }
 

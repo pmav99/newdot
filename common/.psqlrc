@@ -36,7 +36,9 @@ SET intervalstyle to 'postgres_verbose';
 \setenv PAGER 'pspg -s19 --only-for-tables --quit-if-one-screen'
 \pset pager always
 \pset linestyle 'unicode'
-\pset border 1
+\pset unicode_border_linestyle single
+\pset unicode_column_linestyle single
+\pset unicode_header_linestyle double
 \pset null '¤'
 
 \timing on
