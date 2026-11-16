@@ -24,8 +24,10 @@ shopt -s cmdhist
 # Incrementally share history between shells without reloading the entire file.
 # Registered alongside the prompt hook in .bash_prompt.sh.
 sync_bash_history() {
+  local last_status=$?
   history -a
   history -n
+  return "$last_status"
 }
 
 # check the window size after each command and, if necessary,
@@ -42,9 +44,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
-# Setup prompt
-source "${HOME}"/.bash_prompt.sh
 
 # Setup aliases
 source ~/.shell_common

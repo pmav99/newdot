@@ -57,6 +57,7 @@ update_awesome_menu() {
 }
 
 # Prompt (keep Prezto for editing, completion, and other shell features).
-if (( $+commands[oh-my-posh] )); then
+if (( $+commands[oh-my-posh] )) && [[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/oh-my-posh/host.sh" ]]; then
+    source "${XDG_CONFIG_HOME:-$HOME/.config}/oh-my-posh/host.sh"
     eval "$(oh-my-posh init zsh --config "${XDG_CONFIG_HOME:-$HOME/.config}/oh-my-posh/prompt.omp.json")"
 fi

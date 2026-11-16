@@ -17,7 +17,10 @@
           "type": "session",
           "style": "plain",
           "foreground": "#98c379",
-          "template": "{{ .UserName }}@{{ .HostName }} "
+          "foreground_templates": [
+            "{{ if .Root }}#e06c75{{ else if eq .Env.DOTFILES_POSH_MELUXINA \"1\" }}#c678dd{{ else if .SSHSession }}#e5c07b{{ else }}#98c379{{ end }}"
+          ],
+          "template": "{{ if .SSHSession }}[SSH] {{ end }}{{ if eq .Env.DOTFILES_POSH_MELUXINA \"1\" }}[MELUXINA] {{ end }}{{ .UserName }}@{{ .HostName }} "
         },
         {
           "type": "path",
@@ -71,7 +74,8 @@
           "type": "text",
           "style": "plain",
           "foreground": "#98c379",
-          "template": "❯"
+          "foreground_templates": ["{{ if .Root }}#e06c75{{ end }}"],
+          "template": "{{ if .Root }}#{{ else }}❯{{ end }}"
         }
       ]
     }

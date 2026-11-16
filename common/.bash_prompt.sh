@@ -2,6 +2,27 @@
 # WARNING: Sourcing of this file must happen **before** using eval on the direnv hook.
 #
 
+# Prefer the shared Oh My Posh theme; retain the legacy prompt as a fallback.
+_posh_dir="${XDG_CONFIG_HOME:-$HOME/.config}/oh-my-posh"
+if command -v oh-my-posh >/dev/null 2>&1 && [[ -r "$_posh_dir/prompt.omp.json" && -r "$_posh_dir/host.sh" ]]; then
+    source "$_posh_dir/host.sh"
+    # Remove legacy/duplicate hooks when re-sourcing, keeping unrelated hooks.
+    _bash_prompt_hooks=()
+    for _bash_prompt_hook in "${PROMPT_COMMAND[@]}"; do
+        case $_bash_prompt_hook in
+            set_bash_prompt|sync_bash_history|'') ;;
+            *) _bash_prompt_hooks+=("$_bash_prompt_hook") ;;
+        esac
+    done
+    PROMPT_COMMAND=("${_bash_prompt_hooks[@]}")
+    eval "$(oh-my-posh init bash --config "$_posh_dir/prompt.omp.json")"
+    PROMPT_COMMAND+=(sync_bash_history)
+    export -n PROMPT_COMMAND
+    unset _posh_dir _bash_prompt_hooks _bash_prompt_hook
+    return
+fi
+unset _posh_dir
+
 # we use __git_ps1 so we must source git-prompt.sh which comes in a different place
 # in each distro.
 

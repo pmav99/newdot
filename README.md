@@ -5,6 +5,27 @@ In order to use this you need GNU `stow`.
 Before running stow you probably want to create the directory structure beforehand so that stow
 creates symlinks only for files. More info [here](https://stackoverflow.com/a/4073999/592289)
 
+# Shell prompt
+
+Bash and desktop Zsh share `common/.config/oh-my-posh/prompt.omp.json`.
+Install `oh-my-posh` on each host and deploy `common` with Stow. Bash falls
+back to its legacy prompt if the executable or shared configuration is missing.
+
+- Local identity: green; SSH identity: amber, with an `[SSH]` badge.
+- Hosts whose `hostname -f` ends in `.meluxina.lxp.lu`: magenta, with a
+  `[MELUXINA]` badge (the actual node name remains visible).
+- Root: red identity and a `#` prompt symbol.
+- Commands longer than two seconds show elapsed time; failures show `exit:N`.
+
+Host classification runs once during shell initialization. Compute nodes must
+use the same DNS suffix to receive the MeluXina styling. No Nerd Font is required.
+The duration threshold is the `executiontime` segment's `options.threshold`, in
+milliseconds; set it to `0` to show all command durations.
+
+The theme previously lived under `zsh_desktop/.config/oh-my-posh`. On existing
+installations, retarget any directory symlink at `~/.config/oh-my-posh` to
+`common/.config/oh-my-posh` before re-stowing. Start a new shell after deploying.
+
 # Zsh
 
 ## Setting up Zsh with zprezto.

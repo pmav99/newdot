@@ -19,6 +19,12 @@ if [[ $- == *i* ]] && [[ -n "${DEFAULT_CONDA_ENV:-}" ]] && command -v micromamba
   micromamba activate "${DEFAULT_CONDA_ENV}"
 fi
 
+# The prompt may also come from the default conda env. Initialize it before
+# direnv, but after host-specific setup and activation have populated PATH.
+if [[ $- == *i* ]]; then
+  source "${HOME}"/.bash_prompt.sh
+fi
+
 # direnv may come from the default conda env, so load it after activation.
 if [[ $- == *i* ]] && command -v direnv >/dev/null 2>&1; then
   eval "$(direnv hook bash)"
