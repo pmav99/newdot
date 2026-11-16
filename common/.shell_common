@@ -362,3 +362,8 @@ disable_benchmarking() {
   # echo 2 | sudo tee /proc/sys/kernel/randomize_va_space
   # unset PYTHONHASHSEED
 }
+
+
+if [ -x "$(command -v claude)" ]; then
+  export CLAUDE_CODE_DISABLE_1M_CONTEXT=1
+fi
