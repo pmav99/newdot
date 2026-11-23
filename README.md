@@ -13,14 +13,15 @@ back to its legacy prompt if the executable or shared configuration is missing.
 
 - Apptainer and Singularity sessions show the image name, e.g. `APPTAINER:sea.sif`
   or `SINGULARITY:sea.sif`. The label is hidden outside those runtimes.
-- Local identity: green; SSH identity: amber, with an `SSH` label.
-- Hosts whose `hostname -f` ends in `.meluxina.lxp.lu`: magenta, with a
-  `MELUXINA` label (the actual node name remains visible).
+- Hosts without a friendly name: green locally, amber with an `SSH` label remotely.
+- Hosts with a friendly name show it instead of `SSH`, in magenta. The actual
+  node name remains visible. MeluXina hosts use `MELUXINA`.
 - Root: red identity and a `#` prompt symbol.
 - Commands longer than two seconds show elapsed time; failures show `exit:N`.
 
-Host classification runs once during shell initialization. Compute nodes must
-use the same DNS suffix to receive the MeluXina styling. No Nerd Font is required.
+Host classification runs once during shell initialization. Add hostname patterns
+and labels in `common/.config/oh-my-posh/host.sh` to name more hosts. Compute nodes
+must use the same DNS suffix to receive the MeluXina styling. No Nerd Font is required.
 The duration threshold is the `executiontime` segment's `options.threshold`, in
 milliseconds; set it to `0` to show all command durations.
 

@@ -24,9 +24,9 @@
           "style": "plain",
           "foreground": "#98c379",
           "foreground_templates": [
-            "{{ if .Root }}#e06c75{{ else if eq .Env.DOTFILES_POSH_MELUXINA \"1\" }}#c678dd{{ else if .SSHSession }}#e5c07b{{ else }}#98c379{{ end }}"
+            "{{ if .Root }}#e06c75{{ else if .Env.DOTFILES_POSH_HOST_LABEL }}#c678dd{{ else if .SSHSession }}#e5c07b{{ else }}#98c379{{ end }}"
           ],
-          "template": "{{ if .SSHSession }}SSH {{ end }}{{ if eq .Env.DOTFILES_POSH_MELUXINA \"1\" }}MELUXINA {{ end }}{{ .UserName }}@{{ .HostName | splitList \".\" | first }} "
+          "template": "{{ if .Env.DOTFILES_POSH_HOST_LABEL }}{{ .Env.DOTFILES_POSH_HOST_LABEL }} {{ else if .SSHSession }}SSH {{ end }}{{ .UserName }}@{{ .HostName | splitList \".\" | first }} "
         },
         {
           "type": "path",
