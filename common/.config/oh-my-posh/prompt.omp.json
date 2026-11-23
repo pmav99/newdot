@@ -17,7 +17,7 @@
           "type": "text",
           "style": "plain",
           "foreground": "#56b6c2",
-          "template": "{{ $apptainer := or .Env.APPTAINER_NAME .Env.APPTAINER_CONTAINER }}{{ $singularity := or .Env.SINGULARITY_NAME .Env.SINGULARITY_CONTAINER }}{{ if $apptainer }}[APPTAINER:{{ $apptainer | base }}] {{ else if $singularity }}[SINGULARITY:{{ $singularity | base }}] {{ end }}"
+          "template": "{{ $apptainer := or .Env.APPTAINER_NAME .Env.APPTAINER_CONTAINER }}{{ $singularity := or .Env.SINGULARITY_NAME .Env.SINGULARITY_CONTAINER }}{{ if $apptainer }}APPTAINER:{{ $apptainer | base }} {{ else if $singularity }}SINGULARITY:{{ $singularity | base }} {{ end }}"
         },
         {
           "type": "session",
@@ -26,7 +26,7 @@
           "foreground_templates": [
             "{{ if .Root }}#e06c75{{ else if eq .Env.DOTFILES_POSH_MELUXINA \"1\" }}#c678dd{{ else if .SSHSession }}#e5c07b{{ else }}#98c379{{ end }}"
           ],
-          "template": "{{ if .SSHSession }}[SSH] {{ end }}{{ if eq .Env.DOTFILES_POSH_MELUXINA \"1\" }}[MELUXINA] {{ end }}{{ .UserName }}@{{ .HostName | splitList \".\" | first }} "
+          "template": "{{ if .SSHSession }}SSH {{ end }}{{ if eq .Env.DOTFILES_POSH_MELUXINA \"1\" }}MELUXINA {{ end }}{{ .UserName }}@{{ .HostName | splitList \".\" | first }} "
         },
         {
           "type": "path",
