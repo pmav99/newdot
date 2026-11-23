@@ -19,6 +19,21 @@ if [[ $- == *i* ]] && [[ -n "${DEFAULT_CONDA_ENV:-}" ]] && command -v micromamba
   micromamba activate "${DEFAULT_CONDA_ENV}"
 fi
 
+# Prompt hook arrays require Bash 5.1+. Activation changes PATH, not the
+# running shell, so replace an older interactive Bash with the environment's.
+if [[ $- == *i* ]] && (( BASH_VERSINFO[0] < 5 || (BASH_VERSINFO[0] == 5 && BASH_VERSINFO[1] < 1) )); then
+  _conda_bash="${CONDA_PREFIX:-}/bin/bash"
+  if [[ -n ${CONDA_PREFIX:-} && -x $_conda_bash ]] &&
+     "$_conda_bash" --noprofile --norc -c '(( BASH_VERSINFO[0] > 5 || (BASH_VERSINFO[0] == 5 && BASH_VERSINFO[1] >= 1) ))'; then
+    if shopt -q login_shell; then
+      exec "$_conda_bash" --login -i
+    else
+      exec "$_conda_bash" -i
+    fi
+  fi
+  unset _conda_bash
+fi
+
 # The prompt may also come from the default conda env. Initialize it before
 # direnv, but after host-specific setup and activation have populated PATH.
 if [[ $- == *i* ]]; then
