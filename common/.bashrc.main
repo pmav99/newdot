@@ -22,12 +22,20 @@ HISTTIMEFORMAT='%F %T '
 # Multiple commands on one line show up as a single line
 shopt -s cmdhist
 # Incrementally share history between shells without reloading the entire file.
-# Registered alongside the prompt hook in .bash_prompt.sh.
 sync_bash_history() {
   local last_status=$?
   history -a
   history -n
   return "$last_status"
+}
+
+register_bash_history_hook() {
+  local hook
+  local -a hooks=()
+  for hook in "${PROMPT_COMMAND[@]}"; do
+    [[ $hook == sync_bash_history ]] || hooks+=("$hook")
+  done
+  PROMPT_COMMAND=("${hooks[@]}" sync_bash_history)
 }
 
 # check the window size after each command and, if necessary,

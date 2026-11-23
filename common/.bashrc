@@ -23,6 +23,10 @@ fi
 # direnv, but after host-specific setup and activation have populated PATH.
 if [[ $- == *i* ]]; then
   source "${HOME}"/.bash_prompt.sh
+  # Append history sync after rendering so it doesn't clobber PIPESTATUS first.
+  if declare -F register_bash_history_hook >/dev/null; then
+    register_bash_history_hook
+  fi
 fi
 
 # direnv may come from the default conda env, so load it after activation.
