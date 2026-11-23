@@ -14,6 +14,12 @@
           "template": "{{ .CurrentDate | date \"15:04:05\" }} "
         },
         {
+          "type": "text",
+          "style": "plain",
+          "foreground": "#56b6c2",
+          "template": "{{ $apptainer := or .Env.APPTAINER_NAME .Env.APPTAINER_CONTAINER }}{{ $singularity := or .Env.SINGULARITY_NAME .Env.SINGULARITY_CONTAINER }}{{ if $apptainer }}[APPTAINER:{{ $apptainer | base }}] {{ else if $singularity }}[SINGULARITY:{{ $singularity | base }}] {{ end }}"
+        },
+        {
           "type": "session",
           "style": "plain",
           "foreground": "#98c379",

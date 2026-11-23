@@ -11,6 +11,8 @@ Bash and desktop Zsh share `common/.config/oh-my-posh/prompt.omp.json`.
 Install `oh-my-posh` on each host and deploy `common` with Stow. Bash falls
 back to its legacy prompt if the executable or shared configuration is missing.
 
+- Apptainer and Singularity sessions show the image name, e.g. `[APPTAINER:sea.sif]`
+  or `[SINGULARITY:sea.sif]`. The badge is hidden outside those runtimes.
 - Local identity: green; SSH identity: amber, with an `[SSH]` badge.
 - Hosts whose `hostname -f` ends in `.meluxina.lxp.lu`: magenta, with a
   `[MELUXINA]` badge (the actual node name remains visible).
