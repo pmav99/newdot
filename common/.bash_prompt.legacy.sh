@@ -8,7 +8,10 @@ elif [ -f /usr/lib/git-core/git-sh-prompt ]; then
 elif [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh
 else
-    echo "couldn't find git-prompt.sh"
+    # No git-prompt.sh (for example, inside a container): show no git status.
+    # With 2 or more arguments, __git_ps1 is in PROMPT_COMMAND mode and sets PS1.
+    echo "couldn't find git-prompt.sh. Defining an empty __git_ps1"
+    __git_ps1() { if [ $# -ge 2 ]; then PS1="$1$2"; fi; }
 fi
 
 # ANSI colors for the fallback prompt.
